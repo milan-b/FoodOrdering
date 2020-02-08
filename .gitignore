@@ -1,0 +1,6 @@
+
+#Visual Studio data
+.vs
+*.csproj.user
+
+*.cache
