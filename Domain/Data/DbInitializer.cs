@@ -8,16 +8,16 @@ namespace Domain.Data
 {
     public static class DbInitializer
     {
-        public static void Initialize(BookcaseContext context)
+        public static void Initialize(HranaContext context)
         {
             //Remove EnsureCreated when data needs to be preserved - EnsureCreated create new empty db
-            //context.Database.EnsureCreated();
+            context.Database.EnsureCreated();
 
             // Look for any students.
-            if (context.Books.Any())
-            {
-                return;   // DB has been seeded
-            }
+            //if (context.Books.Any())
+            //{
+            //    return;   // DB has been seeded
+            //}
 
             var bookbs = new Book[]
             {

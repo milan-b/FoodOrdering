@@ -8,17 +8,17 @@ using System.Linq;
 
 namespace Service
 {
-    public interface IBookService
+    public interface IHranaService
     {
         IEnumerable<Book> GetAll();
         Book GetById(int id);
         void Delete(int id);
     }
-    public class BookService: IBookService
+    public class HranaService : IHranaService
     {
-        private BookcaseContext _context;
+        private HranaContext _context;
 
-        public BookService(BookcaseContext context)
+        public HranaService(HranaContext context)
         {
             _context = context;
         }

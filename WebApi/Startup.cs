@@ -29,9 +29,17 @@ namespace WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
-            services.AddDbContext<DataContext>(x => x.UseInMemoryDatabase("TestDb"));
-            services.AddDbContext<BookcaseContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("BookcaseContext"), b => b.MigrationsAssembly("Domain")));
+
+            //services.AddDbContext<DataContext>(x => x.UseInMemoryDatabase("TestDb"));
+            //services.AddDbContext<BookcaseContext>(options =>
+            //        options.UseSqlServer(Configuration.GetConnectionString("BookcaseContext"), b => b.MigrationsAssembly("Domain")));
+
+            //services.AddDbContext<HranaContext>(options =>
+            //        options.UseSqlServer(Configuration.GetConnectionString("HranaContext"), b => b.MigrationsAssembly("Domain")));
+            services.AddDbContext<HranaContext>(options => 
+                options.UseMySql(Configuration.GetConnectionString("HranaContext"), b => b.MigrationsAssembly("Domain")));
+
+
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -76,8 +84,8 @@ namespace WebApi
             });
 
             // configure DI for application services
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IBookService, BookService>();
+            //services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IHranaService, HranaService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
