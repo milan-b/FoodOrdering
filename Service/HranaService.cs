@@ -10,8 +10,8 @@ namespace Service
 {
     public interface IHranaService
     {
-        IEnumerable<Book> GetAll();
-        Book GetById(int id);
+        IEnumerable<Hrana> GetAll();
+        Hrana GetById(int id);
         void Delete(int id);
     }
     public class HranaService : IHranaService
@@ -23,22 +23,22 @@ namespace Service
             _context = context;
         }
 
-        public IEnumerable<Book> GetAll()
+        public IEnumerable<Hrana> GetAll()
         {
-            return _context.Books;
+            return _context.Hrana;
         }
 
-        public Book GetById(int id)
+        public Hrana GetById(int id)
         {
-            return _context.Books.Find(id);
+            return _context.Hrana.Find(id);
         }
 
         public void Delete(int id)
         {
-            var book = _context.Books.Find(id);
-            if (book != null)
+            var hrana = _context.Hrana.Find(id);
+            if (hrana != null)
             {
-                _context.Books.Remove(book);
+                _context.Hrana.Remove(hrana);
                 _context.SaveChanges();
             }
         }
