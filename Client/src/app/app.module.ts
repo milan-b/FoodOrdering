@@ -13,35 +13,50 @@ import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 import { HomeComponent } from './home';
 import { LoginComponent } from './login';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatCardModule } from '@angular/material/card';
-import { MatGridListModule } from '@angular/material/grid-list';
+import {
+  MatCardModule,
+  MatFormFieldModule,
+  MatGridListModule,
+  MatRadioModule,
+  MatDatepickerModule,
+  MatDatepickerIntl
+} from '@angular/material';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 import { BookcaseComponent } from './bookcase/bookcase.component';
+import { MeniComponent } from './meni/meni.component';
 
 
 @NgModule({
-    imports: [
-        BrowserModule,
-        ReactiveFormsModule,
-        HttpClientModule,
-        appRoutingModule,
-        BrowserAnimationsModule,
-        MatCardModule,
-        MatGridListModule
-    ],
-    declarations: [
-        AppComponent,
-        HomeComponent,
-        LoginComponent,
-        BookcaseComponent
-    ],
-    providers: [
-        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+  imports: [
+    BrowserModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    appRoutingModule,
+    BrowserAnimationsModule,
+    MatCardModule,
+    MatGridListModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    MatRadioModule,
+    MatMomentDateModule
+  ],
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    LoginComponent,
+    BookcaseComponent,
+    MeniComponent
+    
+  ],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    MatDatepickerIntl
 
-        // provider used to create fake backend
-        //fakeBackendProvider
-    ],
-    bootstrap: [AppComponent]
+    // provider used to create fake backend
+    //fakeBackendProvider
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
