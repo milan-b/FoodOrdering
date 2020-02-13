@@ -23,18 +23,18 @@ namespace WebApi.Controllers
     public class BookController : ControllerBase
     {
         private IUserService _userService;
-        private IBookService _bookService;
+       
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
         public BookController(
             IUserService userService,
-            IBookService bookService,
+            
             IMapper mapper,
             IOptions<AppSettings> appSettings)
         {
             _userService = userService;
-            _bookService = bookService;
+         
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
@@ -50,12 +50,9 @@ namespace WebApi.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var books = _bookService.GetAll().Select(o => new {
-                o.BookId,
-                o.Name
-            });
+            
 
-            return Ok(books);
+            return Ok();
         }
 
     }

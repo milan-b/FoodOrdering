@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29424.173
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "client", "Client\", "{E674A41C-B8AA-45B1-8EA7-2152FA05ED3B}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Client", "Client\", "{E674A41C-B8AA-45B1-8EA7-2152FA05ED3B}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_63443"
@@ -26,9 +26,9 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "client", "Client\", "{E674A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "WebApi\WebApi.csproj", "{A6C2B025-95BF-4458-AF0D-739F78DEAE98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{DE788296-DBA0-48E1-9FBC-D79589A3590B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "Service\Service.csproj", "{DE788296-DBA0-48E1-9FBC-D79589A3590B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{C1D24A85-6299-4EDD-BA9C-74B09150CA1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{C1D24A85-6299-4EDD-BA9C-74B09150CA1F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,9 +37,7 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{E674A41C-B8AA-45B1-8EA7-2152FA05ED3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E674A41C-B8AA-45B1-8EA7-2152FA05ED3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E674A41C-B8AA-45B1-8EA7-2152FA05ED3B}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{E674A41C-B8AA-45B1-8EA7-2152FA05ED3B}.Release|Any CPU.Build.0 = Debug|Any CPU
 		{A6C2B025-95BF-4458-AF0D-739F78DEAE98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A6C2B025-95BF-4458-AF0D-739F78DEAE98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6C2B025-95BF-4458-AF0D-739F78DEAE98}.Release|Any CPU.ActiveCfg = Release|Any CPU

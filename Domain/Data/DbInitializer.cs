@@ -8,16 +8,40 @@ namespace Domain.Data
 {
     public static class DbInitializer
     {
-        public static void Initialize(BookcaseContext context)
+        public static void Initialize(HranaContext context)
         {
             //Remove EnsureCreated when data needs to be preserved - EnsureCreated create new empty db
-            //context.Database.EnsureCreated();
+            context.Database.EnsureCreated();
 
             // Look for any students.
-            if (context.Books.Any())
+            if (context.Hrana.Any())
             {
                 return;   // DB has been seeded
             }
+
+            var hrana = new Hrana[]
+            {
+                new Hrana{Naziv="Pekarski kropmir", Stalna=true},
+                new Hrana{Naziv="Pileci file sa zara", Stalna = true},
+                new Hrana{Naziv="Lignje", Stalna=false}
+            };
+            foreach(Hrana h in hrana)
+            {
+                context.Hrana.Add(h);
+            }
+            context.SaveChanges();
+
+            var meni = new Meni[]
+            {
+                new Meni{Datum= DateTime.Now },
+                new Meni{Datum= DateTime.Now.AddDays(1) }
+            };
+            foreach(Meni m in meni)
+            {
+                context.Add(m);
+            }
+
+            
 
             var bookbs = new Book[]
             {

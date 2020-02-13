@@ -19,9 +19,9 @@ namespace Service
     }
     public class UserService: IUserService
     {
-        private BookcaseContext _context;
+        private HranaContext _context;
 
-        public UserService(BookcaseContext context)
+        public UserService(HranaContext context)
         {
             _context = context;
         }

@@ -34,7 +34,7 @@ namespace WebApi
 
                 try
                 {
-                    var context = services.GetRequiredService<BookcaseContext>();
+                    var context = services.GetRequiredService<HranaContext>();
                     DbInitializer.Initialize(context);
                 }
                 catch (Exception ex)
