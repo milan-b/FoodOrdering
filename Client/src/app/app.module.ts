@@ -19,7 +19,10 @@ import {
   MatGridListModule,
   MatRadioModule,
   MatDatepickerModule,
-  MatDatepickerIntl
+  MatExpansionModule,
+  MatIconModule,
+  MAT_DATE_LOCALE
+  
 } from '@angular/material';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
@@ -39,7 +42,9 @@ import { MeniComponent } from './meni/meni.component';
     MatFormFieldModule,
     MatDatepickerModule,
     MatRadioModule,
-    MatMomentDateModule
+    MatMomentDateModule,
+    MatExpansionModule,
+    MatIconModule
   ],
   declarations: [
     AppComponent,
@@ -52,7 +57,7 @@ import { MeniComponent } from './meni/meni.component';
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    MatDatepickerIntl
+    { provide: MAT_DATE_LOCALE, useValue: 'sr' },
 
     // provider used to create fake backend
     //fakeBackendProvider
