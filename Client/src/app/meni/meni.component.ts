@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDatepickerIntl } from '@angular/material/datepicker';
+import { MeniService } from './meni.service';
 
 @Component({
   selector: 'app-meni',
@@ -9,6 +10,17 @@ import { MatDatepickerIntl } from '@angular/material/datepicker';
 })
 export class MeniComponent implements OnInit {
   step = 0;
+
+  constructor(private meniService: MeniService) { }
+  hrana: any;
+
+  ngOnInit() {
+    this.meniService.getMenu().subscribe(response => {
+      if (response) {
+        this.hrana = (<any>response.body).hrana;
+      }
+    });
+  }
 
   setStep(index: number) {
     this.step = index;
@@ -25,10 +37,7 @@ export class MeniComponent implements OnInit {
   date = new FormControl(new Date());
   serializedDate = new FormControl((new Date()).toISOString());
 
-  constructor(private datePicker: MatDatepickerIntl) { }
 
-  ngOnInit() {
-    this.datePicker.calendarLabel = "Nesto radi ovo";
-  }
+
 
 }

@@ -8,8 +8,8 @@ namespace Domain.Models
     {
         public int MeniId { get; set; }
         public DateTime Datum { get; set; }
-        public ICollection<HranaMeni> Hrana { get; set; }
-        public ICollection<Narudzba> Narudzbe { get; set; }
+        public virtual ICollection<HranaMeni> Hrana { get; set; }
+        public virtual ICollection<Narudzba> Narudzbe { get; set; }
 
     }
 }

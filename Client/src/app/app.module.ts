@@ -22,7 +22,7 @@ import {
   MatExpansionModule,
   MatIconModule,
   MAT_DATE_LOCALE
-  
+
 } from '@angular/material';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
@@ -52,7 +52,7 @@ import { MeniComponent } from './meni/meni.component';
     LoginComponent,
     BookcaseComponent,
     MeniComponent
-    
+
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

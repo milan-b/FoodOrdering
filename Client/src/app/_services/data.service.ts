@@ -34,7 +34,7 @@ export class DataService {
        * @param {string} url    URL
        * @param {HttpParams} params Get-params
        */
-    get(url: string, params: HttpParams): Observable<HttpResponse<Object>> {
+  get(url: string, params: HttpParams): Observable<HttpResponse<Object>> {
         return this.http.get(environment.apiUrl + url, { observe: 'response', params: params })
             .pipe(
                 retry(3),
