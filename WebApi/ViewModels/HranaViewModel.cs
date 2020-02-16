@@ -10,5 +10,7 @@ namespace WebApi.ViewModels
         public int HranaId { get; set; }
         public string Naziv { get; set; }
         public bool Stalna { get; set; }
+        public List<HranaPrilogViewModel> Prilozi { get; set; }
+        public bool Narucena { get; set; }
     }
 }

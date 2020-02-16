@@ -35,17 +35,16 @@ namespace WebApi.Controllers
 
 
         #region Mappers
-        private void MapMeniTOMeniVM(Meni meni, MeniViewModel viewModel)
-        {
-            //viewModel.MeniId = meni.MeniId;
-            //viewModel.Hrana = new List<HranaViewModel>(); 
-            //foreach(var hrana in meni.Hrana)
-            //{
-            //    var hranaPom = hrana.Hrana;
-            //    var a = _mapper.Map<HranaViewModel>(hranaPom);
-            //    viewModel.Hrana.Add(_mapper.Map<HranaViewModel>(hrana.Hrana));
-            //}
-        }
+        //private void MapMeniTOMeniVM(Meni meni, MeniViewModel viewModel)
+        //{
+        //    viewModel.MeniId = meni.MeniId;
+        //    viewModel.Hrana = new List<HranaViewModel>();
+        //    foreach (var hrana in meni.Hrana)
+        //    {
+        //        viewModel.Hrana.Add(_mapper.Map<HranaViewModel>(hrana.Hrana));
+        //    }
+
+        //}
         #endregion
     }
 }

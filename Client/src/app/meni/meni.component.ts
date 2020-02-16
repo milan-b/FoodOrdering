@@ -4,6 +4,7 @@ import { MatDatepickerIntl, MatDatepickerInputEvent } from '@angular/material/da
 import { MeniService } from './meni.service';
 import { Moment } from 'moment';
 import * as moment from 'moment';
+import { Meni } from '../_models/meni';
 
 @Component({
   selector: 'app-meni',
@@ -14,9 +15,12 @@ export class MeniComponent implements OnInit {
   step = 0;
 
   constructor(private meniService: MeniService) { }
+  meni: Meni
   hrana: any;
+  date: FormControl;
 
   ngOnInit() {
+    this.date = new FormControl(moment().toDate());
     this.getHrana(moment());
   }
 
@@ -36,16 +40,16 @@ export class MeniComponent implements OnInit {
     this.step--;
   }
 
-  date = new FormControl(new Date());
-  serializedDate = new FormControl((new Date()).toISOString());
-
   getHrana(date: Moment) {
     this.meniService.getMenu(date).subscribe(response => {
-      if (response && response.body) {
-        this.hrana = (<any>response.body).hrana;
-      } else {
-        this.hrana = null;
-      }
+      console.log(response);
+      this.meni = new Meni(response);
+      console.log(this.meni);
+      //if (response && response.body) {
+      //  this.hrana = (<any>response.body).hrana;
+      //} else {
+      //  this.hrana = null;
+      //}
     });
   }
 

@@ -18,6 +18,8 @@ namespace WebApi.Helpers
             CreateMap<Meni, MeniViewModel>();
             CreateMap<Hrana, HranaViewModel>();
             CreateMap<HranaMeni, HranaMeniViewModel>();
+            CreateMap<HranaPrilog, HranaPrilogViewModel>();
+            CreateMap<Prilog, PrilogViewModel>();
         }
     }
 }

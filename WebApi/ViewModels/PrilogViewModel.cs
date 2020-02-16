@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Domain.Models
+namespace WebApi.ViewModels
 {
-    public class Prilog
+    public class PrilogViewModel
     {
         public int PrilogId { get; set; }
         public string Naziv { get; set; }
-        public virtual ICollection<HranaPrilog> Hrana { get; set; }
     }
 }

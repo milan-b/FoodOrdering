@@ -65,13 +65,22 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Domain.Models.HranaPrilog", b =>
                 {
+                    b.Property<int>("HranaPrilogId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
                     b.Property<int>("HranaId")
                         .HasColumnType("int");
 
                     b.Property<int>("PrilogId")
                         .HasColumnType("int");
 
-                    b.HasKey("HranaId", "PrilogId");
+                    b.Property<int>("Varijanta")
+                        .HasColumnType("int");
+
+                    b.HasKey("HranaPrilogId");
+
+                    b.HasIndex("HranaId");
 
                     b.HasIndex("PrilogId");
 
@@ -207,10 +216,7 @@ namespace Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("Varijanta")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Vrijednost")
+                    b.Property<string>("Naziv")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("PrilogId");
@@ -273,13 +279,13 @@ namespace Domain.Migrations
                     b.HasOne("Domain.Models.Hrana", "Hrana")
                         .WithMany("Menii")
                         .HasForeignKey("HranaId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.Models.Meni", "Meni")
                         .WithMany("Hrana")
                         .HasForeignKey("MeniId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -288,13 +294,13 @@ namespace Domain.Migrations
                     b.HasOne("Domain.Models.Hrana", "Hrana")
                         .WithMany("Prilozi")
                         .HasForeignKey("HranaId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.Models.Prilog", "Prilog")
                         .WithMany("Hrana")
                         .HasForeignKey("PrilogId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -303,13 +309,13 @@ namespace Domain.Migrations
                     b.HasOne("Domain.Models.Hrana", null)
                         .WithMany("Komentari")
                         .HasForeignKey("HranaId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.Models.Korisnik", "Korisnik")
                         .WithMany()
                         .HasForeignKey("KorisnikId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -318,13 +324,13 @@ namespace Domain.Migrations
                     b.HasOne("Domain.Models.Korisnik", "Korisnik")
                         .WithMany()
                         .HasForeignKey("KorisnikId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.Models.Meni", null)
                         .WithMany("Narudzbe")
                         .HasForeignKey("MeniId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -333,13 +339,13 @@ namespace Domain.Migrations
                     b.HasOne("Domain.Models.Hrana", null)
                         .WithMany("Ocjene")
                         .HasForeignKey("HranaId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.Models.Korisnik", "Korisnik")
                         .WithMany()
                         .HasForeignKey("KorisnikId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -348,13 +354,13 @@ namespace Domain.Migrations
                     b.HasOne("Domain.Models.Book", "Book")
                         .WithMany("BookUsers")
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.Models.User", "User")
                         .WithMany("BookUsers")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

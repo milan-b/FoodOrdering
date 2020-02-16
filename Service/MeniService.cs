@@ -40,6 +40,8 @@ namespace Service
             return _context.Menii
                 .Include(o => o.Hrana)
                 .ThenInclude(o => o.Hrana)
+                .ThenInclude(o => o.Prilozi)
+                .ThenInclude(o => o.Prilog)
                 .Where(o => o.Datum.Date == date.Date).FirstOrDefault();
         }
 

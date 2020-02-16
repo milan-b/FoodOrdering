@@ -11,9 +11,21 @@
       Meni za datum
       <input (dateChange)="onDateChange($event)" [matDatepicker]="picker1" [formControl]="date">
       <mat-datepicker-toggle [for]="picker1"></mat-datepicker-toggle>
-      <mat-datepicker  #picker1></mat-datepicker>
+      <mat-datepicker #picker1></mat-datepicker>
     </h4>
     <div class="card-body">
+
+      <section class="prilog-section">
+        <mat-radio-button class="prilog-margin">Caevec</mat-radio-button>
+        <mat-radio-button class="prilog-margin">Medicinska Elektronika</mat-radio-button>
+        <mat-radio-button class="prilog-margin">ETF</mat-radio-button>
+      </section>
+
+      <section class="prilog-section">
+        <mat-radio-button class="prilog-margin">11:30h</mat-radio-button>
+        <mat-radio-button class="prilog-margin">12:30h</mat-radio-button>
+      </section>
+
       <!--<input matInput [matDatepicker]="picker1" [formControl]="date">
       <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
       <mat-datepicker #picker1></mat-datepicker>-->
@@ -33,22 +45,35 @@
 </div>
 
 <mat-accordion class="example-headers-align">
-  <div *ngIf="hrana">
-    <mat-expansion-panel *ngFor="let item of hrana; let i = index;" [expanded]="step === i" (opened)="setStep(i)" hideToggle>
+  <div *ngIf="meni">
+    <mat-expansion-panel *ngFor="let item of meni.hrana; let i = index;" [expanded]="step === i" (opened)="setStep(i)" hideToggle>
       <mat-expansion-panel-header>
         <mat-panel-title>
           <img src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
 
         </mat-panel-title>
         <mat-panel-description>
-          {{item.hrana.naziv}}
+          {{item.naziv}}
           <mat-icon>account_circle</mat-icon>
         </mat-panel-description>
       </mat-expansion-panel-header>
 
+      <!--Prilozi-->
+      <div *ngIf="item.prilozi.length > 0" class="card mt-2">
+        <h4 class="card-header">
+          Prilozi
+        </h4>
+        <div class="card-body">
+          <section  class="prilog-section">
+            <mat-checkbox *ngFor="let prilogItem of item.prilozi" class="prilog-margin">{{prilogItem.naziv}}</mat-checkbox>
+          </section>
+
+        </div>
+      </div>
+
       <mat-action-row>
         <button *ngIf="i > 0" mat-button color="warn" (click)="prevStep()">Prethodni</button>
-        <button mat-button color="primary" (click)="nextStep()">{{i == hrana.length - 1 ? 'Kraj' : 'Sledeći'}}</button>
+        <button mat-button color="primary" (click)="nextStep()">{{i == meni.hrana.length - 1 ? 'Kraj' : 'Sledeći'}}</button>
       </mat-action-row>
     </mat-expansion-panel>
   </div>
