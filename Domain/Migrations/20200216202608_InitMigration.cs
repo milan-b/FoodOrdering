@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Domain.Migrations
 {
-    public partial class Initial : Migration
+    public partial class InitMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -57,7 +57,7 @@ namespace Domain.Migrations
                 {
                     MeniId = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Datum = table.Column<DateTime>(nullable: false)
+                    Datum = table.Column<DateTime>(type: "Date", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -70,8 +70,7 @@ namespace Domain.Migrations
                 {
                     PrilogId = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Vrijednost = table.Column<string>(nullable: true),
-                    Varijanta = table.Column<int>(nullable: false)
+                    Naziv = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -113,13 +112,13 @@ namespace Domain.Migrations
                         column: x => x.HranaId,
                         principalTable: "Hrana",
                         principalColumn: "HranaId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Komentar_Korisnik_KorisnikId",
                         column: x => x.KorisnikId,
                         principalTable: "Korisnik",
                         principalColumn: "KorisnikId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -140,13 +139,13 @@ namespace Domain.Migrations
                         column: x => x.HranaId,
                         principalTable: "Hrana",
                         principalColumn: "HranaId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Ocjena_Korisnik_KorisnikId",
                         column: x => x.KorisnikId,
                         principalTable: "Korisnik",
                         principalColumn: "KorisnikId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -164,13 +163,13 @@ namespace Domain.Migrations
                         column: x => x.HranaId,
                         principalTable: "Hrana",
                         principalColumn: "HranaId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_HranaMeni_Meni_MeniId",
                         column: x => x.MeniId,
                         principalTable: "Meni",
                         principalColumn: "MeniId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -194,37 +193,40 @@ namespace Domain.Migrations
                         column: x => x.KorisnikId,
                         principalTable: "Korisnik",
                         principalColumn: "KorisnikId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Narudzba_Meni_MeniId",
                         column: x => x.MeniId,
                         principalTable: "Meni",
                         principalColumn: "MeniId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "HranaPrilog",
                 columns: table => new
                 {
+                    HranaPrilogId = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     HranaId = table.Column<int>(nullable: false),
-                    PrilogId = table.Column<int>(nullable: false)
+                    PrilogId = table.Column<int>(nullable: false),
+                    Varijanta = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_HranaPrilog", x => new { x.HranaId, x.PrilogId });
+                    table.PrimaryKey("PK_HranaPrilog", x => x.HranaPrilogId);
                     table.ForeignKey(
                         name: "FK_HranaPrilog_Hrana_HranaId",
                         column: x => x.HranaId,
                         principalTable: "Hrana",
                         principalColumn: "HranaId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_HranaPrilog_Prilog_PrilogId",
                         column: x => x.PrilogId,
                         principalTable: "Prilog",
                         principalColumn: "PrilogId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -245,19 +247,24 @@ namespace Domain.Migrations
                         column: x => x.BookId,
                         principalTable: "Book",
                         principalColumn: "BookId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_SavedBook_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_HranaMeni_MeniId",
                 table: "HranaMeni",
                 column: "MeniId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HranaPrilog_HranaId",
+                table: "HranaPrilog",
+                column: "HranaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_HranaPrilog_PrilogId",
@@ -273,6 +280,12 @@ namespace Domain.Migrations
                 name: "IX_Komentar_KorisnikId",
                 table: "Komentar",
                 column: "KorisnikId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Meni_Datum",
+                table: "Meni",
+                column: "Datum",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Narudzba_KorisnikId",

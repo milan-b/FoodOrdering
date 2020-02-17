@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using WebApi.Helpers;
 using WebApi.Services;
 using AutoMapper;
@@ -16,7 +17,7 @@ using Service;
 
 namespace WebApi
 {
-  public class Startup
+    public class Startup
     {
         public Startup(IConfiguration configuration)
         {
@@ -36,8 +37,8 @@ namespace WebApi
 
             //services.AddDbContext<HranaContext>(options =>
             //        options.UseSqlServer(Configuration.GetConnectionString("HranaContext"), b => b.MigrationsAssembly("Domain")));
-            services.AddDbContext<HranaContext>(options => 
-                options.UseMySql(Configuration.GetConnectionString("HranaContext"), b => b.MigrationsAssembly("Domain")));
+            services.AddDbContext<HranaContext>(options =>
+                options.UseMySql(Configuration.GetConnectionString("HranaContext"), b => b.MigrationsAssembly("Domain")), ServiceLifetime.Singleton);
 
 
             services.AddControllers();
@@ -46,6 +47,9 @@ namespace WebApi
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
+
+
+
 
             // configure jwt authentication
             var appSettings = appSettingsSection.Get<AppSettings>();
@@ -83,9 +87,13 @@ namespace WebApi
                 };
             });
 
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
             // configure DI for application services
             //services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IHranaService, HranaService>();
+            services.AddSingleton<IHranaService, HranaService>();
+            services.AddSingleton<IMeniService, MeniService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -101,8 +109,9 @@ namespace WebApi
 
             app.UseAuthentication();
             app.UseAuthorization();
-            
-            app.UseEndpoints(endpoints => {
+
+            app.UseEndpoints(endpoints =>
+            {
                 //endpoints.MapControllers();
                 endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
