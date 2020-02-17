@@ -42,7 +42,9 @@ export class Meni {
         new Prilog({
           prilogId: prilogItem.prilog.prilogId,
           naziv: prilogItem.prilog.naziv,
-          varijanta: prilogItem.varijanta
+          varijanta: prilogItem.varijanta,
+          izabran: false,
+          omogucen: true
         })
       );
     });

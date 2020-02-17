@@ -5,6 +5,8 @@ import { MeniService } from './meni.service';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { Meni } from '../_models/meni';
+import { Hrana } from '../_models/hrana';
+import { Prilog } from '../_models/prilog';
 
 @Component({
   selector: 'app-meni',
@@ -44,13 +46,26 @@ export class MeniComponent implements OnInit {
     this.meniService.getMenu(date).subscribe(response => {
       console.log(response);
       this.meni = new Meni(response);
-      console.log(this.meni);
-      //if (response && response.body) {
-      //  this.hrana = (<any>response.body).hrana;
-      //} else {
-      //  this.hrana = null;
-      //}
     });
+  }
+
+  onPrilogChange(hrana: Hrana, prilog: Prilog) {
+    if (prilog.varijanta != 0) {
+      if (prilog.izabran) {
+        let izabranaVarijanta = prilog.varijanta;
+        hrana.prilozi.forEach(prilogItem => {
+          if (prilogItem.varijanta != 0 && prilogItem.varijanta != izabranaVarijanta) {
+            prilogItem.omogucen = false;
+          }
+        });
+      } else {
+        if (hrana.prilozi.every(prilogItem => { return !prilogItem.izabran || prilogItem.varijanta == 0 })) {
+          hrana.prilozi.forEach(prilogItem => {
+            prilogItem.omogucen = true;
+          });
+        }
+      }
+    }
   }
 
 

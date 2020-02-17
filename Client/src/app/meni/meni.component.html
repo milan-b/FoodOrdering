@@ -65,7 +65,11 @@
         </h4>
         <div class="card-body">
           <section  class="prilog-section">
-            <mat-checkbox *ngFor="let prilogItem of item.prilozi" class="prilog-margin">{{prilogItem.naziv}}</mat-checkbox>
+            <mat-checkbox *ngFor="let prilogItem of item.prilozi"
+                          class="prilog-margin" [(ngModel)]="prilogItem.izabran"
+                          [disabled]="!prilogItem.omogucen"
+                          (change)="onPrilogChange(item, prilogItem)">{{prilogItem.naziv}}
+            </mat-checkbox>
           </section>
 
         </div>
