@@ -33,6 +33,15 @@ namespace WebApi.Controllers
             return Ok(meniViewModel);
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult GetAllMenis()
+        {
+            var menis = _meniService.GetAll().ToList();
+            var viewModel = _mapper.Map<List<MeniForCalendarViewModel>>(menis);
+            return Ok(viewModel);
+        }
+
 
         #region Mappers
         //private void MapMeniTOMeniVM(Meni meni, MeniViewModel viewModel)

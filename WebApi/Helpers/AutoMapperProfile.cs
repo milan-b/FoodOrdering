@@ -16,6 +16,7 @@ namespace WebApi.Helpers
             CreateMap<UpdateModel, User>();
 
             CreateMap<Meni, MeniViewModel>();
+            CreateMap<Meni, MeniForCalendarViewModel>();
             CreateMap<Hrana, HranaViewModel>();
             CreateMap<HranaMeni, HranaMeniViewModel>();
             CreateMap<HranaPrilog, HranaPrilogViewModel>();
