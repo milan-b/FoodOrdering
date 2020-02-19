@@ -56,9 +56,7 @@ export class MeniComponent implements OnInit {
 
   setDatesWithMenus() {
     this.meniService.getAllMenus().subscribe(response => {
-      if (response.body) {
-        this.datesWithMenue = (<any[]>response.body).map(item => { return { meniId: item.meniId, datum: new Date(item.datum) } });
-      }
+      this.datesWithMenue = (<any[]>response.body).map(item => { return { meniId: item.meniId, datum: new Date(item.datum) } });
     });
   }
 
@@ -67,7 +65,7 @@ export class MeniComponent implements OnInit {
     return !this.datesWithMenue.every(menue => menue.datum.getTime() != date) ? 'date-with-menue' : '';
   }
 
-  onPrilogChange(hrana: Hrana, prilog: Prilog){
+  onPrilogChange(hrana: Hrana, prilog: Prilog) {
     if (prilog.varijanta != 0) {
       if (prilog.izabran) {
         let izabranaVarijanta = prilog.varijanta;

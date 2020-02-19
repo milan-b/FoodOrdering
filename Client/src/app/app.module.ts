@@ -23,7 +23,8 @@ import {
   MatExpansionModule,
   MatIconModule,
   MAT_DATE_LOCALE,
-  MatCheckboxModule
+  MatCheckboxModule,
+  MatSnackBarModule
 
 } from '@angular/material';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
@@ -31,6 +32,7 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { BookcaseComponent } from './bookcase/bookcase.component';
 import { MeniComponent } from './meni/meni.component';
 import { NoviMeniComponent } from './novi-meni/novi-meni.component';
+import { ErrorBarComponent } from './error-bar/error-bar.component';
 
 
 @NgModule({
@@ -50,7 +52,8 @@ import { NoviMeniComponent } from './novi-meni/novi-meni.component';
     MatExpansionModule,
     MatIconModule,
     MatCheckboxModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatSnackBarModule
   ],
   declarations: [
     AppComponent,
@@ -58,7 +61,8 @@ import { NoviMeniComponent } from './novi-meni/novi-meni.component';
     LoginComponent,
     BookcaseComponent,
     MeniComponent,
-    NoviMeniComponent
+    NoviMeniComponent,
+    ErrorBarComponent
 
   ],
   providers: [

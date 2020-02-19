@@ -4,6 +4,7 @@ import { HttpClient, HttpResponse, HttpHeaders, HttpErrorResponse, HttpParams } 
 import { environment } from '../../environments/environment';
 import { Observable, Observer, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
+import { ErrorService } from './error.service';
 //import { NotifierService } from 'angular-notifier';
 //import { TranslateService } from '@ngx-translate/core';
 
@@ -12,7 +13,7 @@ import { catchError, retry } from 'rxjs/operators';
 })
 export class DataService {
 
-    constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private errorService: ErrorService) { }
 
     /**
       * Perform http get without params. If you need params use function get
@@ -91,17 +92,19 @@ export class DataService {
         //this.translate.get('ServerError')
         //    .subscribe((data: string) => {
         //        this.notifier.notify('error', data + '  - - -  ' + error.statusText);
-        //    });
+      //    });
+      
 
         if (error.error instanceof ErrorEvent) {
             // A client-side or network error occurred. Handle it accordingly.
-            console.error('An client-side error occurred:', error.error.message);
+          console.error('An client-side error occurred:', error.error.message);
+          this.errorService.showError('An client - side error occurred: \n' + error.error.message);
         } else {
             // The backend returned an unsuccessful response code.
             // The response body may contain clues as to what went wrong,
-            console.error(
-                `Backend returned code ${error.status}, ` +
-                `body was: ${error.error}`);
+          let errorMessage = `Backend returned code ${error.status}, ` + `body was: ${error.error}`
+          console.error(errorMessage);
+          this.errorService.showError(errorMessage);
         }
         // return an observable with a user-facing error message
         return throwError(
