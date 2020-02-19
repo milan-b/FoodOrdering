@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 // used to create fake backend
 import { fakeBackendProvider } from './_helpers';
@@ -29,6 +30,7 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 import { BookcaseComponent } from './bookcase/bookcase.component';
 import { MeniComponent } from './meni/meni.component';
+import { NoviMeniComponent } from './novi-meni/novi-meni.component';
 
 
 @NgModule({
@@ -47,14 +49,16 @@ import { MeniComponent } from './meni/meni.component';
     MatMomentDateModule,
     MatExpansionModule,
     MatIconModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    FlexLayoutModule
   ],
   declarations: [
     AppComponent,
     HomeComponent,
     LoginComponent,
     BookcaseComponent,
-    MeniComponent
+    MeniComponent,
+    NoviMeniComponent
 
   ],
   providers: [

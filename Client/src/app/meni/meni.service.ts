@@ -14,4 +14,8 @@ export class MeniService {
     let params = new HttpParams().set('date', datum.format('YYYY-MM-DD'));
     return this.dataService.get('Meni/GetMeni', params);
   }
+
+  getAllMenus() {
+    return this.dataService.getAll('Meni/GetAllMenis');
+  }
 }

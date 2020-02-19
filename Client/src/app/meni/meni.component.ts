@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatDatepickerIntl, MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MatDatepickerIntl, MatDatepickerInputEvent, MatCalendarCellCssClasses } from '@angular/material/datepicker';
 import { MeniService } from './meni.service';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { Meni } from '../_models/meni';
 import { Hrana } from '../_models/hrana';
 import { Prilog } from '../_models/prilog';
+import { MeniForCalendar } from '../_models/meniForCalendar';
 
 @Component({
   selector: 'app-meni',
@@ -20,10 +21,14 @@ export class MeniComponent implements OnInit {
   meni: Meni
   hrana: any;
   date: FormControl;
+  datesWithMenue: Array<MeniForCalendar>;
 
   ngOnInit() {
-    this.date = new FormControl(moment().toDate());
-    this.getHrana(moment());
+    let nextDay = moment().add(1, 'days');
+    this.getHrana(nextDay);
+    this.date = new FormControl(nextDay.toDate());
+
+    this.setDatesWithMenus();
   }
 
   onDateChange(date) {
@@ -49,7 +54,20 @@ export class MeniComponent implements OnInit {
     });
   }
 
-  onPrilogChange(hrana: Hrana, prilog: Prilog) {
+  setDatesWithMenus() {
+    this.meniService.getAllMenus().subscribe(response => {
+      if (response.body) {
+        this.datesWithMenue = (<any[]>response.body).map(item => { return { meniId: item.meniId, datum: new Date(item.datum) } });
+      }
+    });
+  }
+
+  dateWithMenuClass = (d: Moment): MatCalendarCellCssClasses => {
+    const date = d.toDate().getTime();
+    return !this.datesWithMenue.every(menue => menue.datum.getTime() != date) ? 'date-with-menue' : '';
+  }
+
+  onPrilogChange(hrana: Hrana, prilog: Prilog){
     if (prilog.varijanta != 0) {
       if (prilog.izabran) {
         let izabranaVarijanta = prilog.varijanta;

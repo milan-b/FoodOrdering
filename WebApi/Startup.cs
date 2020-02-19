@@ -38,7 +38,7 @@ namespace WebApi
             //services.AddDbContext<HranaContext>(options =>
             //        options.UseSqlServer(Configuration.GetConnectionString("HranaContext"), b => b.MigrationsAssembly("Domain")));
             services.AddDbContext<HranaContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("HranaContext"), b => b.MigrationsAssembly("Domain")), ServiceLifetime.Singleton);
+                options.UseMySql(Configuration.GetConnectionString("HranaContext"), b => b.MigrationsAssembly("Domain")), ServiceLifetime.Scoped);
 
 
             services.AddControllers();
@@ -92,8 +92,8 @@ namespace WebApi
             );
             // configure DI for application services
             //services.AddScoped<IUserService, UserService>();
-            services.AddSingleton<IHranaService, HranaService>();
-            services.AddSingleton<IMeniService, MeniService>();
+            services.AddScoped<IHranaService, HranaService>();
+            services.AddScoped<IMeniService, MeniService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
