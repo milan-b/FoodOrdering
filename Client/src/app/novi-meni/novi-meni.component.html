@@ -1,3 +1,26 @@
-<p>
-  novi-meni works!
-</p>
+<div class="card">
+  <div class="card-header" fxLayout="row" fxLayoutAlign="space-between center">
+    <h4 fxFlex="50%">
+      Meni za datum
+    </h4>
+    <!--<div fxFlex="50%" fxLayoutAlign="end center">
+      <input id="date" (dateChange)="onDateChange($event)" [matDatepicker]="picker1" [formControl]="date">
+      <mat-datepicker-toggle [for]="picker1"></mat-datepicker-toggle>
+      <mat-datepicker [dateClass]="dateWithMenuClass" #picker1></mat-datepicker>
+    </div>-->
+  </div>
+  <div class="card-body">
+
+    <section class="prilog-section">
+      <mat-radio-button class="prilog-margin">Caevec</mat-radio-button>
+      <mat-radio-button class="prilog-margin">Medicinska Elektronika</mat-radio-button>
+      <mat-radio-button class="prilog-margin">ETF</mat-radio-button>
+    </section>
+
+    <section class="prilog-section">
+      <mat-radio-button class="prilog-margin">11:30h</mat-radio-button>
+      <mat-radio-button class="prilog-margin">12:30h</mat-radio-button>
+    </section>
+
+  </div>
+</div>

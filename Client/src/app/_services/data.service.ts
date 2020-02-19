@@ -102,7 +102,7 @@ export class DataService {
         } else {
             // The backend returned an unsuccessful response code.
             // The response body may contain clues as to what went wrong,
-          let errorMessage = `Backend returned code ${error.status}, ` + `body was: ${error.error}`
+          let errorMessage = `An server - side error occurred: Backend returned code "${error.status}", ` + `body was "${error.error}"`;
           console.error(errorMessage);
           this.errorService.showError(errorMessage);
         }

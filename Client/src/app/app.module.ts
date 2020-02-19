@@ -33,6 +33,7 @@ import { BookcaseComponent } from './bookcase/bookcase.component';
 import { MeniComponent } from './meni/meni.component';
 import { NoviMeniComponent } from './novi-meni/novi-meni.component';
 import { ErrorBarComponent } from './error-bar/error-bar.component';
+import { DatePickerComponent } from './date-picker/date-picker.component';
 
 
 @NgModule({
@@ -62,7 +63,8 @@ import { ErrorBarComponent } from './error-bar/error-bar.component';
     BookcaseComponent,
     MeniComponent,
     NoviMeniComponent,
-    ErrorBarComponent
+    ErrorBarComponent,
+    DatePickerComponent
 
   ],
   providers: [

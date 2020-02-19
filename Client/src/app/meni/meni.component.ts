@@ -20,15 +20,12 @@ export class MeniComponent implements OnInit {
   constructor(private meniService: MeniService) { }
   meni: Meni
   hrana: any;
-  date: FormControl;
+  nextDay: Moment;
   datesWithMenue: Array<MeniForCalendar>;
 
   ngOnInit() {
-    let nextDay = moment().add(1, 'days');
-    this.getHrana(nextDay);
-    this.date = new FormControl(nextDay.toDate());
-
-    this.setDatesWithMenus();
+    this.nextDay = moment().add(1, 'days');
+    this.getHrana(this.nextDay);
   }
 
   onDateChange(date) {
@@ -52,17 +49,6 @@ export class MeniComponent implements OnInit {
       console.log(response);
       this.meni = new Meni(response);
     });
-  }
-
-  setDatesWithMenus() {
-    this.meniService.getAllMenus().subscribe(response => {
-      this.datesWithMenue = (<any[]>response.body).map(item => { return { meniId: item.meniId, datum: new Date(item.datum) } });
-    });
-  }
-
-  dateWithMenuClass = (d: Moment): MatCalendarCellCssClasses => {
-    const date = d.toDate().getTime();
-    return !this.datesWithMenue.every(menue => menue.datum.getTime() != date) ? 'date-with-menue' : '';
   }
 
   onPrilogChange(hrana: Hrana, prilog: Prilog) {

@@ -5,9 +5,7 @@
         Meni za datum
       </h4>
       <div fxFlex="50%" fxLayoutAlign="end center" >
-        <input id="date" (dateChange)="onDateChange($event)" [matDatepicker]="picker1" [formControl]="date">
-        <mat-datepicker-toggle [for]="picker1"></mat-datepicker-toggle>
-        <mat-datepicker [dateClass]="dateWithMenuClass" #picker1></mat-datepicker>
+        <app-date-picker (dateChange)="onDateChange($event)" [initDate]="nextDay"></app-date-picker>
       </div>
     </div>
     <div class="card-body">
