@@ -1,5 +1,6 @@
 ﻿using Domain.Data;
 using Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,9 @@ namespace Service
 
         public IEnumerable<Hrana> GetAll()
         {
-            return _context.Hrana;
+            return _context.Hrana
+                        .Include(o => o.Prilozi)
+                        .ThenInclude(o => o.Prilog);
         }
 
         public Hrana GetById(int id)

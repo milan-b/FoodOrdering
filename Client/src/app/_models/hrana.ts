@@ -8,7 +8,33 @@ export class Hrana {
   narucena: boolean;
   prilozi: Prilog[];
 
-  public constructor(init?: Partial<Hrana>) {
-    Object.assign(this, init);
+  //public constructor(init?: Partial<Hrana>) {
+  //  Object.assign(this, init);
+  //}
+
+  public constructor(hrana: any)
+  {
+    this.hranaId = hrana.hranaId;
+    this.naziv = hrana.naziv;
+    this.stalna = hrana.stalna;
+    this.narucena = false;
+    //izabrana: this.narudzba.hrana == hranaItem.hrana.hranaId,
+    this.prilozi = this.getPrilozi(hrana.prilozi);
+  }
+
+  private getPrilozi(priloziItem: any): Array<Prilog> {
+    let prilozi: Prilog[] = [];
+    priloziItem.forEach((prilogItem) => {
+      prilozi.push(
+        new Prilog({
+          prilogId: prilogItem.prilog.prilogId,
+          naziv: prilogItem.prilog.naziv,
+          varijanta: prilogItem.varijanta,
+          izabran: false,
+          omogucen: true
+        })
+      );
+    });
+    return prilozi;
   }
 }

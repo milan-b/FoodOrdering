@@ -18,4 +18,8 @@ export class MeniService {
   getAllMenus() {
     return this.dataService.getAll('Meni/GetAllMenis');
   }
+
+  getAllFood() {
+    return this.dataService.getAll('hrana/GetAll');
+  }
 }

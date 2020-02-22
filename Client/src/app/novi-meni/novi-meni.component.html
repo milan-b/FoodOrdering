@@ -3,15 +3,17 @@
     <h4 fxFlex="50%">
       Meni za datum
     </h4>
-    <!--<div fxFlex="50%" fxLayoutAlign="end center">
-      <input id="date" (dateChange)="onDateChange($event)" [matDatepicker]="picker1" [formControl]="date">
-      <mat-datepicker-toggle [for]="picker1"></mat-datepicker-toggle>
-      <mat-datepicker [dateClass]="dateWithMenuClass" #picker1></mat-datepicker>
-    </div>-->
+    <div fxFlex="50%" fxLayoutAlign="end center">
+      <app-date-picker (dateChange)="onDateChange($event)" [initDate]="nextWeek"></app-date-picker>
+    </div>
   </div>
   <div class="card-body">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" class="form-control" />
+    </div>
 
-    <section class="prilog-section">
+    <!-- Dodati kada se ne radi uredjivanje meni <section class="prilog-section">
       <mat-radio-button class="prilog-margin">Caevec</mat-radio-button>
       <mat-radio-button class="prilog-margin">Medicinska Elektronika</mat-radio-button>
       <mat-radio-button class="prilog-margin">ETF</mat-radio-button>
@@ -20,7 +22,163 @@
     <section class="prilog-section">
       <mat-radio-button class="prilog-margin">11:30h</mat-radio-button>
       <mat-radio-button class="prilog-margin">12:30h</mat-radio-button>
-    </section>
+    </section>-->
 
   </div>
 </div>
+
+<div class="card">
+
+  <div class="card-header" fxLayout="row" fxLayoutAlign="space-between center">
+    <h4 fxFlex="20%">
+      Hrana
+    </h4>
+    <div fxFlex="80%" fxLayout="row" fxLayoutAlign="space-between center">
+      <!--<label for="username">Username</label>-->
+      <div fxFlex="30%">
+        <input type="text" placeholder="Filtriraj hranu" class="form-control" />
+      </div>
+      <div fxFlex="50%" fxLayoutAlign="end center">
+        <button class="btn btn-primary">
+          Kreiraj novu
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <mat-accordion class="example-headers-align">
+      <div *ngIf="hranaArray">
+        <mat-expansion-panel [ngClass]="{'selected-food': item.izabrana}" *ngFor="let item of hranaArray; let i = index;" [expanded]="step === i" (opened)="setStep(i)" hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <img src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+
+            </mat-panel-title>
+            <mat-panel-description>
+              <h3>{{item.naziv}}</h3>
+              <button (click)="izaberiHranu($event, item)" [ngClass]="item.izabrana ? 'btn-success': 'btn-light'" class="btn ">
+                Izaberi<!--<mat-icon>account_circle</mat-icon>-->
+              </button>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <!--Prilozi-->
+          <div *ngIf="item.prilozi.length > 0" class="card mt-2">
+            <h4 class="card-header">
+              Prilozi
+            </h4>
+            <div class="card-body">
+              <section class="prilog-section">
+                <mat-checkbox *ngFor="let prilogItem of item.prilozi"
+                              class="prilog-margin" [(ngModel)]="prilogItem.izabran"
+                              [disabled]="!prilogItem.omogucen"
+                              (change)="onPrilogChange(item, prilogItem)">
+                  {{prilogItem.naziv}}
+                </mat-checkbox>
+              </section>
+
+            </div>
+          </div>
+
+          <mat-action-row>
+            <button *ngIf="i > 0" mat-button color="warn" (click)="prevStep()">Prethodni</button>
+            <button mat-button color="primary" (click)="nextStep()">{{i == hranaArray.length - 1 ? 'Kraj' : 'Sledeći'}}</button>
+          </mat-action-row>
+        </mat-expansion-panel>
+      </div>
+    </mat-accordion>
+  </div>
+</div>
+
+
+<div class="card">
+
+  <div class="card-header" fxLayout="row" fxLayoutAlign="space-between center">
+    <h4 fxFlex="20%">
+      Stalna hrana
+    </h4>
+    <div fxFlex="80%" fxLayout="row" fxLayoutAlign="space-between center">
+      <!--<label for="username">Username</label>-->
+      <div fxFlex="30%">
+        <input type="text" placeholder="Filtriraj hranu" class="form-control" />
+      </div>
+      <!--<div fxFlex="50%" fxLayoutAlign="end center">
+        <button class="btn btn-primary">
+          Kreiraj novu
+        </button>
+      </div>-->
+    </div>
+  </div>
+
+  <!--Stanla hrana-->
+  <div class="card-body">
+    <mat-accordion class="example-headers-align">
+      <div *ngIf="hranaArray">
+        <mat-expansion-panel *ngFor="let item of stalnaHranaArray; let i = index;" [ngClass]="{'selected-food': item.izabrana}" [expanded]="step === i" (opened)="setStep(i)" hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <img src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+
+            </mat-panel-title>
+            <mat-panel-description>
+              <h3>{{item.naziv}}</h3>
+              <button (click)="izaberiHranu($event, item)" [ngClass]="item.izabrana ? 'btn-success': 'btn-light'" class="btn ">
+                Izaberi<!--<mat-icon>account_circle</mat-icon>-->
+              </button>
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+
+          <!--Prilozi-->
+          <div *ngIf="item.prilozi.length > 0" class="card mt-2">
+            <h4 class="card-header">
+              Prilozi
+            </h4>
+            <div class="card-body">
+              <section class="prilog-section">
+                <mat-checkbox *ngFor="let prilogItem of item.prilozi"
+                              class="prilog-margin" [(ngModel)]="prilogItem.izabran"
+                              [disabled]="!prilogItem.omogucen"
+                              (change)="onPrilogChange(item, prilogItem)">
+                  {{prilogItem.naziv}}
+                </mat-checkbox>
+              </section>
+
+            </div>
+          </div>
+
+          <mat-action-row>
+            <button *ngIf="i > 0" mat-button color="warn" (click)="prevStep()">Prethodni</button>
+            <button mat-button color="primary" (click)="nextStep()">{{i == stalnaHranaArray.length - 1 ? 'Kraj' : 'Sledeći'}}</button>
+          </mat-action-row>
+        </mat-expansion-panel>
+      </div>
+    </mat-accordion>
+  </div>
+
+</div>
+
+
+
+
+<!--<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="username">Username</label>
+    <input type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
+    <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+      <div *ngIf="f.username.errors.required">Username is required</div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
+    <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+      <div *ngIf="f.password.errors.required">Password is required</div>
+    </div>
+  </div>
+  <button [disabled]="loading" class="btn btn-primary">
+    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+    Login
+  </button>
+  <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
+</form>-->

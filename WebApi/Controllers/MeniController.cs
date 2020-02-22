@@ -13,8 +13,8 @@ namespace WebApi.Controllers
 {
     public class MeniController : Controller
     {
-        readonly IMeniService _meniService;
-        private IMapper _mapper;
+        readonly private IMeniService _meniService;
+        readonly private IMapper _mapper;
 
         public MeniController(IMeniService meniService, IMapper mapper)
         {

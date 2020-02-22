@@ -18,16 +18,9 @@ export class Meni {
     this.hrana = [];
     if (meniResponse && meniResponse.body) {
       meniResponse.body.hrana.forEach((hranaItem) => {
-        this.hrana.push(new Hrana({
-          hranaId: hranaItem.hrana.hranaId,
-          naziv: hranaItem.hrana.naziv,
-          stalna: hranaItem.hrana.stalna,
-          narucena: false,
-          izabrana: this.narudzba.hrana == hranaItem.hrana.hranaId,
-          prilozi: this.getPrilozi(hranaItem.hrana.prilozi)
-        })
-        );
-
+        let hrana = new Hrana(hranaItem.hrana);
+        hrana.izabrana = (this.narudzba.hrana == hranaItem.hrana.hranaId);
+        this.hrana.push(hrana)
       });
     }
     else {
@@ -35,19 +28,5 @@ export class Meni {
     }
   }
 
-  private getPrilozi(priloziItem: any): Array<Prilog> {
-    let prilozi: Prilog[] = [];
-    priloziItem.forEach((prilogItem) => {
-      prilozi.push(
-        new Prilog({
-          prilogId: prilogItem.prilog.prilogId,
-          naziv: prilogItem.prilog.naziv,
-          varijanta: prilogItem.varijanta,
-          izabran: false,
-          omogucen: true
-        })
-      );
-    });
-    return prilozi;
-  }
+
 }

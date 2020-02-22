@@ -20,14 +20,12 @@ export class DatePickerComponent implements OnInit {
   constructor(private meniService: MeniService) { }
 
   ngOnInit(): void {
-    console.log(this.initDate);
     this.date = new FormControl(this.initDate.toDate());
     this.setDatesWithMenus();
   }
 
   onDateChange(date) {
     this.dateChange.emit(date);
-    console.log('changed date', date);
   }
 
   setDatesWithMenus = () => {
