@@ -16,7 +16,10 @@ export class NoviMeniComponent implements OnInit {
   nextWeek: moment.Moment;
   hranaArray: Hrana[] = [];
   stalnaHranaArray: Hrana[] = [];
-  step = 0;
+  filterHrana: string = "";
+  filterStalnaHrana: string = "";
+  step: number = -1;
+  stepStalna: number = -1;
 
   constructor(private meniService: MeniService) { }
 
@@ -71,12 +74,29 @@ export class NoviMeniComponent implements OnInit {
     this.step = index;
   }
 
-  nextStep() {
+  nextStep(event) {
+    event.stopPropagation();
     this.step++;
   }
 
-  prevStep() {
+  prevStep(event) {
+    event.stopPropagation();
     this.step--;
+  }
+
+  setStepStalna(index: number) {
+    this.stepStalna = index;
+  }
+
+  nextStepStalna(event) {
+    event.stopPropagation();
+    console.log(this.stepStalna);
+    this.stepStalna++;
+  }
+
+  prevStepStalna(event) {
+    event.stopPropagation();
+    this.stepStalna--;
   }
   /// end region //
 }
