@@ -24,7 +24,10 @@ import {
   MatIconModule,
   MAT_DATE_LOCALE,
   MatCheckboxModule,
-  MatSnackBarModule
+  MatSnackBarModule,
+  MatDialogModule,
+  MatDividerModule,
+  MatListModule
 
 } from '@angular/material';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
@@ -34,6 +37,8 @@ import { MeniComponent } from './meni/meni.component';
 import { NoviMeniComponent } from './novi-meni/novi-meni.component';
 import { ErrorBarComponent } from './error-bar/error-bar.component';
 import { DatePickerComponent } from './date-picker/date-picker.component';
+import { CreateFoodDialogComponent } from './create-food-dialog/create-food-dialog.component';
+import { InfoBarComponent } from './info-bar/info-bar.component';
 
 
 @NgModule({
@@ -54,7 +59,10 @@ import { DatePickerComponent } from './date-picker/date-picker.component';
     MatIconModule,
     MatCheckboxModule,
     FlexLayoutModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialogModule,
+    MatDividerModule,
+    MatListModule
   ],
   declarations: [
     AppComponent,
@@ -64,7 +72,9 @@ import { DatePickerComponent } from './date-picker/date-picker.component';
     MeniComponent,
     NoviMeniComponent,
     ErrorBarComponent,
-    DatePickerComponent
+    DatePickerComponent,
+    CreateFoodDialogComponent,
+    InfoBarComponent
 
   ],
   providers: [

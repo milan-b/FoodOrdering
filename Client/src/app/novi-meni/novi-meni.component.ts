@@ -5,6 +5,8 @@ import { MeniService } from '../meni/meni.service';
 import { HttpResponse } from '@angular/common/http';
 import { Hrana } from '../_models/hrana';
 import { Prilog } from '../_models/prilog';
+import { MatDialog } from '@angular/material';
+import { CreateFoodDialogComponent } from '../create-food-dialog/create-food-dialog.component';
 
 @Component({
   selector: 'app-novi-meni',
@@ -21,7 +23,7 @@ export class NoviMeniComponent implements OnInit {
   step: number = -1;
   stepStalna: number = -1;
 
-  constructor(private meniService: MeniService) { }
+  constructor(private meniService: MeniService, private dialog: MatDialog) { }
 
   ngOnInit() {
     this.nextWeek = moment().add(1, 'week');
@@ -44,6 +46,21 @@ export class NoviMeniComponent implements OnInit {
   izaberiHranu(event, hrana: Hrana) {
     event.stopPropagation();
     hrana.izabrana = !hrana.izabrana;
+
+  }
+
+  kreirajHranu(): void {
+    const dialogRef = this.dialog.open(CreateFoodDialogComponent, {
+      width: '700px',
+      height: '80%',
+      disableClose: true
+      //data: { name: this.name, animal: this.animal }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      //this.animal = result;
+    });
   }
 
   onDateChange(date) {

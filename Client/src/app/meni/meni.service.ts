@@ -22,4 +22,13 @@ export class MeniService {
   getAllFood() {
     return this.dataService.getAll('hrana/GetAll');
   }
+
+  getAllSideDishes() {
+    return this.dataService.getAll('hrana/GetAllSideDishes');
+  }
+
+  createSideDish(data) {
+    return this.dataService.post('hrana/CreateSideDish', data);
+  }
+
 }

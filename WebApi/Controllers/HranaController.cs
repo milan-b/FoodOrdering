@@ -29,5 +29,31 @@ namespace WebApi.Controllers
             var viewModel = _mapper.Map<List<HranaViewModel>>(hrana);
             return Ok(viewModel);
         }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult GetAllSideDishes()
+        {
+            var prilozi = _hranaService.GetAllSideDishes().ToList();
+            var viewModel = _mapper.Map<List<PrilogViewModel>>(prilozi);
+            return Ok(viewModel);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult CreateSideDish([FromBody] PrilogViewModel viewModel)
+        {
+            IActionResult result;
+            if (!ModelState.IsValid)
+            {
+                result = ValidationProblem("Naziv ne moze biti prazan.");
+            }
+            else
+            {
+                var sideDishId = _hranaService.CreateSideDish(viewModel.Naziv);
+                result = Ok(sideDishId);
+            }
+            return result;
+        }
     }
 }

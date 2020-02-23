@@ -12,7 +12,9 @@ namespace Service
     public interface IHranaService
     {
         IEnumerable<Hrana> GetAll();
+        IEnumerable<Prilog> GetAllSideDishes();
         Hrana GetById(int id);
+        int CreateSideDish(string name);
         void Delete(int id);
     }
     public class HranaService : IHranaService
@@ -31,6 +33,18 @@ namespace Service
                         .ThenInclude(o => o.Prilog);
         }
 
+        public IEnumerable<Prilog> GetAllSideDishes()
+        {
+            return _context.Prilozi;
+        }
+
+        public int CreateSideDish(string name)
+        {
+            var sideDish = _context.Prilozi.Add(new Prilog { Naziv = name });
+            _context.SaveChanges();
+            return sideDish.Entity.PrilogId;
+        }
+
         public Hrana GetById(int id)
         {
             return _context.Hrana.Find(id);
@@ -46,6 +60,6 @@ namespace Service
             }
         }
 
-        
+
     }
 }
