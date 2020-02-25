@@ -1,10 +1,10 @@
 <h3>Nova hrana</h3>
+<br />
 
-
-<form [formGroup]="createFoodForm" (ngSubmit)="onSubmit()">
+<form *ngIf="createFoodForm" [formGroup]="createFoodForm" (ngSubmit)="onSubmit()">
   <div class="form-group">
-    <label for="username">Naziv</label>
-    <input type="text" formControlName="name" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
+    <label for="name">Naziv</label>
+    <input type="text" id="name" formControlName="name" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" />
     <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
       <div>Naziv je obavezan</div>
     </div>
@@ -26,27 +26,27 @@
       <div fxFlex="70%" fxLayout="row" fxLayoutAlign="space-between center">
         <!--<label for="username">Username</label>-->
         <div>
-          <input #prilogFilter type="text" placeholder="Filtriraj priloge" class="form-control" />
+          <input #prilogFilter (input)="renderHelper()" type="text" placeholder="Filtriraj priloge" class="form-control" />
         </div>
       </div>
     </div>
     <div class="card-body">
 
       <mat-list>
-        <div *ngFor="let item of sideDishes; let i = index;"
+        <div formArrayName="sideDishes" *ngFor="let item of sideDishes; let i = index;"
              [ngClass]="{'mat-list-item-odd': ((i+1)%2 === 1)}">
           <div *ngIf="item.naziv.toLowerCase().indexOf(prilogFilter.value.toLowerCase()) != -1">
-            <mat-list-item fxLayout="row" fxLayoutAlign="space-between center">
+            <mat-list-item [formGroupName]="i" fxLayout="row" fxLayoutAlign="space-between center">
               <div fxFlex="30%">{{item.naziv}}</div>
               <div fxFlex="70%" fxLayout="row" fxLayoutAlign="end center">
                 <label>Varijante: </label> &nbsp;
-                <mat-checkbox class="prilog-margin">
+                <mat-checkbox formControlName="all" class="prilog-margin">
                   Sve
                 </mat-checkbox>
-                <mat-checkbox class="prilog-margin">
+                <mat-checkbox formControlName="first" class="prilog-margin">
                   Prva
                 </mat-checkbox>
-                <mat-checkbox class="prilog-margin">
+                <mat-checkbox formControlName="second" class="prilog-margin">
                   Druga
                 </mat-checkbox>
               </div>

@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MeniService } from '../meni/meni.service';
 import { Prilog } from '../_models/prilog';
 import { BarService } from '../_services/bar.service';
@@ -20,19 +20,37 @@ export class CreateFoodDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
-    this.createFoodForm = this.formBuilder.group({
-      name: ['', Validators.required],
-      permanent: ['']
-    });
+    //this.createFoodForm = this.formBuilder.group({
+    //  name: ['', Validators.required],
+    //  permanent: ['false'],
+    //  sideDishes: 
+    //});
 
     this.menueService.getAllSideDishes().subscribe(data => {
       this.sideDishes = (<[]>data.body).map((o: any) => new Prilog({ naziv: o.naziv, prilogId: o.prilogId }));
-    })
+      const sideDishesFC = this.formBuilder.array(this.sideDishes.map(() => this.getVariantsFormControl()));
+      this.createFoodForm = this.formBuilder.group({
+        name: ['', Validators.required],
+        permanent: ['false'],
+        sideDishes: sideDishesFC
+      });
+    });
+  }
+
+  getVariantsFormControl(): FormGroup {
+    const variantsFG = this.formBuilder.group({
+      all: [false],
+      first: [false],
+      second: [false]
+    });
+    return variantsFG;
   }
 
   get f() {
     return this.createFoodForm.controls;
   }
+
+  renderHelper = () => { };
 
   createSideDish(newSideDishInput) {
     if (newSideDishInput.value === '') {
@@ -45,7 +63,7 @@ export class CreateFoodDialogComponent implements OnInit {
         newSideDishInput.value = '';
       })
     }
-   
+
   }
 
   closeDialog = () => {
@@ -55,12 +73,12 @@ export class CreateFoodDialogComponent implements OnInit {
   onSubmit() {
     this.submitted = true;
 
-    //  // stop here if form is invalid
-    //  if (this.loginForm.invalid) {
-    //    return;
-    //  }
+    console.log(this.createFoodForm);
 
-    //  this.loading = true;
+    // stop here if form is invalid
+    //if (!this.createFoodForm.invalid) {
+
+    //  //this.loading = true;
     //  this.authenticationService.login(this.f.username.value, this.f.password.value)
     //    .pipe(first())
     //    .subscribe(
@@ -71,6 +89,7 @@ export class CreateFoodDialogComponent implements OnInit {
     //        this.error = error;
     //        this.loading = false;
     //      });
+    //}
   }
 
 }
