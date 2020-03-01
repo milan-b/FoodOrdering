@@ -4,7 +4,7 @@ import { MatCalendarCellCssClasses } from '@angular/material';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { MeniForCalendar } from '../_models/meniForCalendar';
-import { MeniService } from '../meni/meni.service';
+import { MeniService } from '../_services/meni.service';
 
 @Component({
   selector: 'app-date-picker',

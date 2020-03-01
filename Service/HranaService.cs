@@ -15,7 +15,9 @@ namespace Service
         IEnumerable<Prilog> GetAllSideDishes();
         Hrana GetById(int id);
         int CreateSideDish(string name);
+        Prilog GetSideDish(int id);
         void Delete(int id);
+        Hrana CreateOrUpdate(Hrana hrana);
     }
     public class HranaService : IHranaService
     {
@@ -38,11 +40,30 @@ namespace Service
             return _context.Prilozi;
         }
 
+        public Hrana CreateOrUpdate(Hrana hrana)
+        {
+            Hrana ret;
+            if (hrana.HranaId != 0)
+            {
+                ret = _context.Hrana.Add(hrana).Entity;
+            }
+            else
+            {
+                ret = _context.Hrana.Update(hrana).Entity;
+            }
+            _context.SaveChanges();
+            return ret;
+        }
         public int CreateSideDish(string name)
         {
             var sideDish = _context.Prilozi.Add(new Prilog { Naziv = name });
             _context.SaveChanges();
             return sideDish.Entity.PrilogId;
+        }
+
+        public Prilog GetSideDish(int id)
+        {
+            return _context.Prilozi.Find(id);
         }
 
         public Hrana GetById(int id)

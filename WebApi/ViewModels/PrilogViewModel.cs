@@ -9,7 +9,6 @@ namespace WebApi.ViewModels
     public class PrilogViewModel
     {
         public int PrilogId { get; set; }
-        [Required]
         public string Naziv { get; set; }
     }
 }

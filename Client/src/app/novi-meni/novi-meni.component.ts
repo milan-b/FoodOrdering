@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import * as moment from 'moment';
-import { MeniService } from '../meni/meni.service';
+import { MeniService } from '../_services/meni.service';
 import { HttpResponse } from '@angular/common/http';
 import { Hrana } from '../_models/hrana';
 import { Prilog } from '../_models/prilog';
@@ -107,7 +107,6 @@ export class NoviMeniComponent implements OnInit {
 
   nextStepStalna(event) {
     event.stopPropagation();
-    console.log(this.stepStalna);
     this.stepStalna++;
   }
 

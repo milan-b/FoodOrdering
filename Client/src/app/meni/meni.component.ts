@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDatepickerIntl, MatDatepickerInputEvent, MatCalendarCellCssClasses } from '@angular/material/datepicker';
-import { MeniService } from './meni.service';
+import { MeniService } from '../_services/meni.service';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { Meni } from '../_models/meni';

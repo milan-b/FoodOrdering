@@ -31,4 +31,8 @@ export class MeniService {
     return this.dataService.post('hrana/CreateSideDish', data);
   }
 
+  createFood(data) {
+    return this.dataService.post('hrana/CreateOrUpdate', data);
+  }
+
 }

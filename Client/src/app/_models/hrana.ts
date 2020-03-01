@@ -22,6 +22,10 @@ export class Hrana {
     this.prilozi = this.getPrilozi(hrana.prilozi);
   }
 
+  //public constructor(init?: Partial<Hrana>) {
+  //  Object.assign(this, init);
+  //}
+
   private getPrilozi(priloziItem: any): Array<Prilog> {
     let prilozi: Prilog[] = [];
     priloziItem.forEach((prilogItem) => {

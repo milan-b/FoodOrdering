@@ -14,8 +14,6 @@
     <mat-checkbox class="prilog-margin" formControlName="permanent">
       Stalna hrana
     </mat-checkbox>
-    <!--<label for="permanent">Stalna hrana</label>
-    <input type="checkbox" formControlName="permanent" class="form-control" />-->
   </div>
 
   <div class="card">
@@ -24,7 +22,6 @@
         Prilozi
       </h4>
       <div fxFlex="70%" fxLayout="row" fxLayoutAlign="space-between center">
-        <!--<label for="username">Username</label>-->
         <div>
           <input #prilogFilter (input)="renderHelper()" type="text" placeholder="Filtriraj priloge" class="form-control" />
         </div>
@@ -40,13 +37,13 @@
               <div fxFlex="30%">{{item.naziv}}</div>
               <div fxFlex="70%" fxLayout="row" fxLayoutAlign="end center">
                 <label>Varijante: </label> &nbsp;
-                <mat-checkbox formControlName="all" class="prilog-margin">
+                <mat-checkbox  (change)="onVariantChage(i, 'all')" formControlName="all" class="prilog-margin">
                   Sve
                 </mat-checkbox>
-                <mat-checkbox formControlName="first" class="prilog-margin">
+                <mat-checkbox (change)="onVariantChage(i, 'first')" formControlName="first" class="prilog-margin">
                   Prva
                 </mat-checkbox>
-                <mat-checkbox formControlName="second" class="prilog-margin">
+                <mat-checkbox (change)="onVariantChage(i, 'second')" formControlName="second" class="prilog-margin">
                   Druga
                 </mat-checkbox>
               </div>

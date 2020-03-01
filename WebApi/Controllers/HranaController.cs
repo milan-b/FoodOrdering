@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service;
@@ -37,6 +38,26 @@ namespace WebApi.Controllers
             var prilozi = _hranaService.GetAllSideDishes().ToList();
             var viewModel = _mapper.Map<List<PrilogViewModel>>(prilozi);
             return Ok(viewModel);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public IActionResult CreateOrUpdate([FromBody] HranaViewModel viewModel)
+        {
+            IActionResult result;
+            if (!ModelState.IsValid)
+            {
+                result = ValidationProblem("Naziv ne moze biti prazan.");
+            }
+            else
+            {
+                var hrana = _mapper.Map<Hrana>(viewModel);
+
+                hrana = _hranaService.CreateOrUpdate(hrana);
+                result = Ok(hrana.HranaId);
+            }
+
+            return result;
         }
 
         [AllowAnonymous]
