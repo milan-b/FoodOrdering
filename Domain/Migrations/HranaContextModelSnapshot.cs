@@ -65,22 +65,19 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Domain.Models.HranaPrilog", b =>
                 {
-                    b.Property<int>("HranaPrilogId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
                     b.Property<int>("HranaId")
                         .HasColumnType("int");
 
                     b.Property<int>("PrilogId")
                         .HasColumnType("int");
 
+                    b.Property<int>("HranaPrilogId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Varijanta")
                         .HasColumnType("int");
 
-                    b.HasKey("HranaPrilogId");
-
-                    b.HasIndex("HranaId");
+                    b.HasKey("HranaId", "PrilogId");
 
                     b.HasIndex("PrilogId");
 

@@ -1,4 +1,5 @@
-<h3>Nova hrana</h3>
+<h3 *ngIf="!isEditMode">Nova hrana</h3>
+<h3 *ngIf="isEditMode">Izmjeni hranu</h3>
 <br />
 
 <form *ngIf="createFoodForm" [formGroup]="createFoodForm" (ngSubmit)="onSubmit()">
@@ -29,23 +30,23 @@
     </div>
     <div class="card-body">
 
-      <mat-list>
-        <div formArrayName="sideDishes" *ngFor="let item of sideDishes; let i = index;"
+      <mat-list formArrayName="sideDishes">
+        <div *ngFor="let item of createFoodForm.get('sideDishes').controls; let i = index;"
              [ngClass]="{'mat-list-item-odd': ((i+1)%2 === 1)}">
-          <div *ngIf="item.naziv.toLowerCase().indexOf(prilogFilter.value.toLowerCase()) != -1">
-            <mat-list-item [formGroupName]="i" fxLayout="row" fxLayoutAlign="space-between center">
-              <div fxFlex="30%">{{item.naziv}}</div>
+          <div *ngIf="sideDishes[i].naziv.toLowerCase().indexOf(prilogFilter.value.toLowerCase()) != -1">
+            <mat-list-item fxLayout="row" fxLayoutAlign="space-between center" [formGroupName]="i">
+              <div fxFlex="30%">
+                <mat-checkbox formControlName="selected" class="prilog-margin" title="Izabran">
+                  {{sideDishes[i].naziv}}
+                </mat-checkbox>
+              </div>
               <div fxFlex="70%" fxLayout="row" fxLayoutAlign="end center">
                 <label>Varijante: </label> &nbsp;
-                <mat-checkbox  (change)="onVariantChage(i, 'all')" formControlName="all" class="prilog-margin">
-                  Sve
-                </mat-checkbox>
-                <mat-checkbox (change)="onVariantChage(i, 'first')" formControlName="first" class="prilog-margin">
-                  Prva
-                </mat-checkbox>
-                <mat-checkbox (change)="onVariantChage(i, 'second')" formControlName="second" class="prilog-margin">
-                  Druga
-                </mat-checkbox>
+                <mat-radio-group [disabled]="!f.sideDishes.controls[i].controls.selected.value" formControlName="variant" aria-label="Select an option">
+                  <mat-radio-button value="{{mapVariantToVariantId['all']}}" class="prilog-margin">Sve</mat-radio-button>
+                  <mat-radio-button value="{{mapVariantToVariantId['first']}}" class="prilog-margin">Prva</mat-radio-button>
+                  <mat-radio-button value="{{mapVariantToVariantId['second']}}" class="prilog-margin">Druga</mat-radio-button>
+                </mat-radio-group>
               </div>
             </mat-list-item>
             <mat-divider></mat-divider>
@@ -57,11 +58,11 @@
         </mat-list-item>
       </mat-list>
 
-    </div>
+  </div>
   </div>
   <div fxLayout="row" fxLayoutAlign="center center" class="mt-3">
     <button type="submit" class="btn btn-primary">
-      Kreiraj
+      {{isEditMode ? 'Snimi' : 'Kreiraj'}}
     </button>
     <button (click)="closeDialog()" type="button" class="btn btn-danger ml-1">
       Odustani

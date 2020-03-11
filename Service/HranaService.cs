@@ -45,11 +45,12 @@ namespace Service
             Hrana ret;
             if (hrana.HranaId != 0)
             {
-                ret = _context.Hrana.Add(hrana).Entity;
+                _context.HranaPrilozi.RemoveRange(_context.HranaPrilozi.Where(o => o.HranaId == hrana.HranaId));
+                ret = _context.Hrana.Update(hrana).Entity;
             }
             else
             {
-                ret = _context.Hrana.Update(hrana).Entity;
+                ret = _context.Hrana.Add(hrana).Entity;
             }
             _context.SaveChanges();
             return ret;

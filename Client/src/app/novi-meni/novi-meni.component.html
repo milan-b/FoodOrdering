@@ -35,12 +35,13 @@
     <div fxFlex="80%" fxLayout="row" fxLayoutAlign="space-between center">
       <!--<label for="username">Username</label>-->
       <div fxFlex="30%">
-        <input [(ngModel)]="filterHrana" type="text" placeholder="Filtriraj hranu" class="form-control"  />
+        <input [(ngModel)]="filterHrana" type="text" placeholder="Filtriraj hranu" class="form-control" />
       </div>
       <div fxFlex="50%" fxLayoutAlign="end center">
         <button class="btn btn-primary" (click)="kreirajHranu()">
           Kreiraj novu
         </button>
+
       </div>
     </div>
   </div>
@@ -62,9 +63,7 @@
               <mat-panel-description>
                 <h3>{{item.naziv}}</h3>
                 <div fxLayoutAlign="end center">
-                  <button (click)="izaberiHranu($event, item)" [ngClass]="item.izabrana ? 'btn-success': 'btn-light'" class="btn ">
-                    Izaberi<!--<mat-icon>account_circle</mat-icon>-->
-                  </button>
+
                   <div *ngIf="step === i">
                     <mat-icon *ngIf="i > 0" class="btn" mat-button color="secondary" title="Prethodni" (click)="prevStep($event)">keyboard_arrow_left</mat-icon>
                     <mat-icon class="btn" mat-button color="primary"
@@ -88,7 +87,7 @@
                                 class="prilog-margin" [(ngModel)]="prilogItem.izabran"
                                 [disabled]="!prilogItem.omogucen"
                                 (change)="onPrilogChange(item, prilogItem)">
-                    {{prilogItem.naziv}}
+                    {{sideDishesMap[prilogItem.prilogId]}}
                   </mat-checkbox>
                 </section>
 
@@ -96,8 +95,13 @@
             </div>
 
             <mat-action-row>
-              <button *ngIf="i > 0" mat-button color="warn" (click)="prevStep()">Prethodni</button>
-              <button mat-button color="primary" (click)="nextStep($event)">{{i == hranaArray.length - 1 ? 'Kraj' : 'Sledeći'}}</button>
+              <button class="btn btn-secondary" (click)="editFood(item)">
+                Izmjeni
+              </button>
+              <button (click)="izaberiHranu($event, item)" [ngClass]="item.izabrana ? 'btn-success': 'btn-light'" class="btn ml-2">
+                Izaberi<!--<mat-icon>account_circle</mat-icon>-->
+              </button>
+
             </mat-action-row>
           </mat-expansion-panel>
         </div>
@@ -116,7 +120,7 @@
     <div fxFlex="80%" fxLayout="row" fxLayoutAlign="space-between center">
       <!--<label for="username">Username</label>-->
       <div fxFlex="30%">
-        <input [(ngModel)]="filterStalnaHrana"  type="text" placeholder="Filtriraj hranu" class="form-control" />
+        <input [(ngModel)]="filterStalnaHrana" type="text" placeholder="Filtriraj hranu" class="form-control" />
       </div>
     </div>
   </div>
@@ -139,10 +143,6 @@
               <mat-panel-description>
                 <h3>{{item.naziv}}</h3>
                 <div fxLayoutAlign="end center">
-                  <button (click)="izaberiHranu($event, item)" [ngClass]="item.izabrana ? 'btn-success': 'btn-light'" class="btn ">
-                    Izaberi
-                  </button>
-
                   <div *ngIf="stepStalna === i">
                     <mat-icon *ngIf="i > 0" class="btn" mat-button color="secondary" title="Prethodni" (click)="prevStepStalna($event)">keyboard_arrow_left</mat-icon>
                     <mat-icon class="btn" mat-button color="primary"
@@ -174,13 +174,14 @@
               </div>
             </div>
 
-            <!--<mat-action-row>
-      <mat-icon *ngIf="i > 0" class="btn" mat-button  color="secondary" title="Prethodni" (click)="prevStep()">keyboard_arrow_left</mat-icon>
-      <mat-icon class="btn" mat-button color="primary"
-              title="{{i == stalnaHranaArray.length - 1 ? 'Kraj' : 'Sledeći'}}"
-              (click)="nextStep()">keyboard_arrow_right
-      </mat-icon>
-    </mat-action-row>-->
+            <mat-action-row>
+              <button class="btn btn-secondary" (click)="editFood(item)">
+                Izmjeni
+              </button>
+              <button (click)="izaberiHranu($event, item)" [ngClass]="item.izabrana ? 'btn-success': 'btn-light'" class="btn ml-2">
+                Izaberi
+              </button>
+            </mat-action-row>
           </mat-expansion-panel>
         </div>
       </div>

@@ -7,6 +7,7 @@ import { Hrana } from '../_models/hrana';
 import { Prilog } from '../_models/prilog';
 import { MatDialog } from '@angular/material';
 import { CreateFoodDialogComponent } from '../create-food-dialog/create-food-dialog.component';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-novi-meni',
@@ -16,23 +17,40 @@ import { CreateFoodDialogComponent } from '../create-food-dialog/create-food-dia
 export class NoviMeniComponent implements OnInit {
   date: FormControl;
   nextWeek: moment.Moment;
-  hranaArray: Hrana[] = [];
-  stalnaHranaArray: Hrana[] = [];
+  hranaArray: Hrana[];
+  stalnaHranaArray: Hrana[];
   filterHrana: string = "";
   filterStalnaHrana: string = "";
   step: number = -1;
   stepStalna: number = -1;
+  sideDishesMap: any[] = [];
+  sideDishes: Prilog[];
 
   constructor(private meniService: MeniService, private dialog: MatDialog) { }
 
   ngOnInit() {
     this.nextWeek = moment().add(1, 'week');
-    //this.date = new FormControl(nextWeek.toDate());
-    this.meniService.getAllFood().subscribe(this.setFood);
+    this.initFood();
+  }
 
+  initFood() {
+    forkJoin({
+      food: this.meniService.getAllFood(),
+      sideDishes: this.meniService.getAllSideDishes()
+    }).subscribe((data) => {
+      this.setFood(data.food);
+      //this.sideDishes = [];
+      this.sideDishesMap = [];
+      this.sideDishes = [...(<any[]>data.sideDishes.body).map(o => new Prilog({ prilogId: o.prilogId, naziv: o.naziv, varijanta: o.varijanta }))];
+      (<any[]>data.sideDishes.body).forEach(o => {
+        this.sideDishesMap[o.prilogId] = o.naziv;
+      })
+    });
   }
 
   setFood = (data: HttpResponse<Object>) => {
+    this.stalnaHranaArray = [];
+    this.hranaArray = [];
     (<[]>data.body).forEach(dataForHrana => {
       let hrana = new Hrana(dataForHrana);
       if (hrana.stalna) {
@@ -46,22 +64,41 @@ export class NoviMeniComponent implements OnInit {
   izaberiHranu(event, hrana: Hrana) {
     event.stopPropagation();
     hrana.izabrana = !hrana.izabrana;
-
   }
 
   kreirajHranu(): void {
     const dialogRef = this.dialog.open(CreateFoodDialogComponent, {
       width: '700px',
       height: '80%',
-      disableClose: true
-      //data: { name: this.name, animal: this.animal }
+      disableClose: true,
+      data: {
+        sideDishesMap: this.sideDishesMap,
+        sideDishes: this.sideDishes
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      //this.animal = result;
+      this.initFood();
     });
   }
+
+  editFood(food: Hrana): void {
+    const dialogRef = this.dialog.open(CreateFoodDialogComponent, {
+      width: '700px',
+      height: '80%',
+      disableClose: true,
+      data: {
+        food: food,
+        sideDishesMap: this.sideDishesMap,
+        sideDishes: this.sideDishes
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.initFood();
+    });
+  }
+
 
   onDateChange(date) {
     console.log('date changed: ', date);
@@ -114,5 +151,5 @@ export class NoviMeniComponent implements OnInit {
     event.stopPropagation();
     this.stepStalna--;
   }
-  /// end region //
+  /// end region ///
 }

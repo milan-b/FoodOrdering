@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatSnackBarVerticalPosition, MatSnackBarConfig } from '@angular/material';
 import { ErrorBarComponent } from '../error-bar/error-bar.component';
 import { InfoBarComponent } from '../info-bar/info-bar.component';
 
@@ -9,19 +9,21 @@ import { InfoBarComponent } from '../info-bar/info-bar.component';
 export class BarService {
   durationInSeconds = 10;
 
-  constructor(private snackBar: MatSnackBar) { }
+  constructor(private snackBar: MatSnackBar) {}
 
   showError(errorMessage: string) {
     this.snackBar.openFromComponent(ErrorBarComponent, {
       duration: this.durationInSeconds * 1000,
-      data: errorMessage
+      data: errorMessage,
+      verticalPosition: 'top' 
     });
   }
 
   showInfo(infoMessage: string) {
     this.snackBar.openFromComponent(InfoBarComponent, {
       duration: this.durationInSeconds * 1000,
-      data: infoMessage
+      data: infoMessage,
+      verticalPosition: 'top'
     });
   }
 }

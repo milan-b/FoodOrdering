@@ -27,6 +27,7 @@ namespace WebApi.Controllers
         public IActionResult GetAll()
         {
             var hrana = _hranaService.GetAll().ToList();
+            //TODO No need for full prilog view model, just prilogId - write maping manualy
             var viewModel = _mapper.Map<List<HranaViewModel>>(hrana);
             return Ok(viewModel);
         }
