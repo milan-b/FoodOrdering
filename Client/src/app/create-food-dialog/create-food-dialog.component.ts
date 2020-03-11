@@ -52,8 +52,8 @@ export class CreateFoodDialogComponent implements OnInit {
     }
     else {
       this.createFoodForm = this.formBuilder.group({
-        name: ['', Validators.required],
-        permanent: [false],
+        name: [this.data.name, Validators.required],
+        permanent: [this.data.permanent],
         sideDishes: this.formBuilder.array(
           this.sideDishes.map(o => this.formBuilder.group({
             selected: [false, Validators.required],

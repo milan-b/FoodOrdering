@@ -66,14 +66,16 @@ export class NoviMeniComponent implements OnInit {
     hrana.izabrana = !hrana.izabrana;
   }
 
-  kreirajHranu(): void {
+  kreirajHranu(permanent: boolean): void {
     const dialogRef = this.dialog.open(CreateFoodDialogComponent, {
       width: '700px',
       height: '80%',
       disableClose: true,
       data: {
         sideDishesMap: this.sideDishesMap,
-        sideDishes: this.sideDishes
+        sideDishes: this.sideDishes,
+        name: permanent ? this.filterStalnaHrana : this.filterHrana,
+        permanent: permanent
       }
     });
 

@@ -38,7 +38,7 @@
         <input [(ngModel)]="filterHrana" type="text" placeholder="Filtriraj hranu" class="form-control" />
       </div>
       <div fxFlex="50%" fxLayoutAlign="end center">
-        <button class="btn btn-primary" (click)="kreirajHranu()">
+        <button class="btn btn-primary" (click)="kreirajHranu(false)">
           Kreiraj novu
         </button>
 
@@ -121,6 +121,12 @@
       <!--<label for="username">Username</label>-->
       <div fxFlex="30%">
         <input [(ngModel)]="filterStalnaHrana" type="text" placeholder="Filtriraj hranu" class="form-control" />
+      </div>
+      <div fxFlex="50%" fxLayoutAlign="end center">
+        <button class="btn btn-primary" (click)="kreirajHranu(true)">
+          Kreiraj novu
+        </button>
+
       </div>
     </div>
   </div>
