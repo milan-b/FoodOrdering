@@ -52,7 +52,7 @@
         <div *ngFor="let item of hranaArray; let i = index;">
           <!--Expamsion panel-->
           <mat-expansion-panel *ngIf="item.naziv.toLowerCase().indexOf(filterHrana.toLowerCase()) != -1"
-                               [ngClass]="{'selected-food': item.izabrana}"
+                               [ngClass]="{'selected-food': item.izabrana, 'expanded': step === i}"
                                [expanded]="step === i"
                                (opened)="setStep(i)"
                                hideToggle>
@@ -63,7 +63,9 @@
               <mat-panel-description>
                 <h3>{{item.naziv}}</h3>
                 <div fxLayoutAlign="end center">
-
+                  <button *ngIf="adminMode" (click)="addFoodToMenu($event, item)" [ngClass]="item.izabrana ? 'btn-success': 'btn-light'" class="btn ml-2">
+                    {{item.izabrana? 'Ukloni iz menija' : 'Dodaj u meni'}}
+                  </button>
                   <div *ngIf="step === i">
                     <mat-icon *ngIf="i > 0" class="btn" mat-button color="secondary" title="Prethodni" (click)="prevStep($event)">keyboard_arrow_left</mat-icon>
                     <mat-icon class="btn" mat-button color="primary"
@@ -95,11 +97,11 @@
             </div>
 
             <mat-action-row>
-              <button class="btn btn-secondary" (click)="editFood(item)">
+              <button *ngIf="adminMode" class="btn btn-secondary" (click)="editFood(item)">
                 Izmjeni
               </button>
-              <button (click)="izaberiHranu($event, item)" [ngClass]="item.izabrana ? 'btn-success': 'btn-light'" class="btn ml-2">
-                Izaberi<!--<mat-icon>account_circle</mat-icon>-->
+              <button *ngIf="!adminMode" (click)="izaberiHranu($event, item)" [ngClass]="item.izabrana ? 'btn-success': 'btn-light'" class="btn ml-2">
+                Izaberi
               </button>
 
             </mat-action-row>
@@ -123,7 +125,7 @@
         <input [(ngModel)]="filterStalnaHrana" type="text" placeholder="Filtriraj hranu" class="form-control" />
       </div>
       <div fxFlex="50%" fxLayoutAlign="end center">
-        <button class="btn btn-primary" (click)="kreirajHranu(true)">
+        <button *ngIf="adminMode" class="btn btn-primary" (click)="kreirajHranu(true)">
           Kreiraj novu
         </button>
 
@@ -138,7 +140,7 @@
         <div *ngFor="let item of stalnaHranaArray; let i = index;">
           <!--Expansion panel-->
           <mat-expansion-panel *ngIf="item.naziv.toLowerCase().indexOf(filterStalnaHrana.toLowerCase()) != -1"
-                               [ngClass]="{'selected-food': item.izabrana}"
+                               [ngClass]="{'selected-food': item.izabrana, 'expanded': stepStalna === i}"
                                [expanded]="stepStalna === i"
                                (opened)="setStepStalna(i)" hideToggle>
             <mat-expansion-panel-header>
@@ -149,13 +151,18 @@
               <mat-panel-description>
                 <h3>{{item.naziv}}</h3>
                 <div fxLayoutAlign="end center">
-                  <div *ngIf="stepStalna === i">
-                    <mat-icon *ngIf="i > 0" class="btn" mat-button color="secondary" title="Prethodni" (click)="prevStepStalna($event)">keyboard_arrow_left</mat-icon>
-                    <mat-icon class="btn" mat-button color="primary"
-                              title="{{i == stalnaHranaArray.length - 1 ? 'Kraj' : 'Sledeći'}}"
-                              (click)="nextStepStalna($event)">
-                      keyboard_arrow_right
-                    </mat-icon>
+                  <button *ngIf="adminMode" (click)="addFoodToMenu($event, item)" [ngClass]="item.izabrana ? 'btn-success': 'btn-light'" class="btn ml-2">
+                    {{item.izabrana? 'Ukloni iz menija' : 'Dodaj u meni'}}
+                  </button>
+                  <div class="icon-place-holder">
+                    <div *ngIf="stepStalna === i">
+                      <mat-icon *ngIf="i > 0" class="btn" mat-button color="secondary" title="Prethodni" (click)="prevStepStalna($event)">keyboard_arrow_left</mat-icon>
+                      <mat-icon class="btn" mat-button color="primary"
+                                title="{{i == stalnaHranaArray.length - 1 ? 'Kraj' : 'Sledeći'}}"
+                                (click)="nextStepStalna($event)">
+                        keyboard_arrow_right
+                      </mat-icon>
+                    </div>
                   </div>
 
                 </div>
@@ -181,10 +188,10 @@
             </div>
 
             <mat-action-row>
-              <button class="btn btn-secondary" (click)="editFood(item)">
+              <button *ngIf="adminMode"  class="btn btn-secondary" (click)="editFood(item)">
                 Izmjeni
               </button>
-              <button (click)="izaberiHranu($event, item)" [ngClass]="item.izabrana ? 'btn-success': 'btn-light'" class="btn ml-2">
+              <button *ngIf="!adminMode"  (click)="izaberiHranu($event, item)" [ngClass]="item.izabrana ? 'btn-success': 'btn-light'" class="btn ml-2">
                 Izaberi
               </button>
             </mat-action-row>

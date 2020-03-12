@@ -25,12 +25,18 @@ export class NoviMeniComponent implements OnInit {
   stepStalna: number = -1;
   sideDishesMap: any[] = [];
   sideDishes: Prilog[];
+  selectedFood: Hrana;
+  foodForMenu: Hrana[] = [];
+
+  adminMode: boolean = false;
 
   constructor(private meniService: MeniService, private dialog: MatDialog) { }
 
   ngOnInit() {
     this.nextWeek = moment().add(1, 'week');
     this.initFood();
+
+    //this.adminMode = true;
   }
 
   initFood() {
@@ -54,6 +60,10 @@ export class NoviMeniComponent implements OnInit {
     (<[]>data.body).forEach(dataForHrana => {
       let hrana = new Hrana(dataForHrana);
       if (hrana.stalna) {
+        if (this.adminMode) {
+          this.foodForMenu.push(hrana);
+          hrana.izabrana = true;
+        }
         this.stalnaHranaArray.push(hrana);
       } else {
         this.hranaArray.push(hrana);
@@ -64,6 +74,20 @@ export class NoviMeniComponent implements OnInit {
   izaberiHranu(event, hrana: Hrana) {
     event.stopPropagation();
     hrana.izabrana = !hrana.izabrana;
+    if (this.selectedFood) {
+      this.selectedFood.izabrana = false;
+    }
+    this.selectedFood = hrana;
+  }
+
+  addFoodToMenu(event, food: Hrana) {
+    event.stopPropagation();
+    food.izabrana = !food.izabrana;
+    if (food.izabrana) {
+      this.foodForMenu.push(food);
+    } else {
+      this.foodForMenu.splice(this.foodForMenu.indexOf(food),1);
+    }
   }
 
   kreirajHranu(permanent: boolean): void {
