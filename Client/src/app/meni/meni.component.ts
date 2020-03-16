@@ -46,7 +46,7 @@ export class MeniComponent implements OnInit {
 
   getHrana(date: Moment) {
     this.meniService.getMenu(date).subscribe(response => {
-      this.meni = new Meni(response);
+      //this.meni = new Meni(response);
     });
   }
 

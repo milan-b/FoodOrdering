@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { DataService } from '../_services/data.service';
 import { HttpParams } from '@angular/common/http';
 import { Moment } from 'moment';
+import { Meni } from '../_models/meni';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,10 @@ export class MeniService {
 
   createFood(data) {
     return this.dataService.post('hrana/CreateOrUpdate', data);
+  }
+
+  createMenu(menu: Meni) {
+    return this.dataService.post('meni/CreateOrUpdate', menu);
   }
 
 }

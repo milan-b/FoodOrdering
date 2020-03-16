@@ -8,6 +8,7 @@ import { Prilog } from '../_models/prilog';
 import { MatDialog } from '@angular/material';
 import { CreateFoodDialogComponent } from '../create-food-dialog/create-food-dialog.component';
 import { forkJoin } from 'rxjs';
+import { Meni } from '../_models/meni';
 
 @Component({
   selector: 'app-novi-meni',
@@ -27,6 +28,7 @@ export class NoviMeniComponent implements OnInit {
   sideDishes: Prilog[];
   selectedFood: Hrana;
   foodForMenu: Hrana[] = [];
+  menu: Meni;
 
   adminMode: boolean = false;
 
@@ -35,23 +37,33 @@ export class NoviMeniComponent implements OnInit {
   ngOnInit() {
     this.nextWeek = moment().add(1, 'week');
     this.initFood();
+    //this.initMenu();
 
-    //this.adminMode = true;
+    this.adminMode = false;
   }
+  //TODO napraviti da se u admin modu povuce meniId za novi meni i sva hrana. Onda snimati hranu za taj meni.
 
   initFood() {
     forkJoin({
       food: this.meniService.getAllFood(),
-      sideDishes: this.meniService.getAllSideDishes()
+      sideDishes: this.meniService.getAllSideDishes(),
+      menu: this.meniService.getMenu(this.nextWeek)
     }).subscribe((data) => {
       this.setFood(data.food);
-      //this.sideDishes = [];
+      this.menu = new Meni({ menuId: (<any>data.menu.body).menuId, date: (<any>data.menu.body).date, food: (<any>data.menu.body).food })
       this.sideDishesMap = [];
       this.sideDishes = [...(<any[]>data.sideDishes.body).map(o => new Prilog({ prilogId: o.prilogId, naziv: o.naziv, varijanta: o.varijanta }))];
       (<any[]>data.sideDishes.body).forEach(o => {
         this.sideDishesMap[o.prilogId] = o.naziv;
       })
     });
+  }
+
+  initMenu(date: moment.Moment) {
+    this.meniService.getMenu(date)
+      .subscribe((data: any) => {
+        this.menu = new Meni({ menuId: data.body.menuId, date: data.body.date, food: data.body.food })
+      });
   }
 
   setFood = (data: HttpResponse<Object>) => {
@@ -78,6 +90,10 @@ export class NoviMeniComponent implements OnInit {
       this.selectedFood.izabrana = false;
     }
     this.selectedFood = hrana;
+  }
+
+  isInMenu(hrana: Hrana): boolean {
+    return (this.adminMode || this.menu.food.some(h => h === hrana.hranaId));
   }
 
   addFoodToMenu(event, food: Hrana) {
@@ -108,6 +124,20 @@ export class NoviMeniComponent implements OnInit {
     });
   }
 
+  createMenu(): void {
+    this.menu.food = this.hranaArray.concat(this.stalnaHranaArray).filter(h => h.izabrana).map(o => o.hranaId);
+    console.log('meni za kreiranje', this.menu);
+    this.meniService.createMenu(this.menu).subscribe(data => {
+      console.log(data);
+    });
+
+    //this.hranaArray.concat(this.stalnaHranaArray).forEach((hrana: Hrana) => {
+    //  console.log(hrana);
+    //});
+  }
+
+
+
   editFood(food: Hrana): void {
     const dialogRef = this.dialog.open(CreateFoodDialogComponent, {
       width: '700px',
@@ -126,8 +156,10 @@ export class NoviMeniComponent implements OnInit {
   }
 
 
-  onDateChange(date) {
-    console.log('date changed: ', date);
+  onDateChange(event) {
+    //TODO check if saved, and if not create alert
+    console.log('date changed: ', event);
+    this.initMenu(event.value);
   }
 
   onPrilogChange(hrana: Hrana, prilog: Prilog) {
