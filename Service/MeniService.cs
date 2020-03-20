@@ -15,6 +15,8 @@ namespace Service
         Meni GetById(int id);
         void Delete(int id);
         Meni GetByDate(DateTime date);
+        Meni CreateOrUpdate(Meni meni);
+        Meni Create(Meni meni);
     }
     public class MeniService : IMeniService
     {
@@ -39,10 +41,33 @@ namespace Service
         {
             return _context.Menii
                 .Include(o => o.Hrana)
-                .ThenInclude(o => o.Hrana)
-                .ThenInclude(o => o.Prilozi)
-                .ThenInclude(o => o.Prilog)
+                //.ThenInclude(o => o.Hrana)
+                //.ThenInclude(o => o.Prilozi)
+                //.ThenInclude(o => o.Prilog)
                 .Where(o => o.Datum.Date == date.Date).FirstOrDefault();
+        }
+
+        public Meni CreateOrUpdate(Meni meni)
+        {
+            Meni ret;
+            if (meni.MeniId != 0)
+            {
+                _context.HranaMeni.RemoveRange(_context.HranaMeni.Where(o => o.MeniId == meni.MeniId));
+                ret = _context.Menii.Update(meni).Entity;
+            }
+            else
+            {
+                ret = _context.Menii.Add(meni).Entity;
+            }
+            _context.SaveChanges();
+            return ret;
+        }
+
+        public Meni Create(Meni meni)
+        {
+            var ret = _context.Menii.Add(meni).Entity;
+            _context.SaveChanges();
+            return ret;
         }
 
         public void Delete(int id)

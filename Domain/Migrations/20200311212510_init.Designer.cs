@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Domain.Migrations
 {
     [DbContext(typeof(HranaContext))]
-    [Migration("20200216202608_InitMigration")]
-    partial class InitMigration
+    [Migration("20200311212510_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -67,22 +67,19 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Domain.Models.HranaPrilog", b =>
                 {
-                    b.Property<int>("HranaPrilogId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
                     b.Property<int>("HranaId")
                         .HasColumnType("int");
 
                     b.Property<int>("PrilogId")
                         .HasColumnType("int");
 
+                    b.Property<int>("HranaPrilogId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Varijanta")
                         .HasColumnType("int");
 
-                    b.HasKey("HranaPrilogId");
-
-                    b.HasIndex("HranaId");
+                    b.HasKey("HranaId", "PrilogId");
 
                     b.HasIndex("PrilogId");
 

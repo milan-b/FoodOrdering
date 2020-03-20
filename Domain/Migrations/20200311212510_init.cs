@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Domain.Migrations
 {
-    public partial class InitMigration : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -206,15 +206,14 @@ namespace Domain.Migrations
                 name: "HranaPrilog",
                 columns: table => new
                 {
-                    HranaPrilogId = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     HranaId = table.Column<int>(nullable: false),
                     PrilogId = table.Column<int>(nullable: false),
+                    HranaPrilogId = table.Column<int>(nullable: false),
                     Varijanta = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_HranaPrilog", x => x.HranaPrilogId);
+                    table.PrimaryKey("PK_HranaPrilog", x => new { x.HranaId, x.PrilogId });
                     table.ForeignKey(
                         name: "FK_HranaPrilog_Hrana_HranaId",
                         column: x => x.HranaId,
@@ -260,11 +259,6 @@ namespace Domain.Migrations
                 name: "IX_HranaMeni_MeniId",
                 table: "HranaMeni",
                 column: "MeniId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_HranaPrilog_HranaId",
-                table: "HranaPrilog",
-                column: "HranaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_HranaPrilog_PrilogId",

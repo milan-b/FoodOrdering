@@ -80,11 +80,11 @@ namespace Domain.Data
                 {
                     new HranaPrilog{ HranaId = 1, PrilogId = 1, Varijanta = 1},
                     new HranaPrilog{ HranaId = 1, PrilogId = 2, Varijanta = 1},
-                    new HranaPrilog{ HranaId = 1, PrilogId = 1, Varijanta = 2},
+                    //new HranaPrilog{ HranaId = 1, PrilogId = 1, Varijanta = 2},
                     new HranaPrilog{ HranaId = 1, PrilogId = 3, Varijanta = 2},
                     new HranaPrilog{ HranaId = 2, PrilogId = 1, Varijanta = 1},
                     new HranaPrilog{ HranaId = 2, PrilogId = 3, Varijanta = 1},
-                    new HranaPrilog{ HranaId = 2, PrilogId = 1, Varijanta = 2},
+                    //new HranaPrilog{ HranaId = 2, PrilogId = 1, Varijanta = 2},
                     new HranaPrilog{ HranaId = 2, PrilogId = 4, Varijanta = 2},
                     new HranaPrilog{ HranaId = 3, PrilogId = 1, Varijanta = 1},
                     new HranaPrilog{ HranaId = 3, PrilogId = 2, Varijanta = 1},

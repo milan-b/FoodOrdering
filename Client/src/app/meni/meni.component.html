@@ -1,18 +1,13 @@
 <div class="col-md-6 offset-md-3 mt-5">
-  <!--<div id="pikDate" class="row">
-    <mat-label for="datePicker">Meni za datum</mat-label>
-    <input id="datePicker" matInput [matDatepicker]="picker1" [formControl]="date">
-    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-    <mat-datepicker #picker1></mat-datepicker>
-  </div>-->
-
-  <div class="card">
-    <h4 class="card-header">
-      Meni za datum
-      <input (dateChange)="onDateChange($event)" [matDatepicker]="picker1" [formControl]="date">
-      <mat-datepicker-toggle [for]="picker1"></mat-datepicker-toggle>
-      <mat-datepicker #picker1></mat-datepicker>
-    </h4>
+  <div class="card" >
+    <div class="card-header" fxLayout="row" fxLayoutAlign="space-between center" >
+      <h4  fxFlex="50%">
+        Meni za datum
+      </h4>
+      <div fxFlex="50%" fxLayoutAlign="end center" >
+        <app-date-picker (dateChange)="onDateChange($event)" [initDate]="nextDay"></app-date-picker>
+      </div>
+    </div>
     <div class="card-body">
 
       <section class="prilog-section">
@@ -26,9 +21,6 @@
         <mat-radio-button class="prilog-margin">12:30h</mat-radio-button>
       </section>
 
-      <!--<input matInput [matDatepicker]="picker1" [formControl]="date">
-      <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-      <mat-datepicker #picker1></mat-datepicker>-->
     </div>
   </div>
 

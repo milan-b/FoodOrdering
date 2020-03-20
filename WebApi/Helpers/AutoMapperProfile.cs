@@ -16,10 +16,18 @@ namespace WebApi.Helpers
             CreateMap<UpdateModel, User>();
 
             CreateMap<Meni, MeniViewModel>();
+            CreateMap<Meni, MeniForCalendarViewModel>();
             CreateMap<Hrana, HranaViewModel>();
             CreateMap<HranaMeni, HranaMeniViewModel>();
             CreateMap<HranaPrilog, HranaPrilogViewModel>();
             CreateMap<Prilog, PrilogViewModel>();
+
+            CreateMap<HranaViewModel, Hrana>();
+//                .ForMember(dest => dest.Prilozi, opt => opt.Ignore());
+            CreateMap<HranaPrilogViewModel, HranaPrilog>()
+                .ForMember(dest => dest.PrilogId,  opt => opt.MapFrom(source => source.Prilog.PrilogId))
+                .ForMember(dest => dest.Prilog, opt => opt.Ignore());
+            CreateMap<PrilogViewModel, Prilog>();
         }
     }
 }

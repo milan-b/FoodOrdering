@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { MatDatepickerIntl, MatDatepickerInputEvent } from '@angular/material/datepicker';
-import { MeniService } from './meni.service';
+import { MatDatepickerIntl, MatDatepickerInputEvent, MatCalendarCellCssClasses } from '@angular/material/datepicker';
+import { MeniService } from '../_services/meni.service';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { Meni } from '../_models/meni';
 import { Hrana } from '../_models/hrana';
 import { Prilog } from '../_models/prilog';
+import { MeniForCalendar } from '../_models/meniForCalendar';
 
 @Component({
   selector: 'app-meni',
@@ -19,11 +20,12 @@ export class MeniComponent implements OnInit {
   constructor(private meniService: MeniService) { }
   meni: Meni
   hrana: any;
-  date: FormControl;
+  nextDay: Moment;
+  datesWithMenue: Array<MeniForCalendar>;
 
   ngOnInit() {
-    this.date = new FormControl(moment().toDate());
-    this.getHrana(moment());
+    this.nextDay = moment().add(1, 'days');
+    this.getHrana(this.nextDay);
   }
 
   onDateChange(date) {
@@ -44,8 +46,7 @@ export class MeniComponent implements OnInit {
 
   getHrana(date: Moment) {
     this.meniService.getMenu(date).subscribe(response => {
-      console.log(response);
-      this.meni = new Meni(response);
+      //this.meni = new Meni(response);
     });
   }
 

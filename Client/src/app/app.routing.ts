@@ -6,11 +6,13 @@ import { AuthGuard } from './_helpers';
 
 import { BookcaseComponent } from './bookcase/bookcase.component';
 import { MeniComponent } from './meni/meni.component';
+import { NoviMeniComponent } from './novi-meni/novi-meni.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'meni', component: MeniComponent },
+  { path: 'novi-meni', component: NoviMeniComponent },
   //{ path: 'bookcase', component: BookcaseComponent },
 
   // otherwise redirect to home

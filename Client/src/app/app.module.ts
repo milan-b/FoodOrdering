@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 // used to create fake backend
 import { fakeBackendProvider } from './_helpers';
@@ -22,13 +23,22 @@ import {
   MatExpansionModule,
   MatIconModule,
   MAT_DATE_LOCALE,
-  MatCheckboxModule
+  MatCheckboxModule,
+  MatSnackBarModule,
+  MatDialogModule,
+  MatDividerModule,
+  MatListModule
 
 } from '@angular/material';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 import { BookcaseComponent } from './bookcase/bookcase.component';
 import { MeniComponent } from './meni/meni.component';
+import { NoviMeniComponent } from './novi-meni/novi-meni.component';
+import { ErrorBarComponent } from './error-bar/error-bar.component';
+import { DatePickerComponent } from './date-picker/date-picker.component';
+import { CreateFoodDialogComponent } from './create-food-dialog/create-food-dialog.component';
+import { InfoBarComponent } from './info-bar/info-bar.component';
 
 
 @NgModule({
@@ -47,14 +57,24 @@ import { MeniComponent } from './meni/meni.component';
     MatMomentDateModule,
     MatExpansionModule,
     MatIconModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    FlexLayoutModule,
+    MatSnackBarModule,
+    MatDialogModule,
+    MatDividerModule,
+    MatListModule
   ],
   declarations: [
     AppComponent,
     HomeComponent,
     LoginComponent,
     BookcaseComponent,
-    MeniComponent
+    MeniComponent,
+    NoviMeniComponent,
+    ErrorBarComponent,
+    DatePickerComponent,
+    CreateFoodDialogComponent,
+    InfoBarComponent
 
   ],
   providers: [
