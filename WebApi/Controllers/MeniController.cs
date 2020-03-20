@@ -29,9 +29,8 @@ namespace WebApi.Controllers
             var meni = _meniService.GetByDate(date);
             if(meni == null)
             {
-                meni = _meniService.Create(new Meni { Datum = date});
+                meni = new Meni { Datum = date };
             }
-            //var meniViewModel = _mapper.Map<MeniViewModel>(meni);
             var meniViewModel = new MeniViewModel();
             MapMeniToMeniVM(meni, meniViewModel);
             return Ok(meniViewModel);
@@ -41,7 +40,6 @@ namespace WebApi.Controllers
         [HttpGet]
         public IActionResult GetAllMenis()
         {
-            //TODO filtrirati da se vrate samo menii koji u sebi imaju hranu.
             var menis = _meniService.GetAll().ToList();
             var viewModel = _mapper.Map<List<MeniForCalendarViewModel>>(menis);
             return Ok(viewModel);
@@ -100,7 +98,7 @@ namespace WebApi.Controllers
             {
                 foreach (var hrana in viewModel.Food)
                 {
-                    hranaMeni.Add(new HranaMeni { HranaId = hrana, MeniId = menu.MeniId });
+                    hranaMeni.Add(new HranaMeni { HranaId = hrana });
                 }
             }
             menu.Hrana = hranaMeni;
