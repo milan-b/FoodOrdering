@@ -3,14 +3,16 @@ using System;
 using Domain.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Domain.Migrations
 {
     [DbContext(typeof(HranaContext))]
-    partial class HranaContextModelSnapshot : ModelSnapshot
+    [Migration("20200321214848_userRole")]
+    partial class userRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -225,8 +227,8 @@ namespace Domain.Migrations
                     b.Property<byte[]>("PasswordSalt")
                         .HasColumnType("longblob");
 
-                    b.Property<string>("Roles")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                    b.Property<short?>("Role")
+                        .HasColumnType("smallint");
 
                     b.Property<string>("Username")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");

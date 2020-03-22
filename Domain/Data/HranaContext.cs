@@ -20,8 +20,6 @@ namespace Domain.Data
 
 
         public DbSet<User> Users { get; set; }
-        public DbSet<SavedBook> SavedBooks { get; set; }
-        public DbSet<Book> Books { get; set; }
 
         public DbSet<Hrana> Hrana { get; set; }
         public DbSet<Komentar> Komentari { get; set; }
@@ -61,8 +59,6 @@ namespace Domain.Data
             modelBuilder.Entity<Meni>().HasIndex(m => m.Datum).IsUnique(true);
             modelBuilder.Entity<Meni>().Property(m => m.Datum).HasColumnType("Date");
 
-            modelBuilder.Entity<Book>().ToTable("Book");
-            modelBuilder.Entity<SavedBook>().ToTable("SavedBook");
             modelBuilder.Entity<User>().ToTable("User");
 
             modelBuilder.Entity<Hrana>().ToTable("Hrana");

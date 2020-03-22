@@ -47,12 +47,16 @@ namespace WebApi.Controllers
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var userRoles = user.Roles.Split(",");
+            var clames = new List<Claim>();
+            foreach(var role in userRoles)
+            {
+                clames.Add(new Claim(ClaimTypes.Role, role));
+            }
+            clames.Add(new Claim(ClaimTypes.Name, user.UserId.ToString()));
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, user.UserId.ToString())
-                }),
+                Subject = new ClaimsIdentity(clames),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
@@ -66,6 +70,7 @@ namespace WebApi.Controllers
                 Username = user.Username,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
+                Roles = user.Roles,
                 Token = tokenString
             });
         }

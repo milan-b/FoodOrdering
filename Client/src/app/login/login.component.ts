@@ -1,24 +1,26 @@
-﻿import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
 import { AuthenticationService } from '@app/_services';
+import { Subscription } from 'rxjs';
 
 @Component({ templateUrl: 'login.component.html' })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
     loginForm: FormGroup;
     loading = false;
     submitted = false;
     returnUrl: string;
     error = '';
+    qpSupcription: Subscription;
 
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
         private authenticationService: AuthenticationService
-    ) { 
+    ) {
         // redirect to home if already logged in
         if (this.authenticationService.currentUserValue) { 
             this.router.navigate(['/']);
@@ -32,7 +34,9 @@ export class LoginComponent implements OnInit {
         });
 
         // get return url from route parameters or default to '/'
-        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+        this.qpSupcription = this.route.queryParams.subscribe(qp => {
+            this.returnUrl = qp['returnUrl'] || '/';
+        })
     }
 
     // convenience getter for easy access to form fields
@@ -57,5 +61,9 @@ export class LoginComponent implements OnInit {
                     this.error = error;
                     this.loading = false;
                 });
+    }
+
+    ngOnDestroy() {
+        this.qpSupcription.unsubscribe();
     }
 }

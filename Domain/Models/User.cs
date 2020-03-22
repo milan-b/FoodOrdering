@@ -10,9 +10,9 @@ namespace Domain.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Username { get; set; }
+        public string Roles { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
 
-        public ICollection<SavedBook> BookUsers { get; set; }
     }
 }

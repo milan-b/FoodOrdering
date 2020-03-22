@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,7 @@ namespace WebApi.Controllers
             _mapper = mapper;
         }
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpGet]
         public IActionResult GetMeni(DateTime date)
         {
@@ -36,7 +37,7 @@ namespace WebApi.Controllers
             return Ok(meniViewModel);
         }
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpGet]
         public IActionResult GetAllMenis()
         {
@@ -45,11 +46,11 @@ namespace WebApi.Controllers
             return Ok(viewModel);
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = Roles.Admin + "," + Roles.Cook)]
         [HttpPost]
         public IActionResult CreateOrUpdate([FromBody] MeniViewModel viewModel)
         {
-            //TODO Forbid update if any narudzba exist
+            //TODO Forbid update if any order exist
             IActionResult result;
             if (!ModelState.IsValid)
             {

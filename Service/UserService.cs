@@ -8,6 +8,13 @@ using System.Linq;
 
 namespace Service
 {
+    enum Role
+    {
+        Admin,
+        Cook,
+        User
+    }
+
     public interface IUserService
     {
         User Authenticate(string username, string password);
@@ -57,12 +64,13 @@ namespace Service
 
         public User Create(User user, string password)
         {
-            // validation
-            //if (string.IsNullOrWhiteSpace(password))
-            //    throw new AppException("Password is required");
+            //validation
+            if (string.IsNullOrWhiteSpace(password))
+                //throw new AppException("Password is required");
+                throw new Exception("Password is required");
 
-            //if (_context.Users.Any(x => x.Username == user.Username))
-            //    throw new AppException("Username \"" + user.Username + "\" is already taken");
+            if (_context.Users.Any(x => x.Username == user.Username))
+                throw new Exception("Username \"" + user.Username + "\" is already taken");
 
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
@@ -87,8 +95,8 @@ namespace Service
             if (!string.IsNullOrWhiteSpace(userParam.Username) && userParam.Username != user.Username)
             {
                 // throw error if the new username is already taken
-                //if (_context.Users.Any(x => x.Username == userParam.Username))
-                //    throw new AppException("Username " + userParam.Username + " is already taken");
+                if (_context.Users.Any(x => x.Username == userParam.Username))
+                    throw new Exception("Username " + userParam.Username + " is already taken");
 
                 user.Username = userParam.Username;
             }

@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material';
 import { CreateFoodDialogComponent } from '../create-food-dialog/create-food-dialog.component';
 import { forkJoin } from 'rxjs';
 import { Meni } from '../_models/meni';
+import { BarService } from '../_services/bar.service';
 
 @Component({
     selector: 'app-novi-meni',
@@ -32,7 +33,7 @@ export class NoviMeniComponent implements OnInit {
 
     adminMode: boolean = false;
 
-    constructor(private meniService: MeniService, private dialog: MatDialog) { }
+    constructor(private meniService: MeniService, private dialog: MatDialog, private barService: BarService) { }
 
     ngOnInit() {
         this.nextWeek = moment().add(1, 'week');
