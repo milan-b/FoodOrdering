@@ -15,19 +15,20 @@ import { HomeComponent } from './home';
 import { LoginComponent } from './login';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
-  MatCardModule,
-  MatFormFieldModule,
-  MatGridListModule,
-  MatRadioModule,
-  MatDatepickerModule,
-  MatExpansionModule,
-  MatIconModule,
-  MAT_DATE_LOCALE,
-  MatCheckboxModule,
-  MatSnackBarModule,
-  MatDialogModule,
-  MatDividerModule,
-  MatListModule
+    MatCardModule,
+    MatFormFieldModule,
+    MatGridListModule,
+    MatRadioModule,
+    MatDatepickerModule,
+    MatExpansionModule,
+    MatIconModule,
+    MAT_DATE_LOCALE,
+    MatCheckboxModule,
+    MatSnackBarModule,
+    MatDialogModule,
+    MatDividerModule,
+    MatListModule,
+    MatSlideToggleModule
 
 } from '@angular/material';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
@@ -42,49 +43,50 @@ import { InfoBarComponent } from './info-bar/info-bar.component';
 
 
 @NgModule({
-  imports: [
-    BrowserModule,
-    ReactiveFormsModule,
-    FormsModule,
-    HttpClientModule,
-    appRoutingModule,
-    BrowserAnimationsModule,
-    MatCardModule,
-    MatGridListModule,
-    MatFormFieldModule,
-    MatDatepickerModule,
-    MatRadioModule,
-    MatMomentDateModule,
-    MatExpansionModule,
-    MatIconModule,
-    MatCheckboxModule,
-    FlexLayoutModule,
-    MatSnackBarModule,
-    MatDialogModule,
-    MatDividerModule,
-    MatListModule
-  ],
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    LoginComponent,
-    BookcaseComponent,
-    MeniComponent,
-    NoviMeniComponent,
-    ErrorBarComponent,
-    DatePickerComponent,
-    CreateFoodDialogComponent,
-    InfoBarComponent
+    imports: [
+        BrowserModule,
+        ReactiveFormsModule,
+        FormsModule,
+        HttpClientModule,
+        appRoutingModule,
+        BrowserAnimationsModule,
+        MatCardModule,
+        MatGridListModule,
+        MatFormFieldModule,
+        MatDatepickerModule,
+        MatRadioModule,
+        MatMomentDateModule,
+        MatExpansionModule,
+        MatIconModule,
+        MatCheckboxModule,
+        FlexLayoutModule,
+        MatSnackBarModule,
+        MatDialogModule,
+        MatDividerModule,
+        MatListModule,
+        MatSlideToggleModule
+    ],
+    declarations: [
+        AppComponent,
+        HomeComponent,
+        LoginComponent,
+        BookcaseComponent,
+        MeniComponent,
+        NoviMeniComponent,
+        ErrorBarComponent,
+        DatePickerComponent,
+        CreateFoodDialogComponent,
+        InfoBarComponent
 
-  ],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    { provide: MAT_DATE_LOCALE, useValue: 'sr' },
+    ],
+    providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+        { provide: MAT_DATE_LOCALE, useValue: 'sr' },
 
-    // provider used to create fake backend
-    //fakeBackendProvider
-  ],
-  bootstrap: [AppComponent]
+        // provider used to create fake backend
+        //fakeBackendProvider
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

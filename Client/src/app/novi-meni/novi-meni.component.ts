@@ -10,6 +10,7 @@ import { CreateFoodDialogComponent } from '../create-food-dialog/create-food-dia
 import { forkJoin } from 'rxjs';
 import { Meni } from '../_models/meni';
 import { BarService } from '../_services/bar.service';
+import { AuthenticationService } from '../_services';
 
 @Component({
     selector: 'app-novi-meni',
@@ -32,14 +33,15 @@ export class NoviMeniComponent implements OnInit {
     menu: Meni;
 
     adminMode: boolean = false;
+    isAdminOrCook: boolean = false;
 
-    constructor(private meniService: MeniService, private dialog: MatDialog, private barService: BarService) { }
+    constructor(private meniService: MeniService, private dialog: MatDialog, private barService: BarService, private authenticationService: AuthenticationService) { }
 
     ngOnInit() {
         this.nextWeek = moment().add(1, 'week');
         this.initFood();
-
-        this.adminMode = true;
+        this.isAdminOrCook = this.authenticationService.currentUserValue.roles.indexOf("Admin") != -1
+                             || this.authenticationService.currentUserValue.roles.indexOf("Cook") != -1;
     }
 
     initFood() {
