@@ -4,7 +4,7 @@
       Meni za datum
     </h4>
     <div fxFlex="20%">
-      <mat-slide-toggle [(ngModel)]="adminMode" *ngIf="isAdminOrCook">
+      <mat-slide-toggle (change)="adminModeChaged()" [(ngModel)]="adminMode" *ngIf="isAdminOrCook">
         Admin mode
       </mat-slide-toggle>
     </div>

@@ -41,7 +41,7 @@ export class NoviMeniComponent implements OnInit {
         this.nextWeek = moment().add(1, 'week');
         this.initFood();
         this.isAdminOrCook = this.authenticationService.currentUserValue.roles.indexOf("Admin") != -1
-                             || this.authenticationService.currentUserValue.roles.indexOf("Cook") != -1;
+            || this.authenticationService.currentUserValue.roles.indexOf("Cook") != -1;
     }
 
     initFood() {
@@ -68,17 +68,7 @@ export class NoviMeniComponent implements OnInit {
                     this.foodForMenu = [];
                     this.stalnaHranaArray.concat(this.hranaArray).forEach(hrana => {
                         hrana.izabrana = false;
-                        if (this.menu.food) {
-                            if (this.menu.food.indexOf(hrana.hranaId) != -1) {
-                                this.foodForMenu.push(hrana);
-                                hrana.izabrana = true;
-                            }
-                        }
-                        else if (hrana.stalna) {
-                            this.foodForMenu.push(hrana);
-                            hrana.izabrana = true;
-                        }
-
+                        this.setFoodForMenu(hrana);
                     })
                 }
             });
@@ -95,18 +85,36 @@ export class NoviMeniComponent implements OnInit {
                 this.hranaArray.push(hrana);
             }
             if (this.adminMode) {
-                if (this.menu.food) {
-                    if (this.menu.food.indexOf(hrana.hranaId) != -1) {
-                        this.foodForMenu.push(hrana);
-                        hrana.izabrana = true;
-                    }
-                }
-                else if (hrana.stalna) {
-                    this.foodForMenu.push(hrana);
-                    hrana.izabrana = true;
-                }
+                this.setFoodForMenu(hrana);
             }
         });
+    }
+
+    setFoodForMenu(hrana: Hrana) {
+        if (this.menu.food) {
+            if (this.menu.food.indexOf(hrana.hranaId) != -1) {
+                this.foodForMenu.push(hrana);
+                hrana.izabrana = true;
+            }
+        }
+        else if (hrana.stalna) {
+            this.foodForMenu.push(hrana);
+            hrana.izabrana = true;
+        }
+    }
+
+    adminModeChaged() {
+        if (this.adminMode) {
+            this.foodForMenu = [];
+            this.stalnaHranaArray.concat(this.hranaArray).forEach(hrana => {
+                hrana.izabrana = false;
+                this.setFoodForMenu(hrana);
+            })
+        } else {
+            this.stalnaHranaArray.concat(this.hranaArray).forEach(hrana => {
+                hrana.izabrana = false;
+            })
+        }
     }
 
     izaberiHranu(event, hrana: Hrana) {
@@ -157,9 +165,8 @@ export class NoviMeniComponent implements OnInit {
 
     createMenu(): void {
         this.menu.food = this.hranaArray.concat(this.stalnaHranaArray).filter(h => h.izabrana).map(o => o.hranaId);
-        console.log('meni za kreiranje', this.menu);
         this.meniService.createMenu(this.menu).subscribe(data => {
-            console.log(data);
+            this.barService.showInfo("Uspješno ste snimili meni.");
         });
 
         //this.hranaArray.concat(this.stalnaHranaArray).forEach((hrana: Hrana) => {
