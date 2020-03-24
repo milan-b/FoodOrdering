@@ -13,23 +13,37 @@
     </div>
   </div>
   <div class="card-body">
-    <div class="form-group">
-      <button *ngIf="adminMode" class="btn btn-primary" (click)="createMenu()">
+    <div *ngIf="adminMode">
+      <button class="btn btn-primary" (click)="createMenu()">
         Snimi meni
       </button>
     </div>
+    <div *ngIf="!adminMode" fxLayout="row" fxLayoutAlign="space-between center">
+      <section fxFlex="40%" class="right-border">
+        <div class="mb-2">Lokacija za dostavu</div>
+        <mat-radio-group [(ngModel)]="orderLocation">
+          <mat-radio-button *ngFor="let option of orderLocationOptions; let i = index" [value]="i" class="prilog-margin">{{option}}</mat-radio-button>
+        </mat-radio-group>
+        <div *ngIf="orderError.place" class="error">
+          <div>Lokacija je obavezna</div>
+        </div>
+      </section>
 
-    <!-- Dodati kada se ne radi uredjivanje meni <section class="prilog-section">
-      <mat-radio-button class="prilog-margin">Caevec</mat-radio-button>
-      <mat-radio-button class="prilog-margin">Medicinska Elektronika</mat-radio-button>
-      <mat-radio-button class="prilog-margin">ETF</mat-radio-button>
-    </section>
-
-    <section class="prilog-section">
-      <mat-radio-button class="prilog-margin">11:30h</mat-radio-button>
-      <mat-radio-button class="prilog-margin">12:30h</mat-radio-button>
-    </section>-->
-
+      <section fxFlex="40%" class="pl-3">
+        <div class="mb-2">Vrijeme dostave</div>
+        <mat-radio-group [(ngModel)]="orderTime">
+          <mat-radio-button *ngFor="let option of orderTimeOptions; let i = index" [value]="i" class="prilog-margin">{{option}}</mat-radio-button>
+        </mat-radio-group>
+        <div *ngIf="orderError.time" class="error">
+          <div>Vrijeme je obavezno</div>
+        </div>
+      </section>
+      <div fxFlex="20%" fxLayoutAlign="end center">
+        <button class="btn btn-primary" (click)="createOrder()">
+          Naruči
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 <!--CARD HRANA-->

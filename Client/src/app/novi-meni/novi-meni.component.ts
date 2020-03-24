@@ -35,13 +35,26 @@ export class NoviMeniComponent implements OnInit {
     adminMode: boolean = false;
     isAdminOrCook: boolean = false;
 
+    // Order
+    orderError: { time: boolean, place: boolean };
+    orderLocation: number;
+    orderTime: number;
+    orderLocationOptions = ["Čaevec", "Medicinska Elektronika", "ETF"];
+    orderTimeOptions = ["11:30h","12:30h"];
+
     constructor(private meniService: MeniService, private dialog: MatDialog, private barService: BarService, private authenticationService: AuthenticationService) { }
 
     ngOnInit() {
         this.nextWeek = moment().add(1, 'week');
         this.initFood();
-        this.isAdminOrCook = this.authenticationService.currentUserValue.roles.indexOf("Admin") != -1
-            || this.authenticationService.currentUserValue.roles.indexOf("Cook") != -1;
+        let user = this.authenticationService.currentUserValue;
+        this.isAdminOrCook = (user.roles.indexOf("Admin") != -1) ||
+                             (user.roles.indexOf("Cook") != -1);
+        this.orderError = { time: false, place: false };
+        //TODO read this data from user
+        this.orderLocation = 1;
+        this.orderTime = 1;
+
     }
 
     initFood() {
@@ -172,6 +185,26 @@ export class NoviMeniComponent implements OnInit {
         //this.hranaArray.concat(this.stalnaHranaArray).forEach((hrana: Hrana) => {
         //  console.log(hrana);
         //});
+    }
+
+    createOrder() {
+        if (this.selectedFood) {
+            const order = {
+                orderTime: this.orderTime,
+                orderLocation: this.orderLocation,
+                food: {
+                    hranaId: this.selectedFood.hranaId,
+                    prilozi: this.selectedFood.prilozi.filter(o => o.izabran).map(o => o.prilogId)
+                }
+            }
+
+            console.log(order);
+            this.barService.showInfo(`Usješno ste naručili "${this.selectedFood.naziv}" na lokaciju "${this.orderLocationOptions[this.orderLocation]}"
+                                      u vrijeme "${this.orderTimeOptions[this.orderTime]}".`);
+        } else {
+            this.barService.showError("Niste izabrali hranu!");
+        }
+        console.log(this.selectedFood);
     }
 
 
