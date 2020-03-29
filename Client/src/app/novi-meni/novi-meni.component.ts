@@ -11,6 +11,8 @@ import { forkJoin } from 'rxjs';
 import { Meni } from '../_models/meni';
 import { BarService } from '../_services/bar.service';
 import { AuthenticationService } from '../_services';
+import { OrderLocationOptions, OrderTimeOptions } from '../globas';
+import { OrderService } from '../_services/order.service';
 
 @Component({
     selector: 'app-novi-meni',
@@ -39,18 +41,23 @@ export class NoviMeniComponent implements OnInit {
     orderError: { time: boolean, place: boolean };
     orderLocation: number;
     orderTime: number;
-    orderLocationOptions = ["Čaevec", "Medicinska Elektronika", "ETF"];
-    orderTimeOptions = ["11:30h","12:30h"];
+    orderLocationOptions: string[];
+    orderTimeOptions: string[];
+    orderId: number = 0;
 
-    constructor(private meniService: MeniService, private dialog: MatDialog, private barService: BarService, private authenticationService: AuthenticationService) { }
+    constructor(private meniService: MeniService, private dialog: MatDialog, private barService: BarService,
+        private authenticationService: AuthenticationService, private orderService: OrderService) { }
 
     ngOnInit() {
         this.nextWeek = moment().add(1, 'week');
         this.initFood();
         let user = this.authenticationService.currentUserValue;
         this.isAdminOrCook = (user.roles.indexOf("Admin") != -1) ||
-                             (user.roles.indexOf("Cook") != -1);
-        this.orderError = { time: false, place: false };
+            (user.roles.indexOf("Cook") != -1);
+        //this.orderError = { time: false, place: false };
+        this.orderLocationOptions = OrderLocationOptions;
+        this.orderTimeOptions = OrderTimeOptions;
+
         //TODO read this data from user
         this.orderLocation = 1;
         this.orderTime = 1;
@@ -61,7 +68,7 @@ export class NoviMeniComponent implements OnInit {
         forkJoin({
             food: this.meniService.getAllFood(),
             sideDishes: this.meniService.getAllSideDishes(),
-            menu: this.meniService.getMenu(this.nextWeek)
+            menu: this.meniService.getMenu(this.nextWeek),
         }).subscribe((data) => {
             this.menu = new Meni({ menuId: (<any>data.menu.body).menuId, date: (<any>data.menu.body).date, food: (<any>data.menu.body).food })
             this.setFood(data.food);
@@ -70,6 +77,8 @@ export class NoviMeniComponent implements OnInit {
             (<any[]>data.sideDishes.body).forEach(o => {
                 this.sideDishesMap[o.prilogId] = o.naziv;
             })
+
+            this.setOrder();
         });
     }
 
@@ -78,11 +87,9 @@ export class NoviMeniComponent implements OnInit {
             .subscribe((data: any) => {
                 this.menu = new Meni({ menuId: data.body.menuId, date: data.body.date, food: data.body.food });
                 if (this.adminMode) {
-                    this.foodForMenu = [];
-                    this.stalnaHranaArray.concat(this.hranaArray).forEach(hrana => {
-                        hrana.izabrana = false;
-                        this.setFoodForMenu(hrana);
-                    })
+                    this.setFoodForMenu();
+                } else {
+                    this.setOrder();
                 }
             });
     }
@@ -97,36 +104,60 @@ export class NoviMeniComponent implements OnInit {
             } else {
                 this.hranaArray.push(hrana);
             }
-            if (this.adminMode) {
-                this.setFoodForMenu(hrana);
-            }
         });
+        if (this.adminMode) {
+            this.setFoodForMenu();
+        }
+        else {
+            this.setOrder();
+        }
     }
 
-    setFoodForMenu(hrana: Hrana) {
+    setFoodForMenu() {
+        this.foodForMenu = [];
+        this.stalnaHranaArray = this.stalnaHranaArray.map(o => { o.izabrana = false; return o; });
+        this.hranaArray = this.hranaArray.map(o => { o.izabrana = false; return o; });
         if (this.menu.food) {
-            if (this.menu.food.indexOf(hrana.hranaId) != -1) {
+            this.stalnaHranaArray.concat(this.hranaArray).filter(hrana => (this.menu.food.indexOf(hrana.hranaId) != -1)).forEach(hrana => {
                 this.foodForMenu.push(hrana);
                 hrana.izabrana = true;
-            }
+            });
         }
-        else if (hrana.stalna) {
-            this.foodForMenu.push(hrana);
-            hrana.izabrana = true;
+        else {
+            this.stalnaHranaArray.concat(this.hranaArray).filter(hrana => hrana.stalna).forEach(hrana => {
+                this.foodForMenu.push(hrana);
+                hrana.izabrana = true;
+            });
+        }
+    }
+
+    setOrder = () => {
+        this.stalnaHranaArray = this.stalnaHranaArray.map(o => { o.izabrana = false; return o; });
+        this.hranaArray = this.hranaArray.map(o => { o.izabrana = false; return o; });
+        if (this.menu.menuId) {
+            this.orderService.get(this.menu.menuId).subscribe(data => {
+                var order: any = data.body;
+                if (order) {
+                    this.orderId = order.orderId;
+                    this.orderLocation = order.locationId;
+                    this.orderTime = order.timeId;
+                    var orderdFood = this.stalnaHranaArray.concat(this.hranaArray).find(o => o.hranaId === (order.foodId));
+                    orderdFood.izabrana = true;
+                    orderdFood.prilozi.filter(o => order.sideDishes.indexOf(o.prilogId) != -1).map(o => { o.izabran = true; return o; });
+                    this.selectedFood = orderdFood;
+                } else {
+                    this.orderId = 0;
+                    this.selectedFood = null;
+                }
+            });
         }
     }
 
     adminModeChaged() {
         if (this.adminMode) {
-            this.foodForMenu = [];
-            this.stalnaHranaArray.concat(this.hranaArray).forEach(hrana => {
-                hrana.izabrana = false;
-                this.setFoodForMenu(hrana);
-            })
+            this.setFoodForMenu();
         } else {
-            this.stalnaHranaArray.concat(this.hranaArray).forEach(hrana => {
-                hrana.izabrana = false;
-            })
+            this.setOrder();
         }
     }
 
@@ -182,29 +213,39 @@ export class NoviMeniComponent implements OnInit {
             this.barService.showInfo("Uspješno ste snimili meni.");
         });
 
-        //this.hranaArray.concat(this.stalnaHranaArray).forEach((hrana: Hrana) => {
-        //  console.log(hrana);
-        //});
     }
 
     createOrder() {
         if (this.selectedFood) {
             const order = {
-                orderTime: this.orderTime,
-                orderLocation: this.orderLocation,
-                food: {
-                    hranaId: this.selectedFood.hranaId,
-                    prilozi: this.selectedFood.prilozi.filter(o => o.izabran).map(o => o.prilogId)
-                }
+                orderId: this.orderId,
+                timeId: this.orderTime,
+                locationId: this.orderLocation,
+                menuId: this.menu.menuId,
+                foodId: this.selectedFood.hranaId,
+                sideDishes: this.selectedFood.prilozi.filter(o => o.izabran).map(o => o.prilogId)
             }
 
-            console.log(order);
-            this.barService.showInfo(`Usješno ste naručili "${this.selectedFood.naziv}" na lokaciju "${this.orderLocationOptions[this.orderLocation]}"
+            this.orderService.create(order).subscribe((res: number) => {
+                this.orderId = res;
+                this.barService.showInfo(`Usješno ste naručili "${this.selectedFood.naziv}" na lokaciju "${this.orderLocationOptions[this.orderLocation]}"
                                       u vrijeme "${this.orderTimeOptions[this.orderTime]}".`);
+            },
+                error => {
+                    this.barService.showError('Dogorila se greška. Narudžba nije kreirana.');
+                });
         } else {
             this.barService.showError("Niste izabrali hranu!");
         }
-        console.log(this.selectedFood);
+    }
+
+    deleteOrder() {
+        this.orderService.delete(this.orderId).subscribe(rez => {
+            this.barService.showWarning('Obrisali ste narudžbu.');
+            this.setOrder();
+        }, error => {
+                this.barService.showError('Dogodila se greška. Narudžba nije obrisana.');
+        });
     }
 
 

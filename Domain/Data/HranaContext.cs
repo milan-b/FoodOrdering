@@ -1,6 +1,8 @@
 ﻿using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 
 //using MySql.Data.EntityFrameworkCore.Extensions;
@@ -30,6 +32,7 @@ namespace Domain.Data
         public DbSet<Prilog> Prilozi { get; set; }
 
         public DbSet<HranaPrilog> HranaPrilozi { get; set; }
+        public DbSet<OrderSideDish> OrderSideDishes { get; set; }
         public DbSet<HranaMeni> HranaMeni { get; set; }
 
 
@@ -42,6 +45,13 @@ namespace Domain.Data
             }
 
             base.OnModelCreating(modelBuilder);
+
+            #region Query Filter
+
+            modelBuilder.Entity<Narudzba>()
+            .HasQueryFilter(post => EF.Property<bool>(post, "IsDeleted") == false);
+
+            #endregion
 
 
             //modelBuilder.Entity<Book>(entity =>
@@ -56,8 +66,12 @@ namespace Domain.Data
             modelBuilder.Entity<HranaMeni>().HasKey(hm => new { hm.HranaId, hm.MeniId });
             modelBuilder.Entity<HranaPrilog>().HasKey(hp => new { hp.HranaId, hp.PrilogId });
 
+            modelBuilder.Entity<OrderSideDish>().HasKey(os => new { os.NarudzbaId, os.PrilogId });
+
             modelBuilder.Entity<Meni>().HasIndex(m => m.Datum).IsUnique(true);
             modelBuilder.Entity<Meni>().Property(m => m.Datum).HasColumnType("Date");
+
+            modelBuilder.Entity<Narudzba>().HasIndex(m => m.MeniId);
 
             modelBuilder.Entity<User>().ToTable("User");
 
@@ -69,9 +83,44 @@ namespace Domain.Data
             modelBuilder.Entity<Ocjena>().ToTable("Ocjena");
             modelBuilder.Entity<Prilog>().ToTable("Prilog");
             modelBuilder.Entity<HranaPrilog>().ToTable("HranaPrilog");
+            modelBuilder.Entity<OrderSideDish>().ToTable("OrderSideDish");
             modelBuilder.Entity<HranaMeni>().ToTable("HranaMeni");
         }
+
+        #region Soft Delete
+        public override int SaveChanges(bool acceptAllChangesOnSuccess)
+        {
+            OnBeforeSaving();
+            return base.SaveChanges(acceptAllChangesOnSuccess);
+        }
+
+        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            OnBeforeSaving();
+            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        }
+
+        private void OnBeforeSaving()
+        {
+            foreach (var entry in ChangeTracker.Entries<Narudzba>())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.CurrentValues["IsDeleted"] = false;
+                        break;
+
+                    case EntityState.Deleted:
+                        entry.State = EntityState.Modified;
+                        entry.CurrentValues["IsDeleted"] = true;
+                        break;
+                }
+            }
+        }
+        #endregion
     }
+
+
 
 
 }

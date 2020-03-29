@@ -40,6 +40,7 @@ import { ErrorBarComponent } from './error-bar/error-bar.component';
 import { DatePickerComponent } from './date-picker/date-picker.component';
 import { CreateFoodDialogComponent } from './create-food-dialog/create-food-dialog.component';
 import { InfoBarComponent } from './info-bar/info-bar.component';
+import { WarningBarComponent } from './warning-bar/warning-bar.component';
 
 
 @NgModule({
@@ -76,7 +77,8 @@ import { InfoBarComponent } from './info-bar/info-bar.component';
         ErrorBarComponent,
         DatePickerComponent,
         CreateFoodDialogComponent,
-        InfoBarComponent
+        InfoBarComponent,
+        WarningBarComponent
 
     ],
     providers: [

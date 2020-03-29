@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Domain.Migrations
 {
     [DbContext(typeof(HranaContext))]
-    [Migration("20200321231009_userRoles")]
-    partial class userRoles
+    [Migration("20200328231232_swithcFromKorisnikToUser")]
+    partial class swithcFromKorisnikToUser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -110,11 +110,17 @@ namespace Domain.Migrations
                         .IsRequired()
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<int>("LocationId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Lozinka")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("Prezime")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int>("TimeId")
+                        .HasColumnType("int");
 
                     b.HasKey("KorisnikId");
 
@@ -153,20 +159,26 @@ namespace Domain.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<int>("KorisnikId")
+                    b.Property<int>("LocationId")
                         .HasColumnType("int");
 
                     b.Property<int>("MeniId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PrilogId")
+                    b.Property<string>("Note")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int>("TimeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("NarudzbaId");
 
-                    b.HasIndex("KorisnikId");
-
                     b.HasIndex("MeniId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Narudzba");
                 });
@@ -195,6 +207,24 @@ namespace Domain.Migrations
                     b.ToTable("Ocjena");
                 });
 
+            modelBuilder.Entity("Domain.Models.OrderSideDish", b =>
+                {
+                    b.Property<int>("NarudzbaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PrilogId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderSideDishId")
+                        .HasColumnType("int");
+
+                    b.HasKey("NarudzbaId", "PrilogId");
+
+                    b.HasIndex("PrilogId");
+
+                    b.ToTable("OrderSideDish");
+                });
+
             modelBuilder.Entity("Domain.Models.Prilog", b =>
                 {
                     b.Property<int>("PrilogId")
@@ -221,6 +251,9 @@ namespace Domain.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<int>("LocationId")
+                        .HasColumnType("int");
+
                     b.Property<byte[]>("PasswordHash")
                         .HasColumnType("longblob");
 
@@ -229,6 +262,9 @@ namespace Domain.Migrations
 
                     b.Property<string>("Roles")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int>("TimeId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Username")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -285,15 +321,15 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Domain.Models.Narudzba", b =>
                 {
-                    b.HasOne("Domain.Models.Korisnik", "Korisnik")
-                        .WithMany()
-                        .HasForeignKey("KorisnikId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Domain.Models.Meni", null)
                         .WithMany("Narudzbe")
                         .HasForeignKey("MeniId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
@@ -309,6 +345,21 @@ namespace Domain.Migrations
                     b.HasOne("Domain.Models.Korisnik", "Korisnik")
                         .WithMany()
                         .HasForeignKey("KorisnikId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Models.OrderSideDish", b =>
+                {
+                    b.HasOne("Domain.Models.Narudzba", "Narudzba")
+                        .WithMany("SideDishes")
+                        .HasForeignKey("NarudzbaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Models.Prilog", "Prilog")
+                        .WithMany("Orders")
+                        .HasForeignKey("PrilogId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

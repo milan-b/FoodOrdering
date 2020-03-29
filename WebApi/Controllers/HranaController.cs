@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Domain.Enums;
 using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,8 @@ using WebApi.ViewModels;
 
 namespace WebApi.Controllers
 {
+    [Authorize]
+    //[ApiController]
     public class HranaController : Controller
     {
         readonly IHranaService _hranaService;
@@ -22,7 +25,7 @@ namespace WebApi.Controllers
             _mapper = mapper;
         }
 
-        [AllowAnonymous]
+        
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -32,7 +35,7 @@ namespace WebApi.Controllers
             return Ok(viewModel);
         }
 
-        [AllowAnonymous]
+        
         [HttpGet]
         public IActionResult GetAllSideDishes()
         {
@@ -41,7 +44,7 @@ namespace WebApi.Controllers
             return Ok(viewModel);
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = Roles.Admin + "," + Roles.Cook)]
         [HttpPost]
         public IActionResult CreateOrUpdate([FromBody] HranaViewModel viewModel)
         {
@@ -61,7 +64,7 @@ namespace WebApi.Controllers
             return result;
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = Roles.Admin + "," + Roles.Cook)]
         [HttpPost]
         public IActionResult CreateSideDish([FromBody] PrilogViewModel viewModel)
         {

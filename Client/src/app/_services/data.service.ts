@@ -48,7 +48,7 @@ export class DataService {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
       }),
-    };
+      };
     return this.http.post(environment.apiUrl + url, data, httpOptions)
       .pipe(
         catchError(this.handleError)

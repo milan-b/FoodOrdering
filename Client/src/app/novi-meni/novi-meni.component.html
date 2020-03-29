@@ -24,9 +24,9 @@
         <mat-radio-group [(ngModel)]="orderLocation">
           <mat-radio-button *ngFor="let option of orderLocationOptions; let i = index" [value]="i" class="prilog-margin">{{option}}</mat-radio-button>
         </mat-radio-group>
-        <div *ngIf="orderError.place" class="error">
+        <!--<div *ngIf="orderError.place" class="error">
           <div>Lokacija je obavezna</div>
-        </div>
+        </div>-->
       </section>
 
       <section fxFlex="40%" class="pl-3">
@@ -34,12 +34,15 @@
         <mat-radio-group [(ngModel)]="orderTime">
           <mat-radio-button *ngFor="let option of orderTimeOptions; let i = index" [value]="i" class="prilog-margin">{{option}}</mat-radio-button>
         </mat-radio-group>
-        <div *ngIf="orderError.time" class="error">
+        <!--<div *ngIf="orderError.time" class="error">
           <div>Vrijeme je obavezno</div>
-        </div>
+        </div>-->
       </section>
       <div fxFlex="20%" fxLayoutAlign="end center">
-        <button class="btn btn-primary" (click)="createOrder()">
+        <button *ngIf="orderId != 0" class="btn btn-danger" (click)="deleteOrder()">
+          Poništi
+        </button>
+        <button class="btn btn-primary ml-1" (click)="createOrder()">
           Naruči
         </button>
       </div>
