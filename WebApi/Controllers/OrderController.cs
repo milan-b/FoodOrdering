@@ -35,11 +35,11 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAllForUser()
         {
             var orders = _orderService.GetAllForUser(Convert.ToInt32(User.Identity.Name)).ToList();
-            var ordersVM = orders.Select(o => MapOrderToOrderVM(o));
-            return Ok(ordersVM);
+            var menusWithOrders = orders.Select(o => o.MeniId);
+            return Ok(menusWithOrders);
         }
 
         [HttpGet]

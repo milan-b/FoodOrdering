@@ -16,6 +16,10 @@ export class OrderService {
         return this.dataService.get('Order/Get', params);
     }
 
+    getAllForUser() {
+        return this.dataService.getAll('Order/GetAllForUser');
+    }
+
     create(data) {
         return this.dataService.post('Order/CreateOrUpdate', data);
     }

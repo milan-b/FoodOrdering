@@ -9,7 +9,7 @@
       </mat-slide-toggle>
     </div>
     <div fxFlex="40%" fxLayoutAlign="end center">
-      <app-date-picker (dateChange)="onDateChange($event)" [initDate]="nextWeek"></app-date-picker>
+      <app-date-picker (dateChange)="onDateChange($event)" [initDate]="today" [refresh]="refreshCalendar"></app-date-picker>
     </div>
   </div>
   <div class="card-body">
