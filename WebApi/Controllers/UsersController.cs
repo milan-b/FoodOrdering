@@ -66,7 +66,7 @@ namespace WebApi.Controllers
             // return basic user info and authentication token
             return Ok(new
             {
-                Id = user.UserId,
+                //Id = user.UserId,
                 Username = user.Username,
                 FirstName = user.FirstName,
                 LastName = user.LastName,

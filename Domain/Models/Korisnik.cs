@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
@@ -14,8 +15,10 @@ namespace Domain.Models
         [Required]
         public string Email { get; set; }
         public string Lozinka { get; set; }
+        [DefaultValue(0)]
+        public int LocationId { get; set; }
+        [DefaultValue(0)]
+        public int TimeId { get; set; }
 
-
-        //public ICollection<SavedBook> BookUsers { get; set; }
     }
 }

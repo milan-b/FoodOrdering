@@ -4,23 +4,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Domain.Migrations
 {
-    public partial class init : Migration
+    public partial class Orders : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Book",
-                columns: table => new
-                {
-                    BookId = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Book", x => x.BookId);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Hrana",
                 columns: table => new
@@ -44,7 +31,9 @@ namespace Domain.Migrations
                     Ime = table.Column<string>(nullable: false),
                     Prezime = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: false),
-                    Lozinka = table.Column<string>(nullable: true)
+                    Lozinka = table.Column<string>(nullable: true),
+                    LocationId = table.Column<int>(nullable: false),
+                    TimeId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -86,6 +75,7 @@ namespace Domain.Migrations
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
                     Username = table.Column<string>(nullable: true),
+                    Roles = table.Column<string>(nullable: true),
                     PasswordHash = table.Column<byte[]>(nullable: true),
                     PasswordSalt = table.Column<byte[]>(nullable: true)
                 },
@@ -181,8 +171,10 @@ namespace Domain.Migrations
                     MeniId = table.Column<int>(nullable: false),
                     HranaId = table.Column<int>(nullable: false),
                     KorisnikId = table.Column<int>(nullable: false),
-                    PrilogId = table.Column<int>(nullable: false),
                     Dostavljena = table.Column<int>(nullable: false),
+                    Note = table.Column<string>(nullable: true),
+                    LocationId = table.Column<int>(nullable: false),
+                    TimeId = table.Column<int>(nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -229,29 +221,27 @@ namespace Domain.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SavedBook",
+                name: "OrderSideDish",
                 columns: table => new
                 {
-                    SavedBookId = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    BookId = table.Column<int>(nullable: false),
-                    UserId = table.Column<int>(nullable: false),
-                    SavedName = table.Column<string>(nullable: true)
+                    NarudzbaId = table.Column<int>(nullable: false),
+                    PrilogId = table.Column<int>(nullable: false),
+                    OrderSideDishId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SavedBook", x => x.SavedBookId);
+                    table.PrimaryKey("PK_OrderSideDish", x => new { x.NarudzbaId, x.PrilogId });
                     table.ForeignKey(
-                        name: "FK_SavedBook_Book_BookId",
-                        column: x => x.BookId,
-                        principalTable: "Book",
-                        principalColumn: "BookId",
+                        name: "FK_OrderSideDish_Narudzba_NarudzbaId",
+                        column: x => x.NarudzbaId,
+                        principalTable: "Narudzba",
+                        principalColumn: "NarudzbaId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_SavedBook_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
-                        principalColumn: "UserId",
+                        name: "FK_OrderSideDish_Prilog_PrilogId",
+                        column: x => x.PrilogId,
+                        principalTable: "Prilog",
+                        principalColumn: "PrilogId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -302,14 +292,9 @@ namespace Domain.Migrations
                 column: "KorisnikId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SavedBook_BookId",
-                table: "SavedBook",
-                column: "BookId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SavedBook_UserId",
-                table: "SavedBook",
-                column: "UserId");
+                name: "IX_OrderSideDish_PrilogId",
+                table: "OrderSideDish",
+                column: "PrilogId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -324,31 +309,28 @@ namespace Domain.Migrations
                 name: "Komentar");
 
             migrationBuilder.DropTable(
-                name: "Narudzba");
-
-            migrationBuilder.DropTable(
                 name: "Ocjena");
 
             migrationBuilder.DropTable(
-                name: "SavedBook");
+                name: "OrderSideDish");
 
             migrationBuilder.DropTable(
-                name: "Prilog");
-
-            migrationBuilder.DropTable(
-                name: "Meni");
+                name: "User");
 
             migrationBuilder.DropTable(
                 name: "Hrana");
 
             migrationBuilder.DropTable(
+                name: "Narudzba");
+
+            migrationBuilder.DropTable(
+                name: "Prilog");
+
+            migrationBuilder.DropTable(
                 name: "Korisnik");
 
             migrationBuilder.DropTable(
-                name: "Book");
-
-            migrationBuilder.DropTable(
-                name: "User");
+                name: "Meni");
         }
     }
 }

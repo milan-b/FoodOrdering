@@ -7,9 +7,12 @@ import { Hrana } from '../_models/hrana';
 import { Prilog } from '../_models/prilog';
 import { MatDialog } from '@angular/material';
 import { CreateFoodDialogComponent } from '../create-food-dialog/create-food-dialog.component';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subject } from 'rxjs';
 import { Meni } from '../_models/meni';
 import { BarService } from '../_services/bar.service';
+import { AuthenticationService } from '../_services';
+import { OrderLocationOptions, OrderTimeOptions } from '../globas';
+import { OrderService } from '../_services/order.service';
 
 @Component({
     selector: 'app-novi-meni',
@@ -18,7 +21,7 @@ import { BarService } from '../_services/bar.service';
 })
 export class NoviMeniComponent implements OnInit {
     date: FormControl;
-    nextWeek: moment.Moment;
+    today: moment.Moment;
     hranaArray: Hrana[];
     stalnaHranaArray: Hrana[];
     filterHrana: string = "";
@@ -32,21 +35,42 @@ export class NoviMeniComponent implements OnInit {
     menu: Meni;
 
     adminMode: boolean = false;
+    isAdminOrCook: boolean = false;
 
-    constructor(private meniService: MeniService, private dialog: MatDialog, private barService: BarService) { }
+    // Order
+    orderError: { time: boolean, place: boolean };
+    orderLocation: number;
+    orderTime: number;
+    orderLocationOptions: string[];
+    orderTimeOptions: string[];
+    orderId: number = 0;
+    refreshCalendar: Subject<boolean>;
+
+    constructor(private meniService: MeniService, private dialog: MatDialog, private barService: BarService,
+        private authenticationService: AuthenticationService, private orderService: OrderService) { }
 
     ngOnInit() {
-        this.nextWeek = moment().add(1, 'week');
+        this.today = moment();
+        this.refreshCalendar = new Subject<boolean>();
         this.initFood();
+        let user = this.authenticationService.currentUserValue;
+        this.isAdminOrCook = (user.roles.indexOf("Admin") != -1) ||
+            (user.roles.indexOf("Cook") != -1);
+        //this.orderError = { time: false, place: false };
+        this.orderLocationOptions = OrderLocationOptions;
+        this.orderTimeOptions = OrderTimeOptions;
 
-        this.adminMode = true;
+        //TODO read this data from user
+        this.orderLocation = 1;
+        this.orderTime = 1;
+
     }
 
     initFood() {
         forkJoin({
             food: this.meniService.getAllFood(),
             sideDishes: this.meniService.getAllSideDishes(),
-            menu: this.meniService.getMenu(this.nextWeek)
+            menu: this.meniService.getMenu(this.today),
         }).subscribe((data) => {
             this.menu = new Meni({ menuId: (<any>data.menu.body).menuId, date: (<any>data.menu.body).date, food: (<any>data.menu.body).food })
             this.setFood(data.food);
@@ -63,21 +87,9 @@ export class NoviMeniComponent implements OnInit {
             .subscribe((data: any) => {
                 this.menu = new Meni({ menuId: data.body.menuId, date: data.body.date, food: data.body.food });
                 if (this.adminMode) {
-                    this.foodForMenu = [];
-                    this.stalnaHranaArray.concat(this.hranaArray).forEach(hrana => {
-                        hrana.izabrana = false;
-                        if (this.menu.food) {
-                            if (this.menu.food.indexOf(hrana.hranaId) != -1) {
-                                this.foodForMenu.push(hrana);
-                                hrana.izabrana = true;
-                            }
-                        }
-                        else if (hrana.stalna) {
-                            this.foodForMenu.push(hrana);
-                            hrana.izabrana = true;
-                        }
-
-                    })
+                    this.setFoodForMenu();
+                } else {
+                    this.setOrder();
                 }
             });
     }
@@ -92,19 +104,61 @@ export class NoviMeniComponent implements OnInit {
             } else {
                 this.hranaArray.push(hrana);
             }
-            if (this.adminMode) {
-                if (this.menu.food) {
-                    if (this.menu.food.indexOf(hrana.hranaId) != -1) {
-                        this.foodForMenu.push(hrana);
-                        hrana.izabrana = true;
-                    }
-                }
-                else if (hrana.stalna) {
-                    this.foodForMenu.push(hrana);
-                    hrana.izabrana = true;
-                }
-            }
         });
+        if (this.adminMode) {
+            this.setFoodForMenu();
+        }
+        else {
+            this.setOrder();
+        }
+    }
+
+    setFoodForMenu() {
+        this.foodForMenu = [];
+        this.stalnaHranaArray = this.stalnaHranaArray.map(o => { o.izabrana = false; return o; });
+        this.hranaArray = this.hranaArray.map(o => { o.izabrana = false; return o; });
+        if (this.menu.food) {
+            this.stalnaHranaArray.concat(this.hranaArray).filter(hrana => (this.menu.food.indexOf(hrana.hranaId) != -1)).forEach(hrana => {
+                this.foodForMenu.push(hrana);
+                hrana.izabrana = true;
+            });
+        }
+        else {
+            this.stalnaHranaArray.concat(this.hranaArray).filter(hrana => hrana.stalna).forEach(hrana => {
+                this.foodForMenu.push(hrana);
+                hrana.izabrana = true;
+            });
+        }
+    }
+
+    setOrder = () => {
+        
+        this.stalnaHranaArray = this.stalnaHranaArray.map(o => { o.izabrana = false; return o; });
+        this.hranaArray = this.hranaArray.map(o => { o.izabrana = false; return o; });
+        this.orderId = 0;
+        this.selectedFood = null;
+        if (this.menu.menuId) {
+            this.orderService.get(this.menu.menuId).subscribe(data => {
+                var order: any = data.body;
+                if (order) {
+                    this.orderId = order.orderId;
+                    this.orderLocation = order.locationId;
+                    this.orderTime = order.timeId;
+                    var orderdFood = this.stalnaHranaArray.concat(this.hranaArray).find(o => o.hranaId === (order.foodId));
+                    orderdFood.izabrana = true;
+                    orderdFood.prilozi.filter(o => order.sideDishes.indexOf(o.prilogId) != -1).map(o => { o.izabran = true; return o; });
+                    this.selectedFood = orderdFood;
+                }
+            });
+        }
+    }
+
+    adminModeChaged() {
+        if (this.adminMode) {
+            this.setFoodForMenu();
+        } else {
+            this.setOrder();
+        }
     }
 
     izaberiHranu(event, hrana: Hrana) {
@@ -155,14 +209,46 @@ export class NoviMeniComponent implements OnInit {
 
     createMenu(): void {
         this.menu.food = this.hranaArray.concat(this.stalnaHranaArray).filter(h => h.izabrana).map(o => o.hranaId);
-        console.log('meni za kreiranje', this.menu);
         this.meniService.createMenu(this.menu).subscribe(data => {
-            console.log(data);
+            this.barService.showInfo("Uspješno ste snimili meni.");
+            this.refreshCalendar.next(true);
         });
 
-        //this.hranaArray.concat(this.stalnaHranaArray).forEach((hrana: Hrana) => {
-        //  console.log(hrana);
-        //});
+    }
+
+    createOrder() {
+        if (this.selectedFood) {
+            const order = {
+                orderId: this.orderId,
+                timeId: this.orderTime,
+                locationId: this.orderLocation,
+                menuId: this.menu.menuId,
+                foodId: this.selectedFood.hranaId,
+                sideDishes: this.selectedFood.prilozi.filter(o => o.izabran).map(o => o.prilogId)
+            }
+
+            this.orderService.create(order).subscribe((res: number) => {
+                this.orderId = res;
+                this.refreshCalendar.next(true);
+                this.barService.showInfo(`Usješno ste naručili "${this.selectedFood.naziv}" na lokaciju "${this.orderLocationOptions[this.orderLocation]}"
+                                      u vrijeme "${this.orderTimeOptions[this.orderTime]}".`);
+            },
+                error => {
+                    this.barService.showError('Dogorila se greška. Narudžba nije kreirana.');
+                });
+        } else {
+            this.barService.showError("Niste izabrali hranu!");
+        }
+    }
+
+    deleteOrder() {
+        this.orderService.delete(this.orderId).subscribe(rez => {
+            this.barService.showWarning('Obrisali ste narudžbu.');
+            this.refreshCalendar.next(true);
+            this.setOrder();
+        }, error => {
+                this.barService.showError('Dogodila se greška. Narudžba nije obrisana.');
+        });
     }
 
 
