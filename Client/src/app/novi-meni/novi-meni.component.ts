@@ -135,6 +135,8 @@ export class NoviMeniComponent implements OnInit {
         
         this.stalnaHranaArray = this.stalnaHranaArray.map(o => { o.izabrana = false; return o; });
         this.hranaArray = this.hranaArray.map(o => { o.izabrana = false; return o; });
+        this.orderId = 0;
+        this.selectedFood = null;
         if (this.menu.menuId) {
             this.orderService.get(this.menu.menuId).subscribe(data => {
                 var order: any = data.body;
@@ -146,9 +148,6 @@ export class NoviMeniComponent implements OnInit {
                     orderdFood.izabrana = true;
                     orderdFood.prilozi.filter(o => order.sideDishes.indexOf(o.prilogId) != -1).map(o => { o.izabran = true; return o; });
                     this.selectedFood = orderdFood;
-                } else {
-                    this.orderId = 0;
-                    this.selectedFood = null;
                 }
             });
         }
