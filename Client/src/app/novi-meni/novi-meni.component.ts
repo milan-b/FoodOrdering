@@ -295,6 +295,10 @@ export class NoviMeniComponent implements OnInit {
         }
     }
 
+    test() {
+        this.orderService.test().subscribe(data => console.log('slanje emaila proslo\n', data));
+    }
+
     /// Steps region ///
     setStep(index: number) {
         this.step = index;

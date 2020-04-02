@@ -16,6 +16,10 @@ export class OrderService {
         return this.dataService.get('Order/Get', params);
     }
 
+    test() {
+        return this.dataService.getAll('Order/MailTest');
+    }
+
     getAllForUser() {
         return this.dataService.getAll('Order/GetAllForUser');
     }

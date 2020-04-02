@@ -8,6 +8,7 @@ using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service;
+using WebApi.Services;
 using WebApi.ViewModels;
 
 namespace WebApi.Controllers
@@ -17,12 +18,14 @@ namespace WebApi.Controllers
     public class OrderController : Controller
     {
         readonly IOrderService _orderService;
+        readonly IEmailService _emailService;
         readonly private IMapper _mapper;
 
-        public OrderController(IOrderService orderService, IMapper mapper)
+        public OrderController(IOrderService orderService, IMapper mapper, IEmailService emailService)
         {
             _mapper = mapper;
             _orderService = orderService;
+            _emailService = emailService;
         }
 
         [Authorize(Roles = Roles.Admin + "," + Roles.Cook)]
@@ -40,6 +43,13 @@ namespace WebApi.Controllers
             var orders = _orderService.GetAllForUser(Convert.ToInt32(User.Identity.Name)).ToList();
             var menusWithOrders = orders.Select(o => o.MeniId);
             return Ok(menusWithOrders);
+        }
+
+        [HttpGet]
+        public IActionResult MailTest()
+        {
+            _emailService.SendEmailAsync("bojic.job@gmail.com","Test email", "Ovo je prva poruka! \n Radiii !!!!");
+            return Ok();
         }
 
         [HttpGet]

@@ -5,3 +5,4 @@
 
 *.cache
 packages/
+WebApi/appsettings.Development.json

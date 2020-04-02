@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System;
 using Domain.Data;
 using Service;
+using WebApi.Entities;
 
 namespace WebApi
 {
@@ -47,6 +48,8 @@ namespace WebApi
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
+
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
 
 
 
@@ -90,6 +93,9 @@ namespace WebApi
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
+
+            services.AddSingleton<IEmailService, EmailService>();
+
             // configure DI for application services
             //services.AddScoped<IUserService, UserService>();
             services.AddScoped<IHranaService, HranaService>();
