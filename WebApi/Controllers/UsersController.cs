@@ -63,7 +63,6 @@ namespace WebApi.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-            // return basic user info and authentication token
             return Ok(new
             {
                 //Id = user.UserId,

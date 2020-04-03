@@ -28,7 +28,11 @@ import {
     MatDialogModule,
     MatDividerModule,
     MatListModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatToolbarModule,
+    MatSelectModule,
+    MatInputModule,
+    MatButtonModule
 
 } from '@angular/material';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
@@ -41,6 +45,7 @@ import { DatePickerComponent } from './date-picker/date-picker.component';
 import { CreateFoodDialogComponent } from './create-food-dialog/create-food-dialog.component';
 import { InfoBarComponent } from './info-bar/info-bar.component';
 import { WarningBarComponent } from './warning-bar/warning-bar.component';
+import { RegisterComponent } from './register/register.component';
 
 
 @NgModule({
@@ -65,7 +70,11 @@ import { WarningBarComponent } from './warning-bar/warning-bar.component';
         MatDialogModule,
         MatDividerModule,
         MatListModule,
-        MatSlideToggleModule
+        MatSlideToggleModule,
+        MatToolbarModule,
+        MatSelectModule,
+        MatInputModule,
+        MatButtonModule
     ],
     declarations: [
         AppComponent,
@@ -78,7 +87,8 @@ import { WarningBarComponent } from './warning-bar/warning-bar.component';
         DatePickerComponent,
         CreateFoodDialogComponent,
         InfoBarComponent,
-        WarningBarComponent
+        WarningBarComponent,
+        RegisterComponent
 
     ],
     providers: [

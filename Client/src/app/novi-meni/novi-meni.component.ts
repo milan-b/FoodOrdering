@@ -11,7 +11,7 @@ import { forkJoin, Subject } from 'rxjs';
 import { Meni } from '../_models/meni';
 import { BarService } from '../_services/bar.service';
 import { AuthenticationService } from '../_services';
-import { OrderLocationOptions, OrderTimeOptions } from '../globas';
+import { OrderLocationOptions, OrderTimeOptions, ROLES } from '../globas';
 import { OrderService } from '../_services/order.service';
 
 @Component({
@@ -54,8 +54,8 @@ export class NoviMeniComponent implements OnInit {
         this.refreshCalendar = new Subject<boolean>();
         this.initFood();
         let user = this.authenticationService.currentUserValue;
-        this.isAdminOrCook = (user.roles.indexOf("Admin") != -1) ||
-            (user.roles.indexOf("Cook") != -1);
+        this.isAdminOrCook = (user.roles.indexOf(ROLES.admin) != -1) ||
+            (user.roles.indexOf(ROLES.cook) != -1);
         //this.orderError = { time: false, place: false };
         this.orderLocationOptions = OrderLocationOptions;
         this.orderTimeOptions = OrderTimeOptions;
