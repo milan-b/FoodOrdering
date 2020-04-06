@@ -19,6 +19,9 @@ namespace Domain.Models
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
 
+        [DefaultValue(false)]
+        public bool Activated { get; set; }
+
 
         [DefaultValue(false)]
         public bool IsDeleted { get; set; }

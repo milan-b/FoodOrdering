@@ -1,10 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { AuthenticationService } from '../_services';
+import { AuthenticationService, UserService } from '../_services';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ROLES } from '../globas';
+import { User } from '../_models';
+import { MatSort, MatTableDataSource, MatDialog } from '@angular/material';
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 
 @Component({
     selector: 'app-register',
@@ -19,11 +22,16 @@ export class RegisterComponent implements OnInit {
     roles: string[];
     error = '';
     qpSupcription: Subscription;
+    users: Array<User>;
+    userFilter: string = "";
+
 
     constructor(
         private formBuilder: FormBuilder,
         private router: Router,
-        private authenticationService: AuthenticationService
+        private authenticationService: AuthenticationService,
+        private userService: UserService,
+        private dialog: MatDialog
     ) {
 
     }
@@ -34,6 +42,13 @@ export class RegisterComponent implements OnInit {
             email: ['', [Validators.required, Validators.email]],
             role: [ROLES.member, Validators.required]
         });
+        this.loading = true;
+        this.userService.getAll().pipe(first()).subscribe(users => {
+            this.loading = false;
+            this.users = users;
+            console.log(users);
+        });
+
 
     }
 
@@ -60,6 +75,26 @@ export class RegisterComponent implements OnInit {
                     this.error = error;
                     this.loading = false;
                 });
+    }
+
+    resetPassword(user: User) {
+        console.log('not implemented\n', user);
+    }
+
+    delete(user: User) {
+        const dialogRef = this.dialog.open(DeleteDialogComponent, {
+            width: '700px',
+            height: '80%',
+            disableClose: true,
+            data: {
+                message: `Da li ste sigurni da želite obrisati korisnika "${user.username}"?`
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+        });
+        console.log('not implemented\n', user);
     }
 
     ngOnDestroy() {

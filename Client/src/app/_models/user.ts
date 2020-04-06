@@ -1,3 +1,5 @@
+import { MatSort } from '@angular/material';
+
 export class User {
     id: number;
     username: string;
@@ -6,4 +8,5 @@ export class User {
     lastName: string;
     token?: string;
     roles?: string;
+
 }

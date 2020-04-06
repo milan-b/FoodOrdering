@@ -32,7 +32,9 @@ import {
     MatToolbarModule,
     MatSelectModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTableModule,
+    MatSortModule
 
 } from '@angular/material';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
@@ -46,6 +48,7 @@ import { CreateFoodDialogComponent } from './create-food-dialog/create-food-dial
 import { InfoBarComponent } from './info-bar/info-bar.component';
 import { WarningBarComponent } from './warning-bar/warning-bar.component';
 import { RegisterComponent } from './register/register.component';
+import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 
 
 @NgModule({
@@ -74,7 +77,9 @@ import { RegisterComponent } from './register/register.component';
         MatToolbarModule,
         MatSelectModule,
         MatInputModule,
-        MatButtonModule
+        MatButtonModule,
+        MatTableModule,
+        MatSortModule
     ],
     declarations: [
         AppComponent,
@@ -88,7 +93,8 @@ import { RegisterComponent } from './register/register.component';
         CreateFoodDialogComponent,
         InfoBarComponent,
         WarningBarComponent,
-        RegisterComponent
+        RegisterComponent,
+        DeleteDialogComponent
 
     ],
     providers: [

@@ -1,27 +1,66 @@
-<div class="col-md-6 offset-md-3 mt-5">
-  <div class="card">
-    <h4 class="card-header">Kreiraj korisnika</h4>
-    <div class="card-body flex-container">
-      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+<div class="col-md-10 offset-md-1 mt-5">
+  <div class="col-md-6 offset-md-3">
+    <div class="card">
+      <h4 class="card-header">Kreiraj korisnika</h4>
+      <div class="card-body flex-container">
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
 
-        <mat-form-field>
-          <input name="email" formControlName="email" matInput placeholder="Email">
-          <div *ngIf="submitted && f.email.errors" class="invalid">
-            <div *ngIf="f.email.errors.required">Email je obavezan</div>
-            <div *ngIf="f.email.errors.email">Mora biti email</div>
+          <mat-form-field>
+            <input name="email" formControlName="email" matInput placeholder="Email">
+            <div *ngIf="submitted && f.email.errors" class="invalid">
+              <div *ngIf="f.email.errors.required">Email je obavezan</div>
+              <div *ngIf="f.email.errors.email">Mora biti email</div>
+            </div>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-select formControlName="role" placeholder="Izaberi ulogu">
+              <mat-option *ngFor="let role of roles" value="{{role}}">{{role}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div class="mat-form-field">
+            <button type="submit" mat-raised-button color="primary">Kreiraj</button>
           </div>
-        </mat-form-field>
+        </form>
+      </div>
+    </div>
+  </div>
 
-        <mat-form-field>
-          <mat-select formControlName="role" placeholder="Izaberi ulogu">
-            <mat-option *ngFor="let role of roles" value="{{role}}">{{role}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <div class="mat-form-field">
-          <button type="submit" mat-raised-button color="primary">Kreiraj</button>
+  <div class="card mt-4 mb-4">
+    <div class="card-header" fxLayout="row" fxLayoutAlign="space-between center">
+      <h4 fxFlex="20%">
+        Svi korisnici
+      </h4>
+      <div fxFlex="80%" fxLayout="row" fxLayoutAlign="space-between center">
+        <!--<label for="username">Username</label>-->
+        <div fxFlex="60%">
+          <input [(ngModel)]="userFilter" type="text" placeholder="Filtriraj hranu" class="form-control" />
         </div>
-      </form>
+        <div *ngIf="users" fxFlex="20%" fxLayoutAlign="space-between center">
+          <span>Svi {{users.length}}</span>
+          <span>Aktivni {{users.length}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div fxLayout="column" fxLayoutAlign="start stretch">
+        <div *ngFor="let user of users" class="user-container" >
+          <div *ngIf="user.username.toLowerCase().indexOf(userFilter.toLowerCase()) != -1"
+               fxLayout="row" fxLayoutAlign="space-between center" class="userItem" >
+            <div fxFlex="70%">{{user.username}}</div>
+            <div fxFlex="30%" class="controls" fxLayoutAlign="end">
+              <button class="btn btn-primary btn-sm" (click)="resetPassword(user)">
+                Resetuj lozinku
+              </button>
+              <button  class="btn btn-danger btn-sm ml-2" (click)="delete(user)">
+                Obriši
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
