@@ -15,6 +15,7 @@ namespace Service
         IEnumerable<Narudzba> GetAllForUser(int userId);
         Narudzba GetByMenuId(int menuId, int userId);
         void Delete(int id);
+        void DeleteAllForUser(int userId);
         void Delete(Narudzba order);
         Narudzba Get(int id);
         Narudzba CreateOrUpdate(Narudzba hrana);
@@ -73,6 +74,16 @@ namespace Service
             if (order != null)
             {
                 _context.Narudzbe.Remove(order);
+                _context.SaveChanges();
+            }
+        }
+
+        public void DeleteAllForUser(int userId)
+        {
+            var orders = _context.Narudzbe.Where(o => o.UserId == userId);
+            if (orders.Count() > 0)
+            {
+                _context.Narudzbe.RemoveRange(orders);
                 _context.SaveChanges();
             }
         }

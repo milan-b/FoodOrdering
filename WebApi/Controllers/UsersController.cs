@@ -18,26 +18,29 @@ using Service;
 namespace WebApi.Controllers
 {
     [Authorize]
-    [ApiController]
-    [Route("[controller]")]
+   // [ApiController]
+   // [Route("[controller]")]
     public class UsersController : ControllerBase
     {
         private IUserService _userService;
+        private IOrderService _orderService;
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
         public UsersController(
             IUserService userService,
+            IOrderService orderService,
             IMapper mapper,
             IOptions<AppSettings> appSettings)
         {
             _userService = userService;
+            _orderService = orderService;
             _mapper = mapper;
             _appSettings = appSettings.Value;
         }
 
         [AllowAnonymous]
-        [HttpPost("authenticate")]
+        [HttpPost]
         public IActionResult Authenticate([FromBody]AuthenticateModel model)
         {
             var user = _userService.Authenticate(model.Username, model.Password);
@@ -130,9 +133,10 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete]
         public IActionResult Delete(int id)
         {
+            _orderService.DeleteAllForUser(id);
             _userService.Delete(id);
             return Ok();
         }

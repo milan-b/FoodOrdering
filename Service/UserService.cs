@@ -127,7 +127,8 @@ namespace Service
             var user = _context.Users.Find(id);
             if (user != null)
             {
-                _context.Users.Remove(user);
+                user.IsDeleted = true;
+                _context.Users.Update(user);
                 _context.SaveChanges();
             }
         }

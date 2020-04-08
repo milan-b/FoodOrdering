@@ -7,7 +7,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
     styleUrls: ['./delete-dialog.component.less']
 })
 export class DeleteDialogComponent implements OnInit {
-    message: string = '';
     constructor(public dialogRef: MatDialogRef<DeleteDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any) { }
 
@@ -15,11 +14,11 @@ export class DeleteDialogComponent implements OnInit {
     }
 
     closeDialog = () => {
-        this.dialogRef.close();
+        this.dialogRef.close(false);
     }
 
     delete() {
-
+        this.dialogRef.close(true);
     }
 
 }

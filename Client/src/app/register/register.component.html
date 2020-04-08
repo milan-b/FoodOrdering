@@ -38,8 +38,8 @@
           <input [(ngModel)]="userFilter" type="text" placeholder="Filtriraj hranu" class="form-control" />
         </div>
         <div *ngIf="users" fxFlex="20%" fxLayoutAlign="space-between center">
-          <span>Svi {{users.length}}</span>
-          <span>Aktivni {{users.length}}</span>
+          <span>Svi: <b>{{users.length}}</b></span>
+          <span>Aktivirani: <b>{{users.length}}</b></span>
         </div>
       </div>
     </div>

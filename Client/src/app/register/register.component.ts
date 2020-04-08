@@ -6,8 +6,9 @@ import { AuthenticationService, UserService } from '../_services';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ROLES } from '../globas';
 import { User } from '../_models';
-import { MatSort, MatTableDataSource, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
+import { BarService } from '../_services/bar.service';
 
 @Component({
     selector: 'app-register',
@@ -31,7 +32,8 @@ export class RegisterComponent implements OnInit {
         private router: Router,
         private authenticationService: AuthenticationService,
         private userService: UserService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private barService: BarService
     ) {
 
     }
@@ -42,14 +44,17 @@ export class RegisterComponent implements OnInit {
             email: ['', [Validators.required, Validators.email]],
             role: [ROLES.member, Validators.required]
         });
+        this.getUsers();
+
+
+    }
+
+    getUsers() {
         this.loading = true;
         this.userService.getAll().pipe(first()).subscribe(users => {
             this.loading = false;
             this.users = users;
-            console.log(users);
         });
-
-
     }
 
     // convenience getter for easy access to form fields
@@ -82,9 +87,10 @@ export class RegisterComponent implements OnInit {
     }
 
     delete(user: User) {
+        console.log(user);
         const dialogRef = this.dialog.open(DeleteDialogComponent, {
-            width: '700px',
-            height: '80%',
+            width: '500px',
+            height: '200px',
             disableClose: true,
             data: {
                 message: `Da li ste sigurni da želite obrisati korisnika "${user.username}"?`
@@ -92,9 +98,16 @@ export class RegisterComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            console.log(result);
+            if (result) {
+                this.userService.delete(user.userId).subscribe(
+                    () => {
+                        this.barService.showInfo(`Uspješno ste obrisali korisnika "${user.username}".`);
+                        this.users = this.users.filter(o => o.userId != user.userId);
+                    },
+                    (error) => this.barService.showError(`Greška prilikom brisanja korisnika "${user.username}".\n Greška: ${error}`)
+                );
+            }
         });
-        console.log('not implemented\n', user);
     }
 
     ngOnDestroy() {
