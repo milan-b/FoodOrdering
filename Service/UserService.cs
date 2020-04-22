@@ -62,15 +62,16 @@ namespace Service
             return _context.Users.Find(id);
         }
 
+
         public User Create(User user, string password)
         {
             //validation
-            if (string.IsNullOrWhiteSpace(password))
-                //throw new AppException("Password is required");
-                throw new Exception("Password is required");
+            //if (string.IsNullOrWhiteSpace(password))
+            //    //throw new AppException("Password is required");
+            //    throw new Exception("Password is required");
 
-            if (_context.Users.Any(x => x.Username == user.Username))
-                throw new Exception("Username \"" + user.Username + "\" is already taken");
+            //if (_context.Users.Any(x => x.Username == user.Username))
+            //    throw new Exception("Username \"" + user.Username + "\" is already taken");
 
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);

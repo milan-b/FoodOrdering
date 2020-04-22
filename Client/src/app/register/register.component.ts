@@ -61,7 +61,7 @@ export class RegisterComponent implements OnInit {
     get f() { return this.registerForm.controls; }
 
     onSubmit() {
-        console.log(this.registerForm.controls.email.errors);
+        console.log(this.registerForm.value);
         this.submitted = true;
 
         // stop here if form is invalid
@@ -70,11 +70,12 @@ export class RegisterComponent implements OnInit {
         }
 
         this.loading = true;
-        this.authenticationService.login(this.f.username.value, this.f.password.value)
+        this.authenticationService.register(this.registerForm.value.email, this.registerForm.value.role)
             .pipe(first())
             .subscribe(
                 data => {
-                    this.router.navigate([this.returnUrl]);
+                    this.barService.showInfo(data.message);
+                    this.loading = false;
                 },
                 error => {
                     this.error = error;

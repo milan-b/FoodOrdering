@@ -14,6 +14,7 @@ using WebApi.Services;
 using Domain.Models;
 using WebApi.Models.Users;
 using Service;
+using System.Linq;
 
 namespace WebApi.Controllers
 {
@@ -78,23 +79,34 @@ namespace WebApi.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("register")]
+        [HttpPost]
         public IActionResult Register([FromBody]RegisterModel model)
         {
-            // map model to entity
+            IActionResult ret;
             var user = _mapper.Map<User>(model);
+            if (!ModelState.IsValid)
+            {
+                ret = ValidationProblem("Greška! Molimo Vas pokušajte ponovo.");
+            }
+            else
+            {
+                user.Email = user.Email.Trim().ToLower();
+                var isEmailTaken = _userService.GetAll().Any(o => o.Email == user.Email);
+                if (isEmailTaken)
+                {
+                    ret = BadRequest(new { message = "Email zauzet." });
+                }
+                else
+                {
+                    var password = GetRandomPassword();
 
-            try
-            {
-                // create user
-                _userService.Create(user, model.Password);
-                return Ok();
+                    _userService.Create(user, password);
+
+                    //TODO send userEmail to change password.
+                    ret = Ok(new { message = "Korisnik uspješno kreiran!" });
+                }
             }
-            catch (AppException ex)
-            {
-                // return error message if there was an exception
-                return BadRequest(new { message = ex.Message });
-            }
+            return ret;
         }
 
         [HttpGet]
@@ -139,6 +151,17 @@ namespace WebApi.Controllers
             _orderService.DeleteAllForUser(id);
             _userService.Delete(id);
             return Ok();
+        }
+
+        private string GetRandomPassword()
+        {
+            string password = "";
+            Random random = new Random();
+            while (password.Length < 15)
+            {
+                password += (char)random.Next(32, 126);
+            }
+            return password;
         }
     }
 }
