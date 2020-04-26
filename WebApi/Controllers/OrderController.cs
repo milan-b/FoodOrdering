@@ -117,7 +117,7 @@ namespace WebApi.Controllers
             viewModel.TimeId = order.TimeId;
             viewModel.LocationId = order.LocationId;
             viewModel.SideDishes = order.SideDishes.Select(o => o.PrilogId).ToList();
-            viewModel.User = new UserViewModel { FirstName = order.User.FirstName, LastName = order.User.LastName };
+            viewModel.User = new UserViewModel {UserId = order.UserId, Email = order.User.Email };
         }
 
         private void MapOrderVMToOrder(OrderViewModel viewModel, Narudzba order)

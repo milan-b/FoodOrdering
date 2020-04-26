@@ -15,12 +15,13 @@ using Domain.Models;
 using WebApi.Models.Users;
 using Service;
 using System.Linq;
+using WebApi.ViewModels;
 
 namespace WebApi.Controllers
 {
     [Authorize]
-   // [ApiController]
-   // [Route("[controller]")]
+    // [ApiController]
+    // [Route("[controller]")]
     public class UsersController : ControllerBase
     {
         private IUserService _userService;
@@ -44,16 +45,16 @@ namespace WebApi.Controllers
         [HttpPost]
         public IActionResult Authenticate([FromBody]AuthenticateModel model)
         {
-            var user = _userService.Authenticate(model.Username, model.Password);
+            var user = _userService.Authenticate(model.Email, model.Password);
 
             if (user == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
+                return BadRequest(new { message = "Email ili lozinka su neispravni." });
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             var userRoles = user.Roles.Split(",");
             var clames = new List<Claim>();
-            foreach(var role in userRoles)
+            foreach (var role in userRoles)
             {
                 clames.Add(new Claim(ClaimTypes.Role, role));
             }
@@ -71,6 +72,7 @@ namespace WebApi.Controllers
             {
                 //Id = user.UserId,
                 Username = user.Username,
+                Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Roles = user.Roles,
@@ -80,17 +82,18 @@ namespace WebApi.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Register([FromBody]RegisterModel model)
+        public IActionResult Register([FromBody]RegisterModel viewModel)
         {
             IActionResult ret;
-            var user = _mapper.Map<User>(model);
+
             if (!ModelState.IsValid)
             {
                 ret = ValidationProblem("Greška! Molimo Vas pokušajte ponovo.");
             }
             else
             {
-                user.Email = user.Email.Trim().ToLower();
+                var user = new User();
+                MapUserVMToUser(viewModel, user);
                 var isEmailTaken = _userService.GetAll().Any(o => o.Email == user.Email);
                 if (isEmailTaken)
                 {
@@ -113,14 +116,15 @@ namespace WebApi.Controllers
         public IActionResult GetAll()
         {
             var users = _userService.GetAll();
-            var model = _mapper.Map<IList<UserModel>>(users);
-            return Ok(model);
+            var viewModel = MapUsersToUsersVM(users.ToList());
+            return Ok(viewModel);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
             var user = _userService.GetById(id);
+
             var model = _mapper.Map<UserModel>(user);
             return Ok(model);
         }
@@ -163,5 +167,34 @@ namespace WebApi.Controllers
             }
             return password;
         }
+
+        #region mappers
+
+        private void MapUserVMToUser(RegisterModel viewModel, User user)
+        {
+            user.Email = viewModel.Email.Trim().ToLower();
+            user.Roles = viewModel.Roles;
+        }
+
+        private void MapUserToUserVM(User user, UserViewModel viewModel)
+        {
+            viewModel.UserId = user.UserId;
+            viewModel.Activated = user.Activated;
+            viewModel.Email = user.Email;
+
+        }
+
+        private List<UserViewModel> MapUsersToUsersVM(List<User> users)
+        {
+            var ret = new List<UserViewModel>();
+            foreach(var user in users)
+            {
+                var viewModel = new UserViewModel();
+                MapUserToUserVM(user, viewModel);
+                ret.Add(viewModel);
+            }
+            return ret;
+        }
+        #endregion
     }
 }

@@ -47,14 +47,25 @@
     <div class="card-body">
       <div fxLayout="column" fxLayoutAlign="start stretch">
         <div *ngFor="let user of users" class="user-container" >
-          <div *ngIf="user.username.toLowerCase().indexOf(userFilter.toLowerCase()) != -1"
-               fxLayout="row" fxLayoutAlign="space-between center" class="userItem" >
-            <div fxFlex="70%">{{user.username}}</div>
+          <div *ngIf="user.email && user.email.toLowerCase().indexOf(userFilter.toLowerCase()) != -1"
+               fxLayout="row" fxLayoutAlign="space-between center" class="userItem">
+            <div fxFlex="70%">{{user.email}}</div>
             <div fxFlex="30%" class="controls" fxLayoutAlign="end">
               <button class="btn btn-primary btn-sm" (click)="resetPassword(user)">
                 Resetuj lozinku
               </button>
-              <button  class="btn btn-danger btn-sm ml-2" (click)="delete(user)">
+              <button class="btn btn-danger btn-sm ml-2" (click)="delete(user)">
+                Obriši
+              </button>
+            </div>
+          </div>
+          <div *ngIf="!user.email" class="userItem userWithError">
+            <div fxFlex="70%">GREŠKA - Nepotpuni podaci za korisnika UserId = {{user.userId}}</div>
+            <div fxFlex="30%" class="controls" fxLayoutAlign="end">
+              <button class="btn btn-primary btn-sm" (click)="resetPassword(user)">
+                Resetuj lozinku
+              </button>
+              <button class="btn btn-danger btn-sm ml-2" (click)="delete(user)">
                 Obriši
               </button>
             </div>

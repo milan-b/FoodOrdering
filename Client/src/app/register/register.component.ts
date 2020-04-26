@@ -76,9 +76,11 @@ export class RegisterComponent implements OnInit {
                 data => {
                     this.barService.showInfo(data.message);
                     this.loading = false;
+                    this.getUsers();
                 },
                 error => {
                     this.error = error;
+                    this.barService.showError(error);
                     this.loading = false;
                 });
     }
@@ -94,7 +96,7 @@ export class RegisterComponent implements OnInit {
             height: '200px',
             disableClose: true,
             data: {
-                message: `Da li ste sigurni da želite obrisati korisnika "${user.username}"?`
+                message: `Da li ste sigurni da želite obrisati korisnika "${user.email}"?`
             }
         });
 
@@ -102,10 +104,10 @@ export class RegisterComponent implements OnInit {
             if (result) {
                 this.userService.delete(user.userId).subscribe(
                     () => {
-                        this.barService.showInfo(`Uspješno ste obrisali korisnika "${user.username}".`);
+                        this.barService.showInfo(`Uspješno ste obrisali korisnika "${user.email}".`);
                         this.users = this.users.filter(o => o.userId != user.userId);
                     },
-                    (error) => this.barService.showError(`Greška prilikom brisanja korisnika "${user.username}".\n Greška: ${error}`)
+                    (error) => this.barService.showError(`Greška prilikom brisanja korisnika "${user.email}".\n Greška: ${error}`)
                 );
             }
         });
