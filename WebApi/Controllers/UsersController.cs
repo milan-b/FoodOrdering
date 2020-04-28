@@ -16,6 +16,9 @@ using WebApi.Models.Users;
 using Service;
 using System.Linq;
 using WebApi.ViewModels;
+using System.Threading.Tasks;
+using Domain.Enums;
+using Newtonsoft.Json.Linq;
 
 namespace WebApi.Controllers
 {
@@ -27,17 +30,20 @@ namespace WebApi.Controllers
         private IUserService _userService;
         private IOrderService _orderService;
         private IMapper _mapper;
+        private IEmailService _emailService;
         private readonly AppSettings _appSettings;
 
         public UsersController(
             IUserService userService,
             IOrderService orderService,
             IMapper mapper,
+            IEmailService emailService,
             IOptions<AppSettings> appSettings)
         {
             _userService = userService;
             _orderService = orderService;
             _mapper = mapper;
+            _emailService = emailService;
             _appSettings = appSettings.Value;
         }
 
@@ -76,13 +82,14 @@ namespace WebApi.Controllers
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Roles = user.Roles,
+                Activated = user.Activated,
                 Token = tokenString
             });
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = Roles.Admin)]
         [HttpPost]
-        public IActionResult Register([FromBody]RegisterModel viewModel)
+        public async Task<IActionResult> Register([FromBody]RegisterModel viewModel)
         {
             IActionResult ret;
 
@@ -106,12 +113,14 @@ namespace WebApi.Controllers
                     _userService.Create(user, password);
 
                     //TODO send userEmail to change password.
-                    ret = Ok(new { message = "Korisnik uspješno kreiran!" });
+                    await SendEmailToNewUser(user, password);
+                    ret = Ok(new { message = "Korisnik je uspješno kreiran!" });
                 }
             }
             return ret;
         }
 
+        [Authorize(Roles = Roles.Admin)]
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -120,6 +129,7 @@ namespace WebApi.Controllers
             return Ok(viewModel);
         }
 
+        [Authorize(Roles = Roles.Admin)]
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
@@ -129,26 +139,27 @@ namespace WebApi.Controllers
             return Ok(model);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody]UpdateModel model)
+        [HttpPost]
+        public IActionResult UpdatePassword([FromBody]JToken jsonbody)
         {
-            // map model to entity and set id
-            var user = _mapper.Map<User>(model);
-            user.UserId = id;
+            IActionResult ret;
+            var password = jsonbody.Value<string>("password");
 
-            try
+            if (string.IsNullOrEmpty(password) || password.Length < 10)
             {
-                // update user 
-                _userService.Update(user, model.Password);
-                return Ok();
+                ret = ValidationProblem("Greška! Lozinka mora sadržati minimalno 10 karaktera. Molimo Vas pokušajte ponovo.");
             }
-            catch (AppException ex)
+            else
             {
-                // return error message if there was an exception
-                return BadRequest(new { message = ex.Message });
+                var user = _userService.GetById(Convert.ToInt32(User.Identity.Name));
+                user.Activated = true;
+                _userService.Update(user, password);
+                ret = Ok();
             }
+            return ret;
         }
 
+        [Authorize(Roles = Roles.Admin)]
         [HttpDelete]
         public IActionResult Delete(int id)
         {
@@ -163,13 +174,12 @@ namespace WebApi.Controllers
             Random random = new Random();
             while (password.Length < 15)
             {
-                password += (char)random.Next(32, 126);
+                password += (char)random.Next(65, 122);
             }
             return password;
         }
 
         #region mappers
-
         private void MapUserVMToUser(RegisterModel viewModel, User user)
         {
             user.Email = viewModel.Email.Trim().ToLower();
@@ -187,13 +197,32 @@ namespace WebApi.Controllers
         private List<UserViewModel> MapUsersToUsersVM(List<User> users)
         {
             var ret = new List<UserViewModel>();
-            foreach(var user in users)
+            foreach (var user in users)
             {
                 var viewModel = new UserViewModel();
                 MapUserToUserVM(user, viewModel);
                 ret.Add(viewModel);
             }
             return ret;
+        }
+        #endregion
+
+        #region helpers 
+        private async Task SendEmailToNewUser(User user, string password)
+        {
+            var emailBody = $"Poštovani,<br><br> Vama je kreiran nalog na portalu za narudžbu hrane. Da bi ga aktivirali morate se prijaviti " +
+                $"na {_appSettings.URL} sa email-om: {user.Email} i lozinkom:<br><b>{password}</b><br>" +
+                $"Da bi Vaš nalog postao aktivan, nakon prve prijave promijenite lozinku.<br><br>" +
+                $"Srdačan pozdrav i prijatno.<br> ";
+            await _emailService.SendEmailAsync(user.Email, "Registracija na portalu za nardžbu hrane", emailBody);
+        }
+
+        private async Task SendEmailForNewPassword(User user, string password)
+        {
+            var emailBody = $"Poštovani,<br><br> Vama je administrator resetovao lozinku. Vaša nova lozika je: {password}. <br>" +
+                $"Da bi reaktivirali svoj nalog prijavite se na portal i promjenite lozinku.<br><br>" +
+                $"Srdačan pozdrav i prijatno.<br><br> ";
+            await _emailService.SendEmailAsync(user.Email, "Promjena lozinke na portalu za nardžbu hrane", emailBody);
         }
         #endregion
     }

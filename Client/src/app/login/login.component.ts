@@ -36,6 +36,9 @@ export class LoginComponent implements OnInit, OnDestroy {
         // get return url from route parameters or default to '/'
         this.qpSupcription = this.route.queryParams.subscribe(qp => {
             this.returnUrl = qp['returnUrl'] || '/';
+            if (this.returnUrl === '/new-password') {
+                this.returnUrl = '/';
+            }
         })
     }
 

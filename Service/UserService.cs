@@ -20,6 +20,7 @@ namespace Service
         User Authenticate(string username, string password);
         IEnumerable<User> GetAll();
         User GetById(int id);
+        User GetByEmail(string email);
         User Create(User user, string password);
         void Update(User user, string password = null);
         void Delete(int id);
@@ -62,6 +63,11 @@ namespace Service
             return _context.Users.Find(id);
         }
 
+        public User GetByEmail(string email)
+        {
+            return _context.Users.Where(o => o.Email == email).FirstOrDefault();
+        }
+
 
         public User Create(User user, string password)
         {
@@ -85,29 +91,29 @@ namespace Service
             return user;
         }
 
-        public void Update(User userParam, string password = null)
+        public void Update(User user, string password = null)
         {
-            var user = _context.Users.Find(userParam.UserId);
+            //var user = _context.Users.Find(userParam.UserId);
 
             //if (user == null)
             //    throw new AppException("User not found");
 
             // update username if it has changed
-            if (!string.IsNullOrWhiteSpace(userParam.Username) && userParam.Username != user.Username)
-            {
-                // throw error if the new username is already taken
-                if (_context.Users.Any(x => x.Username == userParam.Username))
-                    throw new Exception("Username " + userParam.Username + " is already taken");
+            //if (!string.IsNullOrWhiteSpace(userParam.Username) && userParam.Username != user.Username)
+            //{
+            //    // throw error if the new username is already taken
+            //    if (_context.Users.Any(x => x.Username == userParam.Username))
+            //        throw new Exception("Username " + userParam.Username + " is already taken");
 
-                user.Username = userParam.Username;
-            }
+            //    user.Username = userParam.Username;
+            //}
 
             // update user properties if provided
-            if (!string.IsNullOrWhiteSpace(userParam.FirstName))
-                user.FirstName = userParam.FirstName;
+            //if (!string.IsNullOrWhiteSpace(userParam.FirstName))
+            //    user.FirstName = userParam.FirstName;
 
-            if (!string.IsNullOrWhiteSpace(userParam.LastName))
-                user.LastName = userParam.LastName;
+            //if (!string.IsNullOrWhiteSpace(userParam.LastName))
+            //    user.LastName = userParam.LastName;
 
             // update password if provided
             if (!string.IsNullOrWhiteSpace(password))

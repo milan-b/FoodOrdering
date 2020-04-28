@@ -24,6 +24,7 @@ export class RegisterComponent implements OnInit {
     error = '';
     qpSupcription: Subscription;
     users: Array<User>;
+    activatedUsers: number;
     userFilter: string = "";
 
 
@@ -54,6 +55,7 @@ export class RegisterComponent implements OnInit {
         this.userService.getAll().pipe(first()).subscribe(users => {
             this.loading = false;
             this.users = users;
+            this.activatedUsers = users.filter(o => o.activated).length;
         });
     }
 
@@ -61,7 +63,6 @@ export class RegisterComponent implements OnInit {
     get f() { return this.registerForm.controls; }
 
     onSubmit() {
-        console.log(this.registerForm.value);
         this.submitted = true;
 
         // stop here if form is invalid
@@ -77,6 +78,7 @@ export class RegisterComponent implements OnInit {
                     this.barService.showInfo(data.message);
                     this.loading = false;
                     this.getUsers();
+                    this.registerForm.reset();
                 },
                 error => {
                     this.error = error;
@@ -105,7 +107,7 @@ export class RegisterComponent implements OnInit {
                 this.userService.delete(user.userId).subscribe(
                     () => {
                         this.barService.showInfo(`Uspješno ste obrisali korisnika "${user.email}".`);
-                        this.users = this.users.filter(o => o.userId != user.userId);
+                        this.getUsers();
                     },
                     (error) => this.barService.showError(`Greška prilikom brisanja korisnika "${user.email}".\n Greška: ${error}`)
                 );
