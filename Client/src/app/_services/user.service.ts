@@ -25,8 +25,11 @@ export class UserService {
         return this.http.delete(`${environment.apiUrl}Users/Delete`, { params: params });
     }
 
+    resetPassword(userId: number) {
+        return this.http.post<any>(`${environment.apiUrl}Users/ResetPassword`, { id: userId });
+    }
+
     updatePassword(password: string) {
-        //let params = new HttpParams().set('password', password);
         return this.http.post<any>(`${environment.apiUrl}Users/UpdatePassword`, { password: password });
     }
 }

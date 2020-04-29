@@ -1,5 +1,6 @@
-<div class="col-md-10 offset-md-1 mt-5">
+<div class="col-md-10 offset-md-1 mt-5" [ngClass]="{'loading' : loading}" >
   <div class="col-md-6 offset-md-3">
+    <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
     <div class="card">
       <h4 class="card-header">Kreiraj korisnika</h4>
       <div class="card-body flex-container">
@@ -21,7 +22,6 @@
 
           <div class="mat-form-field">
             <button [disabled]="loading" type="submit" mat-raised-button color="primary">
-              <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
               Kreiraj
             </button>
           </div>
@@ -52,7 +52,8 @@
         <div *ngFor="let user of users" class="user-container" >
           <div *ngIf="user.email && user.email.toLowerCase().indexOf(userFilter.toLowerCase()) != -1"
                fxLayout="row" fxLayoutAlign="space-between center" class="userItem" [ngClass]="{'notActivated' : !user.activated}">
-            <div fxFlex="60%">{{user.email}}</div>
+            <div fxFlex="40%">{{user.email}}</div>
+            <div fxFlex="20%">{{user.roles}}</div>
             <div fxFlex="10%">{{user.activated ? '':'Nije aktiviran'}}</div>
             <div fxFlex="30%" class="controls" fxLayoutAlign="end">
               <button class="btn btn-primary btn-sm" (click)="resetPassword(user)">

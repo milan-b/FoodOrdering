@@ -88,7 +88,18 @@ export class RegisterComponent implements OnInit {
     }
 
     resetPassword(user: User) {
-        console.log('not implemented\n', user);
+        this.loading = true;
+        this.userService.resetPassword(user.userId).subscribe(
+            data => {
+                this.barService.showInfo(data.message);
+                this.loading = false;
+                this.getUsers();
+            },
+            error => {
+                this.error = error;
+                this.barService.showError(error);
+                this.loading = false;
+            })
     }
 
     delete(user: User) {

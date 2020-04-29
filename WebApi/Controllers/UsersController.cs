@@ -112,7 +112,6 @@ namespace WebApi.Controllers
 
                     _userService.Create(user, password);
 
-                    //TODO send userEmail to change password.
                     await SendEmailToNewUser(user, password);
                     ret = Ok(new { message = "Korisnik je uspješno kreiran!" });
                 }
@@ -160,6 +159,19 @@ namespace WebApi.Controllers
         }
 
         [Authorize(Roles = Roles.Admin)]
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword([FromBody]JToken jsonbody)
+        {
+            var id = jsonbody.Value<int>("id");
+            var user = _userService.GetById(id);
+            user.Activated = false;
+            var password = GetRandomPassword();
+            _userService.Update(user, password);
+            await SendEmailForNewPassword(user, password);
+            return Ok(new { message = $"Korisniku {user.Email} je resetovana lozinka." });
+        }
+
+        [Authorize(Roles = Roles.Admin)]
         [HttpDelete]
         public IActionResult Delete(int id)
         {
@@ -191,6 +203,7 @@ namespace WebApi.Controllers
             viewModel.UserId = user.UserId;
             viewModel.Activated = user.Activated;
             viewModel.Email = user.Email;
+            viewModel.Roles = user.Roles;
 
         }
 
@@ -219,7 +232,7 @@ namespace WebApi.Controllers
 
         private async Task SendEmailForNewPassword(User user, string password)
         {
-            var emailBody = $"Poštovani,<br><br> Vama je administrator resetovao lozinku. Vaša nova lozika je: {password}. <br>" +
+            var emailBody = $"Poštovani,<br><br> Vama je administrator resetovao lozinku. Vaša nova lozika je: <b>{password}</b> <br>" +
                 $"Da bi reaktivirali svoj nalog prijavite se na portal i promjenite lozinku.<br><br>" +
                 $"Srdačan pozdrav i prijatno.<br><br> ";
             await _emailService.SendEmailAsync(user.Email, "Promjena lozinke na portalu za nardžbu hrane", emailBody);
