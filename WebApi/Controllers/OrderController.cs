@@ -20,14 +20,20 @@ namespace WebApi.Controllers
         readonly IOrderService _orderService;
         readonly IEmailService _emailService;
         readonly IMeniService _meniService;
+        readonly IUserService _userService;
         readonly private IMapper _mapper;
 
-        public OrderController(IOrderService orderService, IMapper mapper, IEmailService emailService, IMeniService meniService)
+        private string[] ORDER_LOCATION_OPTIONS = { "Čajavec", "Medicinska Elektronika", "ETF" };
+        private string[] ORDER_TIME_OPTIONS = { "11:30h", "12:30h" };
+
+
+        public OrderController(IOrderService orderService, IMapper mapper, IEmailService emailService, IMeniService meniService, IUserService userService)
         {
             _mapper = mapper;
             _orderService = orderService;
             _emailService = emailService;
             _meniService = meniService;
+            _userService = userService;
         }
 
         [Authorize(Roles = Roles.Admin + "," + Roles.Cook)]
@@ -48,13 +54,6 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult MailTest()
-        {
-            _emailService.SendEmailAsync("bojic.job@gmail.com", "Test email", "Ovo je prva poruka! \n Radiii !!!!");
-            return Ok();
-        }
-
-        [HttpGet]
         public IActionResult Get(int menuId)
         {
             OrderViewModel orderVM = null;
@@ -67,7 +66,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateOrUpdate([FromBody] OrderViewModel viewModel)
+        public async Task<IActionResult> CreateOrUpdate([FromBody] OrderViewModel viewModel)
         {
             IActionResult result;
             if (!ModelState.IsValid)
@@ -86,6 +85,8 @@ namespace WebApi.Controllers
                     var order = new Narudzba();
                     MapOrderVMToOrder(viewModel, order);
                     order = _orderService.CreateOrUpdate(order);
+                    var user = _userService.GetById(Convert.ToInt32(User.Identity.Name));
+                    await SendEmailToConfirmOrder(user, order.NarudzbaId);
                     result = Ok(order.NarudzbaId);
                 }
             }
@@ -139,6 +140,29 @@ namespace WebApi.Controllers
             order.LocationId = viewModel.LocationId;
             order.UserId = Convert.ToInt32(User.Identity.Name);
             order.SideDishes = viewModel.SideDishes.Select(o => new OrderSideDish { PrilogId = o }).ToList();
+        }
+
+        #endregion
+
+        #region helpers 
+        private async Task SendEmailToConfirmOrder(User user, int orderId)
+        {
+            if (user.ReceiveOrderConfirmationEmails)
+            {
+                var prilozi = "";
+                var order = _orderService.Get(orderId);
+                order.SideDishes.ToList().ForEach(o => prilozi += o.Prilog.Naziv + ", ");
+                prilozi = prilozi.Substring(0, prilozi.Length - 2);
+                var location = ORDER_LOCATION_OPTIONS[order.LocationId];
+                var time = ORDER_TIME_OPTIONS[order.TimeId];
+                var emailBody = $"Poštovani,<br><br>" +
+                    $" Naručili ste \"{order.Hrana.Naziv}\" za dan {order.Meni.Datum.ToShortDateString()} <br>" +
+                    $"prilozi: {prilozi}<br>" +
+                    $"na likaciju: {location} <br>" +
+                    $"u vrijeme: {time}. <br> <br>" +
+                $"Srdačan pozdrav i prijatno.<br> ";
+                await _emailService.SendEmailAsync(user.Email, "Potvrda nardžbe hrane", emailBody);
+            }
         }
 
         #endregion

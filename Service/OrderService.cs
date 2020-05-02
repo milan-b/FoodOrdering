@@ -19,6 +19,7 @@ namespace Service
         void Delete(Narudzba order);
         Narudzba Get(int id);
         Narudzba CreateOrUpdate(Narudzba hrana);
+
     }
     public class OrderService : IOrderService
     {
@@ -65,7 +66,12 @@ namespace Service
 
         public Narudzba Get(int id)
         {
-            return _context.Narudzbe.Find(id);
+            return _context.Narudzbe.Where(o => o.NarudzbaId == id)
+                .Include(o => o.Hrana)
+                .Include(o => o.Meni)
+                .Include(o => o.SideDishes)
+                    .ThenInclude(sideDish => sideDish.Prilog)
+                .FirstOrDefault();
         }
 
         public void Delete(int id)
@@ -96,6 +102,7 @@ namespace Service
                 _context.SaveChanges();
             }
         }
+
 
 
     }

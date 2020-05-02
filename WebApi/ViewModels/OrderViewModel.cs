@@ -14,7 +14,6 @@ namespace WebApi.ViewModels
         [Required]
         public int FoodId { get; set; }
         public int OrderId { get; set; }
-        public int UserId { get; set; }
         [Required]
         public int LocationId { get; set; }
         [Required]
