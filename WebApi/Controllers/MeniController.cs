@@ -27,13 +27,13 @@ namespace WebApi.Controllers
         [HttpGet]
         public IActionResult GetMeni(DateTime date)
         {
-            var meni = _meniService.GetByDate(date);
-            if(meni == null)
+            var menu = _meniService.GetByDate(date);
+            if(menu == null)
             {
-                meni = new Meni { Datum = date };
+                menu = new Meni { Datum = date };
             }
             var meniViewModel = new MeniViewModel();
-            MapMeniToMeniVM(meni, meniViewModel);
+            MapMeniToMeniVM(menu, meniViewModel);
             return Ok(meniViewModel);
         }
 
@@ -41,8 +41,18 @@ namespace WebApi.Controllers
         [HttpGet]
         public IActionResult GetAllMenis()
         {
-            var menis = _meniService.GetAll().ToList();
-            var viewModel = _mapper.Map<List<MeniForCalendarViewModel>>(menis);
+            var menues = _meniService.GetAll().ToList();
+            List<MeniForCalendarViewModel> viewModel = new List<MeniForCalendarViewModel>();
+            foreach(var menu in menues)
+            {
+                viewModel.Add(new MeniForCalendarViewModel
+                {
+                    MeniId = menu.MeniId,
+                    Datum = menu.Datum,
+                    CanOrder = !(menu.Datum.Subtract(DateTime.Now).TotalHours < 10)
+                });
+            }
+            //var viewModel = _mapper.Map<List<MeniForCalendarViewModel>>(menis);
             return Ok(viewModel);
         }
 
@@ -75,14 +85,16 @@ namespace WebApi.Controllers
 
 
         #region Mappers
-        private void MapMeniToMeniVM(Meni meni, MeniViewModel viewModel)
+
+        private void MapMeniToMeniVM(Meni menu, MeniViewModel viewModel)
         {
-            viewModel.MenuId = meni.MeniId;
-            viewModel.Date = meni.Datum;
+            viewModel.MenuId = menu.MeniId;
+            viewModel.Date = menu.Datum;
             viewModel.Food = new List<int>();
-            if (meni.Hrana != null)
+            viewModel.CanOrder = !(menu.Datum.Subtract(DateTime.Now).TotalHours < 10);
+            if (menu.Hrana != null)
             {
-                foreach (var hrana in meni.Hrana)
+                foreach (var hrana in menu.Hrana)
                 {
                     viewModel.Food.Add(hrana.HranaId);
                 }

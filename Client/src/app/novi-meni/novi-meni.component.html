@@ -1,4 +1,4 @@
-<button (click)="test()">Test Email</button>
+
 <div class="card">
   <div class="card-header" fxLayout="row" fxLayoutAlign="space-between center">
     <h4 fxFlex="40%">
@@ -15,7 +15,7 @@
   </div>
   <div class="card-body">
     <div *ngIf="adminMode">
-      <button class="btn btn-primary" (click)="createMenu()">
+      <button  class="btn btn-primary" (click)="createMenu()" [disabled]="!menu || !menu.canOrder"  title="{{(!menu || !menu.canOrder)? 'Verijeme za narudžbu je isteklo' : ''}}">
         Snimi meni
       </button>
     </div>
@@ -40,10 +40,10 @@
         </div>-->
       </section>
       <div fxFlex="20%" fxLayoutAlign="end center">
-        <button *ngIf="orderId != 0" class="btn btn-danger" (click)="deleteOrder()">
+        <button *ngIf="orderId != 0" class="btn btn-danger" (click)="deleteOrder()" [disabled]="!menu || !menu.canOrder"  title="{{(!menu || !menu.canOrder)? 'Verijeme za narudžbu je isteklo' : ''}}">
           Poništi
         </button>
-        <button class="btn btn-primary ml-1" (click)="createOrder()">
+        <button (click)="createOrder()" [disabled]="!menu || !menu.canOrder"  title="{{(!menu || !menu.canOrder)? 'Verijeme za narudžbu je isteklo' : ''}}"  class="btn btn-primary ml-1" >
           Naruči
         </button>
       </div>

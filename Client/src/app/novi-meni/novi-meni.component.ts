@@ -85,7 +85,7 @@ export class NoviMeniComponent implements OnInit {
     initMenu(date: moment.Moment) {
         this.meniService.getMenu(date)
             .subscribe((data: any) => {
-                this.menu = new Meni({ menuId: data.body.menuId, date: data.body.date, food: data.body.food });
+                this.menu = new Meni({ menuId: data.body.menuId, date: data.body.date, food: data.body.food, canOrder: data.body.canOrder });
                 if (this.adminMode) {
                     this.setFoodForMenu();
                 } else {
@@ -132,7 +132,7 @@ export class NoviMeniComponent implements OnInit {
     }
 
     setOrder = () => {
-        
+
         this.stalnaHranaArray = this.stalnaHranaArray.map(o => { o.izabrana = false; return o; });
         this.hranaArray = this.hranaArray.map(o => { o.izabrana = false; return o; });
         this.orderId = 0;
@@ -209,10 +209,14 @@ export class NoviMeniComponent implements OnInit {
 
     createMenu(): void {
         this.menu.food = this.hranaArray.concat(this.stalnaHranaArray).filter(h => h.izabrana).map(o => o.hranaId);
-        this.meniService.createMenu(this.menu).subscribe(data => {
-            this.barService.showInfo("Uspješno ste snimili meni.");
-            this.refreshCalendar.next(true);
-        });
+        this.meniService.createMenu(this.menu).subscribe(
+            (data: number) => {
+                this.menu.menuId = data;
+                this.barService.showInfo("Uspješno ste snimili meni.");
+                this.refreshCalendar.next(true);
+            }, error => {
+                this.barService.showError(error.message);
+            });
 
     }
 
@@ -234,7 +238,7 @@ export class NoviMeniComponent implements OnInit {
                                       u vrijeme "${this.orderTimeOptions[this.orderTime]}".`);
             },
                 error => {
-                    this.barService.showError('Dogorila se greška. Narudžba nije kreirana.');
+                    this.barService.showError('Dogorila se greška. Narudžba nije kreirana. Detalji: \n' + error);
                 });
         } else {
             this.barService.showError("Niste izabrali hranu!");
@@ -247,7 +251,7 @@ export class NoviMeniComponent implements OnInit {
             this.refreshCalendar.next(true);
             this.setOrder();
         }, error => {
-                this.barService.showError('Dogodila se greška. Narudžba nije obrisana.');
+            this.barService.showError('Dogodila se greška. Narudžba nije obrisana.');
         });
     }
 
@@ -293,10 +297,6 @@ export class NoviMeniComponent implements OnInit {
                 }
             }
         }
-    }
-
-    test() {
-        this.orderService.test().subscribe(data => console.log('slanje emaila proslo\n', data));
     }
 
     /// Steps region ///

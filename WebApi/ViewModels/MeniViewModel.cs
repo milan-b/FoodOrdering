@@ -13,5 +13,6 @@ namespace WebApi.ViewModels
         public DateTime Date { get; set; }
         //public List<HranaMeniViewModel> Hrana { get; set; }
         public List<int> Food { get; set; }
+        public bool CanOrder { get; set; }
     }
 }

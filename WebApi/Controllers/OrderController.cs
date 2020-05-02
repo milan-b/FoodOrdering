@@ -19,13 +19,15 @@ namespace WebApi.Controllers
     {
         readonly IOrderService _orderService;
         readonly IEmailService _emailService;
+        readonly IMeniService _meniService;
         readonly private IMapper _mapper;
 
-        public OrderController(IOrderService orderService, IMapper mapper, IEmailService emailService)
+        public OrderController(IOrderService orderService, IMapper mapper, IEmailService emailService, IMeniService meniService)
         {
             _mapper = mapper;
             _orderService = orderService;
             _emailService = emailService;
+            _meniService = meniService;
         }
 
         [Authorize(Roles = Roles.Admin + "," + Roles.Cook)]
@@ -48,7 +50,7 @@ namespace WebApi.Controllers
         [HttpGet]
         public IActionResult MailTest()
         {
-            _emailService.SendEmailAsync("bojic.job@gmail.com","Test email", "Ovo je prva poruka! \n Radiii !!!!");
+            _emailService.SendEmailAsync("bojic.job@gmail.com", "Test email", "Ovo je prva poruka! \n Radiii !!!!");
             return Ok();
         }
 
@@ -74,10 +76,18 @@ namespace WebApi.Controllers
             }
             else
             {
-                var order = new Narudzba();
-                MapOrderVMToOrder(viewModel, order);
-                order = _orderService.CreateOrUpdate(order);
-                result = Ok(order.NarudzbaId);
+                var meni = _meniService.GetById(viewModel.MenuId);
+                if (meni.Datum.Subtract(DateTime.Now).TotalHours < 10)
+                {
+                    result = ValidationProblem("Vrijeme za narudžbu je isteklo. Naručiti možete do 14h, dan ranije.");
+                }
+                else
+                {
+                    var order = new Narudzba();
+                    MapOrderVMToOrder(viewModel, order);
+                    order = _orderService.CreateOrUpdate(order);
+                    result = Ok(order.NarudzbaId);
+                }
             }
 
             return result;
@@ -88,7 +98,7 @@ namespace WebApi.Controllers
         {
             IActionResult ret;
             var order = _orderService.Get(orderId);
-            if(User.IsInRole(Roles.Admin) || order.UserId == Convert.ToInt32(User.Identity.Name))
+            if (User.IsInRole(Roles.Admin) || order.UserId == Convert.ToInt32(User.Identity.Name))
             {
                 _orderService.Delete(order);
                 ret = Ok();
@@ -117,7 +127,7 @@ namespace WebApi.Controllers
             viewModel.TimeId = order.TimeId;
             viewModel.LocationId = order.LocationId;
             viewModel.SideDishes = order.SideDishes.Select(o => o.PrilogId).ToList();
-            viewModel.User = new UserViewModel {UserId = order.UserId, Email = order.User.Email };
+            viewModel.User = new UserViewModel { UserId = order.UserId, Email = order.User.Email };
         }
 
         private void MapOrderVMToOrder(OrderViewModel viewModel, Narudzba order)
