@@ -227,7 +227,7 @@ namespace WebApi.Controllers
                 $"na {_appSettings.URL} sa email-om: {user.Email} i lozinkom:<br><b>{password}</b><br>" +
                 $"Da bi Vaš nalog postao aktivan, nakon prve prijave promijenite lozinku.<br><br>" +
                 $"Srdačan pozdrav i prijatno.<br> ";
-            await _emailService.SendEmailAsync(user.Email, "Registracija na portalu za nardžbu hrane", emailBody);
+            await _emailService.SendEmailToRecipientAsinc(user.Email, "Registracija na portalu za nardžbu hrane", emailBody);
         }
 
         private async Task SendEmailForNewPassword(User user, string password)
@@ -235,7 +235,7 @@ namespace WebApi.Controllers
             var emailBody = $"Poštovani,<br><br> Vama je administrator resetovao lozinku. Vaša nova lozika je: <b>{password}</b> <br>" +
                 $"Da bi reaktivirali svoj nalog prijavite se na portal i promjenite lozinku.<br><br>" +
                 $"Srdačan pozdrav i prijatno.<br><br> ";
-            await _emailService.SendEmailAsync(user.Email, "Promjena lozinke na portalu za nardžbu hrane", emailBody);
+            await _emailService.SendEmailToRecipientAsinc(user.Email, "Promjena lozinke na portalu za nardžbu hrane", emailBody);
         }
         #endregion
     }

@@ -161,7 +161,7 @@ namespace WebApi.Controllers
                     $"na likaciju: {location} <br>" +
                     $"u vrijeme: {time}. <br> <br>" +
                 $"Srdačan pozdrav i prijatno.<br> ";
-                await _emailService.SendEmailAsync(user.Email, "Potvrda nardžbe hrane", emailBody);
+                await _emailService.SendEmailToRecipientAsinc(user.Email, "Potvrda nardžbe hrane", emailBody);
             }
         }
 

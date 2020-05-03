@@ -1,5 +1,6 @@
 ﻿using Domain.Data;
 using Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,8 +25,9 @@ namespace Service
         User Create(User user, string password);
         void Update(User user, string password = null);
         void Delete(int id);
+        List<string> GetEmailsFromAllThatDidNotOrder(DateTime date);
     }
-    public class UserService: IUserService
+    public class UserService : IUserService
     {
         private HranaContext _context;
 
@@ -138,6 +140,19 @@ namespace Service
                 _context.Users.Update(user);
                 _context.SaveChanges();
             }
+        }
+
+        public List<string> GetEmailsFromAllThatDidNotOrder(DateTime date)
+        {
+            List<string> ret = null;
+            var menu = _context.Menii.Where(o => o.Datum.Date == date.Date).Include(o => o.Narudzbe).FirstOrDefault();
+            if(menu != null)
+            {
+                var usersThatDidOrderd = menu.Narudzbe.Select(o => o.UserId);
+                ret = _context.Users.Where(o => o.ReceiveOrderWarningEmails && !usersThatDidOrderd.Any(o1 => o1 == o.UserId))
+                    .Select(o => o.Email).ToList();
+            }
+            return ret;
         }
 
         // private helper methods

@@ -98,6 +98,7 @@ namespace Service
         {
             if (order != null)
             {
+                _context.OrderSideDishes.RemoveRange(_context.OrderSideDishes.Where(o => o.NarudzbaId == order.NarudzbaId));
                 _context.Narudzbe.Remove(order);
                 _context.SaveChanges();
             }

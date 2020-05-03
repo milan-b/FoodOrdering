@@ -12,7 +12,8 @@ namespace WebApi.Services
 {
     public interface IEmailService
     {
-        Task SendEmailAsync(string email, string subject, string message);
+        Task SendEmailToRecipientAsinc(string email, string subject, string message);
+        Task SendEmailToRecipientsAsinc(List<string> recipients, string subject, string message);
     }
 
     public class EmailService : IEmailService
@@ -28,22 +29,44 @@ namespace WebApi.Services
             _env = env;
         }
 
-        public async Task SendEmailAsync(string email, string subject, string message)
+        public async Task SendEmailToRecipientAsinc(string email, string subject, string message)
+        {
+            var mimeMessage = new MimeMessage();
+
+            mimeMessage.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.Sender));
+
+            mimeMessage.To.Add(new MailboxAddress(email));
+
+            mimeMessage.Subject = subject;
+
+            mimeMessage.Body = new TextPart("html")
+            {
+                Text = message
+            };
+            await SendEmailAsync(mimeMessage);
+        }
+
+        public async Task SendEmailToRecipientsAsinc(List<string> recipients, string subject, string message)
+        {
+            var mimeMessage = new MimeMessage();
+
+            mimeMessage.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.Sender));
+            
+            recipients.ForEach(o => mimeMessage.Bcc.Add(new MailboxAddress(o)));
+
+            mimeMessage.Subject = subject;
+
+            mimeMessage.Body = new TextPart("html")
+            {
+                Text = message
+            };
+            await SendEmailAsync(mimeMessage);
+        }
+
+        private async Task SendEmailAsync(MimeMessage mimeMessage)
         {
             try
             {
-                var mimeMessage = new MimeMessage();
-
-                mimeMessage.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.Sender));
-
-                mimeMessage.To.Add(new MailboxAddress(email));
-
-                mimeMessage.Subject = subject;
-
-                mimeMessage.Body = new TextPart("html")
-                {
-                    Text = message
-                };
 
                 using (var client = new SmtpClient())
                 {

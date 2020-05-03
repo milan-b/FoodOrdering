@@ -15,6 +15,7 @@ using System;
 using Domain.Data;
 using Service;
 using WebApi.Entities;
+using WebApi.HostedServices;
 
 namespace WebApi
 {
@@ -93,6 +94,7 @@ namespace WebApi
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
+            services.AddHostedService<RemindToOrderCronJob> ();
 
             services.AddSingleton<IEmailService, EmailService>();
 
