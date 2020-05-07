@@ -25,9 +25,11 @@ export class DatePickerComponent implements OnInit {
 
     ngOnInit(): void {
         this.date = new FormControl(this.initDate.toDate());
-        this.refresh.subscribe(() => {
-            this.setDatesWithDatas();
-        });
+        if (this.refresh) {
+            this.refresh.subscribe(() => {
+                this.setDatesWithDatas();
+            });
+        }
         this.setDatesWithDatas();
     }
 
@@ -37,7 +39,7 @@ export class DatePickerComponent implements OnInit {
 
     setDatesWithDatas = () => {
         this.meniService.getAllMenus().subscribe(response => {
-            this.datesWithMenue = (<any[]>response.body).map(item => { return { meniId: item.meniId, datum: new Date(item.datum) } });
+            this.datesWithMenue = (<any[]>response.body).map(item => { return { meniId: item.meniId, datum: new Date(item.datum), canOrder: item.canOrder } });
         });
         this.orderService.getAllForUser().subscribe(response => {
             this.menusWihtOrders = (<number[]>response.body);
@@ -55,8 +57,11 @@ export class DatePickerComponent implements OnInit {
             else {
                 retClasses = 'date-with-menue';
             }
+            if (!menu.canOrder) {
+                retClasses += ' order-time-expired'
+            }
         }
-        
+
         return retClasses;
     }
 

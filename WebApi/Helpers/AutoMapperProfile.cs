@@ -12,7 +12,7 @@ namespace WebApi.Helpers
         public AutoMapperProfile()
         {
             CreateMap<User, UserModel>();
-            CreateMap<RegisterModel, User>();
+            CreateMap<Models.Users.RegisterModel, User>();
             CreateMap<UpdateModel, User>();
 
             CreateMap<Meni, MeniViewModel>();

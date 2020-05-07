@@ -134,6 +134,9 @@ namespace Domain.Migrations
                     b.Property<DateTime>("Datum")
                         .HasColumnType("Date");
 
+                    b.Property<bool>("Locked")
+                        .HasColumnType("tinyint(1)");
+
                     b.HasKey("MeniId");
 
                     b.HasIndex("Datum")
@@ -173,6 +176,8 @@ namespace Domain.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("NarudzbaId");
+
+                    b.HasIndex("HranaId");
 
                     b.HasIndex("MeniId");
 
@@ -243,8 +248,17 @@ namespace Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<bool>("Activated")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
                     b.Property<string>("FirstName")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("LastName")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -258,6 +272,12 @@ namespace Domain.Migrations
                     b.Property<byte[]>("PasswordSalt")
                         .HasColumnType("longblob");
 
+                    b.Property<bool>("ReceiveOrderConfirmationEmails")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("ReceiveOrderWarningEmails")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("Roles")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
@@ -268,6 +288,8 @@ namespace Domain.Migrations
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("UserId");
+
+                    b.HasIndex("Email");
 
                     b.ToTable("User");
                 });
@@ -319,7 +341,13 @@ namespace Domain.Migrations
 
             modelBuilder.Entity("Domain.Models.Narudzba", b =>
                 {
-                    b.HasOne("Domain.Models.Meni", null)
+                    b.HasOne("Domain.Models.Hrana", "Hrana")
+                        .WithMany()
+                        .HasForeignKey("HranaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Models.Meni", "Meni")
                         .WithMany("Narudzbe")
                         .HasForeignKey("MeniId")
                         .OnDelete(DeleteBehavior.Restrict)

@@ -51,6 +51,9 @@ namespace Domain.Data
             modelBuilder.Entity<Narudzba>()
             .HasQueryFilter(post => EF.Property<bool>(post, "IsDeleted") == false);
 
+            modelBuilder.Entity<User>()
+            .HasQueryFilter(post => EF.Property<bool>(post, "IsDeleted") == false);
+
             #endregion
 
 
@@ -66,7 +69,10 @@ namespace Domain.Data
             modelBuilder.Entity<HranaMeni>().HasKey(hm => new { hm.HranaId, hm.MeniId });
             modelBuilder.Entity<HranaPrilog>().HasKey(hp => new { hp.HranaId, hp.PrilogId });
 
+
             modelBuilder.Entity<OrderSideDish>().HasKey(os => new { os.NarudzbaId, os.PrilogId });
+
+            modelBuilder.Entity<User>().HasIndex(user => new { user.Email });
 
             modelBuilder.Entity<Meni>().HasIndex(m => m.Datum).IsUnique(true);
             modelBuilder.Entity<Meni>().Property(m => m.Datum).HasColumnType("Date");
@@ -103,6 +109,21 @@ namespace Domain.Data
         private void OnBeforeSaving()
         {
             foreach (var entry in ChangeTracker.Entries<Narudzba>())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.CurrentValues["IsDeleted"] = false;
+                        break;
+
+                    case EntityState.Deleted:
+                        entry.State = EntityState.Modified;
+                        entry.CurrentValues["IsDeleted"] = true;
+                        break;
+                }
+            }
+
+            foreach (var entry in ChangeTracker.Entries<User>())
             {
                 switch (entry.State)
                 {

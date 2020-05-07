@@ -1,5 +1,6 @@
 ﻿using Domain.Data;
 using Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +21,13 @@ namespace Service
         User Authenticate(string username, string password);
         IEnumerable<User> GetAll();
         User GetById(int id);
+        User GetByEmail(string email);
         User Create(User user, string password);
         void Update(User user, string password = null);
         void Delete(int id);
+        List<string> GetEmailsFromAllThatDidNotOrder(DateTime date);
     }
-    public class UserService: IUserService
+    public class UserService : IUserService
     {
         private HranaContext _context;
 
@@ -33,12 +36,12 @@ namespace Service
             _context = context;
         }
 
-        public User Authenticate(string username, string password)
+        public User Authenticate(string email, string password)
         {
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
                 return null;
 
-            var user = _context.Users.SingleOrDefault(x => x.Username == username);
+            var user = _context.Users.SingleOrDefault(x => x.Email == email);
 
             // check if username exists
             if (user == null)
@@ -62,15 +65,21 @@ namespace Service
             return _context.Users.Find(id);
         }
 
+        public User GetByEmail(string email)
+        {
+            return _context.Users.Where(o => o.Email == email).FirstOrDefault();
+        }
+
+
         public User Create(User user, string password)
         {
             //validation
-            if (string.IsNullOrWhiteSpace(password))
-                //throw new AppException("Password is required");
-                throw new Exception("Password is required");
+            //if (string.IsNullOrWhiteSpace(password))
+            //    //throw new AppException("Password is required");
+            //    throw new Exception("Password is required");
 
-            if (_context.Users.Any(x => x.Username == user.Username))
-                throw new Exception("Username \"" + user.Username + "\" is already taken");
+            //if (_context.Users.Any(x => x.Username == user.Username))
+            //    throw new Exception("Username \"" + user.Username + "\" is already taken");
 
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
@@ -84,29 +93,29 @@ namespace Service
             return user;
         }
 
-        public void Update(User userParam, string password = null)
+        public void Update(User user, string password = null)
         {
-            var user = _context.Users.Find(userParam.UserId);
+            //var user = _context.Users.Find(userParam.UserId);
 
             //if (user == null)
             //    throw new AppException("User not found");
 
             // update username if it has changed
-            if (!string.IsNullOrWhiteSpace(userParam.Username) && userParam.Username != user.Username)
-            {
-                // throw error if the new username is already taken
-                if (_context.Users.Any(x => x.Username == userParam.Username))
-                    throw new Exception("Username " + userParam.Username + " is already taken");
+            //if (!string.IsNullOrWhiteSpace(userParam.Username) && userParam.Username != user.Username)
+            //{
+            //    // throw error if the new username is already taken
+            //    if (_context.Users.Any(x => x.Username == userParam.Username))
+            //        throw new Exception("Username " + userParam.Username + " is already taken");
 
-                user.Username = userParam.Username;
-            }
+            //    user.Username = userParam.Username;
+            //}
 
             // update user properties if provided
-            if (!string.IsNullOrWhiteSpace(userParam.FirstName))
-                user.FirstName = userParam.FirstName;
+            //if (!string.IsNullOrWhiteSpace(userParam.FirstName))
+            //    user.FirstName = userParam.FirstName;
 
-            if (!string.IsNullOrWhiteSpace(userParam.LastName))
-                user.LastName = userParam.LastName;
+            //if (!string.IsNullOrWhiteSpace(userParam.LastName))
+            //    user.LastName = userParam.LastName;
 
             // update password if provided
             if (!string.IsNullOrWhiteSpace(password))
@@ -127,9 +136,23 @@ namespace Service
             var user = _context.Users.Find(id);
             if (user != null)
             {
-                _context.Users.Remove(user);
+                user.IsDeleted = true;
+                _context.Users.Update(user);
                 _context.SaveChanges();
             }
+        }
+
+        public List<string> GetEmailsFromAllThatDidNotOrder(DateTime date)
+        {
+            List<string> ret = null;
+            var menu = _context.Menii.Where(o => o.Datum.Date == date.Date).Include(o => o.Narudzbe).FirstOrDefault();
+            if(menu != null)
+            {
+                var usersThatDidOrderd = menu.Narudzbe.Select(o => o.UserId);
+                ret = _context.Users.Where(o => o.ReceiveOrderWarningEmails && !usersThatDidOrderd.Any(o1 => o1 == o.UserId))
+                    .Select(o => o.Email).ToList();
+            }
+            return ret;
         }
 
         // private helper methods

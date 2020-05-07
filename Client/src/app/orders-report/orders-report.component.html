@@ -1,0 +1,20 @@
+<div class="card">
+  <div class="card-header" fxLayout="row" fxLayoutAlign="space-between center">
+    <h4 fxFlex="40%">
+      Izvještaj za datum
+    </h4>
+    <div fxFlex="20%">
+      Meni je zaključen
+      Još uvijek su moguće izmjene naruđbi
+      <!--<mat-slide-toggle (change)="adminModeChaged()" [(ngModel)]="adminMode" *ngIf="isAdminOrCook">
+        Admin mode
+      </mat-slide-toggle>-->
+    </div>
+    <div fxFlex="40%" fxLayoutAlign="end center">
+      <app-date-picker (dateChange)="onDateChange($event)" [initDate]="today"></app-date-picker>
+    </div>
+  </div>
+  <div class="card-body">
+    sadzaj kartice :)
+  </div>
+</div>

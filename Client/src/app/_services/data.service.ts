@@ -103,12 +103,11 @@ export class DataService {
       // The backend returned an unsuccessful response code.
       // The response body may contain clues as to what went wrong,
       let errorMessage = `An server - side error occurred: Backend returned code "${error.status}", ` + `body was "${error.error}"`;
-      console.error(errorMessage);
-      this.barService.showError(errorMessage);
+        console.error(error);
+        this.barService.showError('' + error);
     }
     // return an observable with a user-facing error message
-    return throwError(
-      'Something bad happened; please try again later.');
+      return throwError(error);
   };
 
   private handlePostError(error: HttpErrorResponse) {

@@ -11,8 +11,11 @@ namespace Domain.Models
         public int NarudzbaId { get; set; }
         [Required]
         public int MeniId { get; set; }
+
+        public Meni Meni { get; set; }
         [Required]
         public int HranaId { get; set; }
+        public Hrana Hrana { get; set; }
         [Required]
         public int UserId { get; set; }
         [Required]

@@ -8,6 +8,7 @@ using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Service;
+using WebApi.Services;
 using WebApi.ViewModels;
 
 namespace WebApi.Controllers
@@ -17,12 +18,22 @@ namespace WebApi.Controllers
     public class OrderController : Controller
     {
         readonly IOrderService _orderService;
+        readonly IEmailService _emailService;
+        readonly IMeniService _meniService;
+        readonly IUserService _userService;
         readonly private IMapper _mapper;
 
-        public OrderController(IOrderService orderService, IMapper mapper)
+        private string[] ORDER_LOCATION_OPTIONS = { "Čajavec", "Medicinska Elektronika", "ETF" };
+        private string[] ORDER_TIME_OPTIONS = { "11:30h", "12:30h" };
+
+
+        public OrderController(IOrderService orderService, IMapper mapper, IEmailService emailService, IMeniService meniService, IUserService userService)
         {
             _mapper = mapper;
             _orderService = orderService;
+            _emailService = emailService;
+            _meniService = meniService;
+            _userService = userService;
         }
 
         [Authorize(Roles = Roles.Admin + "," + Roles.Cook)]
@@ -55,7 +66,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateOrUpdate([FromBody] OrderViewModel viewModel)
+        public async Task<IActionResult> CreateOrUpdate([FromBody] OrderViewModel viewModel)
         {
             IActionResult result;
             if (!ModelState.IsValid)
@@ -64,10 +75,20 @@ namespace WebApi.Controllers
             }
             else
             {
-                var order = new Narudzba();
-                MapOrderVMToOrder(viewModel, order);
-                order = _orderService.CreateOrUpdate(order);
-                result = Ok(order.NarudzbaId);
+                var meni = _meniService.GetById(viewModel.MenuId);
+                if (meni.Locked)
+                {
+                    result = ValidationProblem("Vrijeme za narudžbu je isteklo. Naručiti možete do 14h, dan ranije.");
+                }
+                else
+                {
+                    var order = new Narudzba();
+                    MapOrderVMToOrder(viewModel, order);
+                    order = _orderService.CreateOrUpdate(order);
+                    var user = _userService.GetById(Convert.ToInt32(User.Identity.Name));
+                    await SendEmailToConfirmOrder(user, order.NarudzbaId);
+                    result = Ok(order.NarudzbaId);
+                }
             }
 
             return result;
@@ -78,7 +99,7 @@ namespace WebApi.Controllers
         {
             IActionResult ret;
             var order = _orderService.Get(orderId);
-            if(User.IsInRole(Roles.Admin) || order.UserId == Convert.ToInt32(User.Identity.Name))
+            if (!order.Meni.Locked && (order.UserId == Convert.ToInt32(User.Identity.Name) || User.IsInRole(Roles.Admin)))
             {
                 _orderService.Delete(order);
                 ret = Ok();
@@ -107,7 +128,7 @@ namespace WebApi.Controllers
             viewModel.TimeId = order.TimeId;
             viewModel.LocationId = order.LocationId;
             viewModel.SideDishes = order.SideDishes.Select(o => o.PrilogId).ToList();
-            viewModel.User = new UserViewModel { FirstName = order.User.FirstName, LastName = order.User.LastName };
+            viewModel.User = new UserViewModel { UserId = order.UserId, Email = order.User.Email };
         }
 
         private void MapOrderVMToOrder(OrderViewModel viewModel, Narudzba order)
@@ -119,6 +140,32 @@ namespace WebApi.Controllers
             order.LocationId = viewModel.LocationId;
             order.UserId = Convert.ToInt32(User.Identity.Name);
             order.SideDishes = viewModel.SideDishes.Select(o => new OrderSideDish { PrilogId = o }).ToList();
+        }
+
+        #endregion
+
+        #region helpers 
+        private async Task SendEmailToConfirmOrder(User user, int orderId)
+        {
+            if (user.ReceiveOrderConfirmationEmails)
+            {
+                var prilozi = "";
+                var order = _orderService.Get(orderId);
+                order.SideDishes.ToList().ForEach(o => prilozi += o.Prilog.Naziv + ", ");
+                if (!string.IsNullOrEmpty(prilozi))
+                {
+                    prilozi = prilozi.Substring(0, prilozi.Length - 2);
+                }
+                var location = ORDER_LOCATION_OPTIONS[order.LocationId];
+                var time = ORDER_TIME_OPTIONS[order.TimeId];
+                var emailBody = $"Poštovani,<br><br>" +
+                    $" Naručili ste \"{order.Hrana.Naziv}\" za dan {order.Meni.Datum.ToShortDateString()} <br>" +
+                    $"prilozi: {prilozi}<br>" +
+                    $"na likaciju: {location} <br>" +
+                    $"u vrijeme: {time}. <br> <br>" +
+                $"Srdačan pozdrav i prijatno.<br> ";
+                await _emailService.SendEmailToRecipientAsinc(user.Email, "Potvrda nardžbe hrane", emailBody);
+            }
         }
 
         #endregion

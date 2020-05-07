@@ -9,5 +9,7 @@ namespace WebApi.ViewModels
     {
         public int MeniId { get; set; }
         public DateTime Datum { get; set; }
+
+        public bool CanOrder { get; set; }
     }
 }
