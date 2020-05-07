@@ -25,9 +25,11 @@ export class DatePickerComponent implements OnInit {
 
     ngOnInit(): void {
         this.date = new FormControl(this.initDate.toDate());
-        this.refresh.subscribe(() => {
-            this.setDatesWithDatas();
-        });
+        if (this.refresh) {
+            this.refresh.subscribe(() => {
+                this.setDatesWithDatas();
+            });
+        }
         this.setDatesWithDatas();
     }
 
@@ -59,7 +61,7 @@ export class DatePickerComponent implements OnInit {
                 retClasses += ' order-time-expired'
             }
         }
-        
+
         return retClasses;
     }
 

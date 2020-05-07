@@ -9,6 +9,7 @@ import { ROLES } from './globas';
 export class AppComponent {
     currentUser: User;
     isAdmin: boolean;
+    isCook: boolean;
 
 
     constructor(
@@ -20,6 +21,10 @@ export class AppComponent {
             this.isAdmin = false;
             if (x) {
                 this.isAdmin = x.roles.indexOf(ROLES.admin) != -1;
+            }
+            this.isCook = false;
+            if (x) {
+                this.isCook = x.roles.indexOf(ROLES.cook) != -1;
             }
 
         });

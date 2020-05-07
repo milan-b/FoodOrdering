@@ -76,7 +76,7 @@ namespace WebApi.Controllers
             else
             {
                 var meni = _meniService.GetById(viewModel.MenuId);
-                if (meni.Datum.Subtract(DateTime.Now).TotalHours < 10)
+                if (meni.Locked)
                 {
                     result = ValidationProblem("Vrijeme za narudžbu je isteklo. Naručiti možete do 14h, dan ranije.");
                 }
@@ -99,7 +99,7 @@ namespace WebApi.Controllers
         {
             IActionResult ret;
             var order = _orderService.Get(orderId);
-            if (User.IsInRole(Roles.Admin) || order.UserId == Convert.ToInt32(User.Identity.Name))
+            if (!order.Meni.Locked && (order.UserId == Convert.ToInt32(User.Identity.Name) || User.IsInRole(Roles.Admin)))
             {
                 _orderService.Delete(order);
                 ret = Ok();
@@ -152,7 +152,10 @@ namespace WebApi.Controllers
                 var prilozi = "";
                 var order = _orderService.Get(orderId);
                 order.SideDishes.ToList().ForEach(o => prilozi += o.Prilog.Naziv + ", ");
-                prilozi = prilozi.Substring(0, prilozi.Length - 2);
+                if (!string.IsNullOrEmpty(prilozi))
+                {
+                    prilozi = prilozi.Substring(0, prilozi.Length - 2);
+                }
                 var location = ORDER_LOCATION_OPTIONS[order.LocationId];
                 var time = ORDER_TIME_OPTIONS[order.TimeId];
                 var emailBody = $"Poštovani,<br><br>" +

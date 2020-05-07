@@ -49,7 +49,7 @@ namespace WebApi.Controllers
                 {
                     MeniId = menu.MeniId,
                     Datum = menu.Datum,
-                    CanOrder = !(menu.Datum.Subtract(DateTime.Now).TotalHours < 10)
+                    CanOrder = !menu.Locked
                 });
             }
             //var viewModel = _mapper.Map<List<MeniForCalendarViewModel>>(menis);
@@ -91,7 +91,7 @@ namespace WebApi.Controllers
             viewModel.MenuId = menu.MeniId;
             viewModel.Date = menu.Datum;
             viewModel.Food = new List<int>();
-            viewModel.CanOrder = !(menu.Datum.Subtract(DateTime.Now).TotalHours < 10);
+            viewModel.CanOrder = !menu.Locked;
             if (menu.Hrana != null)
             {
                 foreach (var hrana in menu.Hrana)

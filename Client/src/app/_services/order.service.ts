@@ -16,6 +16,11 @@ export class OrderService {
         return this.dataService.get('Order/Get', params);
     }
 
+    getAll(menuId: number) {
+        let params = new HttpParams().set('menuId', menuId.toString());
+        return this.dataService.get('Order/GetAll', params);
+    }
+
     getAllForUser() {
         return this.dataService.getAll('Order/GetAllForUser');
     }

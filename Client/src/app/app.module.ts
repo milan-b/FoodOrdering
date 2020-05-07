@@ -50,6 +50,7 @@ import { WarningBarComponent } from './warning-bar/warning-bar.component';
 import { RegisterComponent } from './register/register.component';
 import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 import { NewPasswordComponent } from './new-password/new-password.component';
+import { OrdersReportComponent } from './orders-report/orders-report.component';
 
 
 @NgModule({
@@ -96,7 +97,8 @@ import { NewPasswordComponent } from './new-password/new-password.component';
         WarningBarComponent,
         RegisterComponent,
         DeleteDialogComponent,
-        NewPasswordComponent
+        NewPasswordComponent,
+        OrdersReportComponent
 
     ],
     providers: [

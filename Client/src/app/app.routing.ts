@@ -11,6 +11,7 @@ import { AdminGuard } from './_helpers/admin.guard';
 import { RegisterComponent } from './register/register.component';
 import { NewUserGuard } from './_helpers/newUser.guard';
 import { NewPasswordComponent } from './new-password/new-password.component';
+import { OrdersReportComponent } from './orders-report/orders-report.component';
 
 const routes: Routes = [
     { path: '', component: HomeComponent, canActivate: [AuthGuard, NewUserGuard] },
@@ -18,6 +19,7 @@ const routes: Routes = [
     { path: 'new-password', component: NewPasswordComponent, canActivate: [AuthGuard] },
     { path: 'meni', component: MeniComponent, canActivate: [AuthGuard, NewUserGuard] },
     { path: 'novi-meni', component: NoviMeniComponent, canActivate: [AuthGuard, NewUserGuard] },
+    { path: 'orders-report', component: OrdersReportComponent, canActivate: [AdminGuard] },
     { path: 'user-managment', component: RegisterComponent, canActivate: [AdminGuard] },
 
     // otherwise redirect to home

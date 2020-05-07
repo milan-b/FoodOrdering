@@ -94,7 +94,8 @@ namespace WebApi
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
-            services.AddHostedService<RemindToOrderCronJob> ();
+            services.AddHostedService<RemindToOrderCronJob>();
+            services.AddHostedService<LockMenuCronJob>();
 
             services.AddSingleton<IEmailService, EmailService>();
 
