@@ -41,7 +41,12 @@ namespace WebApi.Controllers
         public IActionResult GetAll(int menuId)
         {
             var orders = _orderService.GetAll(menuId).ToList();
-            var ordersVM = orders.Select(o => MapOrderToOrderVM(o));
+            var ordersVM = orders.Select(o => MapOrderToOrderVM(o)).ToList();
+            //var ordersVM = new List<OrderViewModel>();
+            //foreach (var order in orders)
+            //{
+            //    ordersVM.Add(MapOrderToOrderVM(order));
+            //}
             return Ok(ordersVM);
         }
 
@@ -84,8 +89,8 @@ namespace WebApi.Controllers
                 {
                     var order = new Narudzba();
                     MapOrderVMToOrder(viewModel, order);
-                    order = _orderService.CreateOrUpdate(order);
                     var user = _userService.GetById(Convert.ToInt32(User.Identity.Name));
+                    order = _orderService.CreateOrUpdate(order, user.UserId);
                     await SendEmailToConfirmOrder(user, order.NarudzbaId);
                     result = Ok(order.NarudzbaId);
                 }
@@ -127,7 +132,7 @@ namespace WebApi.Controllers
             viewModel.OrderId = order.NarudzbaId;
             viewModel.TimeId = order.TimeId;
             viewModel.LocationId = order.LocationId;
-            viewModel.SideDishes = order.SideDishes.Select(o => o.PrilogId).ToList();
+            viewModel.SideDishes = order.SideDishes?.Select(o => o.PrilogId).ToList();
             viewModel.User = new UserViewModel { UserId = order.UserId, Email = order.User.Email };
         }
 

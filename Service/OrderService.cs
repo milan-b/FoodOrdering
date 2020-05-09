@@ -18,7 +18,7 @@ namespace Service
         void DeleteAllForUser(int userId);
         void Delete(Narudzba order);
         Narudzba Get(int id);
-        Narudzba CreateOrUpdate(Narudzba hrana);
+        Narudzba CreateOrUpdate(Narudzba hrana, int userId);
 
     }
     public class OrderService : IOrderService
@@ -33,7 +33,9 @@ namespace Service
         public IEnumerable<Narudzba> GetAll(int menuId)
         {
             return _context.Narudzbe.Where(o => o.MeniId == menuId)
-                        .Include(o => o.User);
+                        .Include(o => o.User)
+                        .Include(o => o.SideDishes)
+                        .Include(o => o.Hrana);
         }
 
         public IEnumerable<Narudzba> GetAllForUser(int userId)
@@ -42,11 +44,13 @@ namespace Service
         }
 
 
-        public Narudzba CreateOrUpdate(Narudzba order)
+        public Narudzba CreateOrUpdate(Narudzba order, int userId)
         {
             Narudzba ret;
-            if (order.NarudzbaId != 0)
+            var oldOrder = GetByMenuId(order.MeniId, Convert.ToInt32(userId));
+            if (oldOrder != null)
             {
+                order.NarudzbaId = oldOrder.NarudzbaId;
                 _context.OrderSideDishes.RemoveRange(_context.OrderSideDishes.Where(o => o.NarudzbaId == order.NarudzbaId));
                 ret = _context.Narudzbe.Update(order).Entity;
             }

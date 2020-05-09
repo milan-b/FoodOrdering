@@ -32,19 +32,7 @@ namespace WebApi.HostedServices
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            using (var scope = _serviceScopeFactory.CreateScope())
-            {
-                var menuService = scope.ServiceProvider.GetRequiredService<IMeniService>();
-                var menues = menuService.GetAll().ToList();
-                foreach(var menu in menues)
-                {
-                    if(!menu.Locked && (menu.Datum.Subtract(DateTime.Now).TotalHours < 10))
-                    {
-                        menu.Locked = true;
-                        menuService.CreateOrUpdate(menu);
-                    }
-                }
-            }
+            LockMenues();
             await ScheduleJob(cancellationToken);
         }
 
@@ -77,17 +65,18 @@ namespace WebApi.HostedServices
 
         public async Task DoWork(CancellationToken cancellationToken)
         {
-            using (var scope = _serviceScopeFactory.CreateScope())
-            {
-                var menuService = scope.ServiceProvider.GetRequiredService<IMeniService>();
+            //using (var scope = _serviceScopeFactory.CreateScope())
+            //{
+            //    var menuService = scope.ServiceProvider.GetRequiredService<IMeniService>();
 
-                var menu = menuService.GetByDate(DateTime.Now.Date);
-                if (menu != null)
-                {
-                    menu.Locked = true;
-                    menuService.CreateOrUpdate(menu);
-                }
-            }
+            //    var menu = menuService.GetByDate(DateTime.Now.Date);
+            //    if (menu != null)
+            //    {
+            //        menu.Locked = true;
+            //        menuService.CreateOrUpdate(menu);
+            //    }
+            //}
+            LockMenues();
         }
 
         public virtual async Task StopAsync(CancellationToken cancellationToken)
@@ -99,6 +88,23 @@ namespace WebApi.HostedServices
         public virtual void Dispose()
         {
             _timer?.Dispose();
+        }
+
+        private void LockMenues()
+        {
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var menuService = scope.ServiceProvider.GetRequiredService<IMeniService>();
+                var menues = menuService.GetAll().ToList();
+                foreach (var menu in menues)
+                {
+                    if (!menu.Locked && (menu.Datum.Subtract(DateTime.Now).TotalHours < 10))
+                    {
+                        menu.Locked = true;
+                        menuService.CreateOrUpdate(menu);
+                    }
+                }
+            }
         }
 
     }
