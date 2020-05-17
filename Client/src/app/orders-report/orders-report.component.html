@@ -4,7 +4,7 @@
       Izvještaj za datum
     </h4>
     <div *ngIf="menu" fxFlex="20%">
-      <div class="color-success" *ngIf="menu.menuId == 0">Za izarani datum ne postoji meni</div>
+      <div class="color-success" *ngIf="menu.menuId == 0">Za izabrani datum ne postoji meni</div>
       <div class="color-success" *ngIf="menu.menuId != 0 && !menu.canOrder">Meni je zaključen</div>
       <div class="color-worning" *ngIf="menu.menuId != 0 && menu.canOrder">Još uvijek su moguće izmjene naruđbi</div>
     </div>
@@ -45,8 +45,9 @@
     <div fxFlex="100%" fxLayout="column" fxLayoutAlign="start stretch">
       <div *ngFor="let order of ordersForDisplay" class="rows-container">
         <div fxFlex="100%" fxLayout="row" fxLayoutAlign="space-between center" class="rowItem">
-          <div fxFlex="50%">{{order.foodName}}</div>
-          <div fxFlex="50%">{{order.user}}</div>
+          <div fxFlex="30%">{{order.foodName}}</div>
+          <div fxFlex="30%">{{order.user}}</div>
+          <div fxFlex="40%">{{order.sideDishes}}</div>
         </div>
       </div>
     </div>

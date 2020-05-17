@@ -84,9 +84,19 @@ export class OrdersReportComponent implements OnInit {
             this.ordersForDisplay.push(
                 {
                     foodName: this.foodMap[order.foodId],
-                    user: order.user.email
+                    user: order.user.email,
+                    sideDishes: this.getSideDishes(order.sideDishes)
                 })
         }
+    }
+
+    getSideDishes = (sideDishes: any[]): string => {
+        let ret = "";
+        sideDishes.forEach(sideDish => {
+            ret += this.sideDishesMap[sideDish] + ", ";
+        })
+        ret = ret.substring(0, ret.length - 2);
+        return ret;
     }
 
 }

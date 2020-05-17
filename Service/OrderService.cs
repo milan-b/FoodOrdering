@@ -50,9 +50,13 @@ namespace Service
             var oldOrder = GetByMenuId(order.MeniId, Convert.ToInt32(userId));
             if (oldOrder != null)
             {
-                order.NarudzbaId = oldOrder.NarudzbaId;
-                _context.OrderSideDishes.RemoveRange(_context.OrderSideDishes.Where(o => o.NarudzbaId == order.NarudzbaId));
-                ret = _context.Narudzbe.Update(order).Entity;
+                oldOrder.SideDishes = order.SideDishes;
+                oldOrder.TimeId = order.TimeId;
+                oldOrder.HranaId = order.HranaId;
+                oldOrder.LocationId = order.LocationId;
+                oldOrder.Note = order.Note;
+                _context.Entry(oldOrder).State = EntityState.Modified;
+                ret = oldOrder;
             }
             else
             {
@@ -65,7 +69,7 @@ namespace Service
         public Narudzba GetByMenuId(int menuId, int userId)
         {
             return _context.Narudzbe.Where(o => o.MeniId == menuId && o.UserId == userId)
-                .Include(o => o.SideDishes).FirstOrDefault() ;
+                .Include(o => o.SideDishes).FirstOrDefault();
         }
 
         public Narudzba Get(int id)
