@@ -31,6 +31,27 @@
           <div fxFlex="50%">{{food.numberOfOrders}}</div>
         </div>
       </div>
+
+      <div *ngFor="let summaryForTime of foodSummaryForTime">
+        <div class="card" >
+          <div class="card-header" fxLayout="row" fxLayoutAlign="space-between center">
+            <h4 fxFlex="100%">
+              {{summaryForTime.time}}
+            </h4>
+          </div>
+          <div class="card-body" fxLayout="row" fxLayoutAlign="space-around center">
+            <div fxFlex="100%" fxLayout="column" fxLayoutAlign="start stretch">
+              <div *ngFor="let food of summaryForTime.foodSummary" class="rows-container">
+                <div fxFlex="100%" fxLayout="row" fxLayoutAlign="space-between center" class="rowItem">
+                  <div fxFlex="50%">{{food.name}}</div>
+                  <div fxFlex="50%">{{food.numberOfOrders}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -43,13 +64,28 @@
   </div>
   <div class="card-body" fxLayout="row" fxLayoutAlign="space-around center">
     <div fxFlex="100%" fxLayout="column" fxLayoutAlign="start stretch">
-      <div *ngFor="let order of ordersForDisplay" class="rows-container">
-        <div fxFlex="100%" fxLayout="row" fxLayoutAlign="space-between center" class="rowItem">
-          <div fxFlex="30%">{{order.foodName}}</div>
-          <div fxFlex="30%">{{order.user}}</div>
-          <div fxFlex="40%">{{order.sideDishes}}</div>
+
+      <div class="card"  *ngFor="let orderForDateTime of ordersForDisplay">
+        <div class="card-header" fxLayout="row" fxLayoutAlign="space-between center">
+          <h4 fxFlex="100%">
+            {{orderForDateTime.timeLocation}}
+          </h4>
+        </div>
+        <div class="card-body" fxLayout="row" fxLayoutAlign="space-around center">
+          <div fxFlex="100%" fxLayout="column" fxLayoutAlign="start stretch">
+
+            <div *ngFor="let order of orderForDateTime.orders" class="rows-container">
+              <div fxFlex="100%" fxLayout="row" fxLayoutAlign="space-between center" class="rowItem">
+                <div fxFlex="30%">{{order.foodName}}</div>
+                <div fxFlex="40%">{{order.sideDishes}}</div>
+                <div fxFlex="30%">{{order.user}}</div>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
+
     </div>
   </div>
 </div>

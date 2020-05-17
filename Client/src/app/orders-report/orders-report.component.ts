@@ -4,8 +4,10 @@ import { MeniService } from '../_services/meni.service';
 import { Meni } from '../_models/meni';
 import { OrderService } from '../_services/order.service';
 import { forkJoin } from 'rxjs';
+import { OrderLocationOptions, OrderTimeOptions, ROLES } from '../globas';
 import { Hrana } from '../_models/hrana';
 import { Order } from '../_models/order';
+
 @Component({
     selector: 'app-orders-report',
     templateUrl: './orders-report.component.html',
@@ -20,6 +22,7 @@ export class OrdersReportComponent implements OnInit {
     orders = [];
     ordersForDisplay = [];
     foodSummary = [];
+    foodSummaryForTime = [];
     constructor(private meniService: MeniService, private orderService: OrderService) { }
 
     ngOnInit(): void {
@@ -29,7 +32,13 @@ export class OrdersReportComponent implements OnInit {
             sideDishes: this.meniService.getAllSideDishes(),
             menu: this.meniService.getMenu(this.today),
         }).subscribe((data) => {
-            this.menu = new Meni({ menuId: (<any>data.menu.body).menuId, date: (<any>data.menu.body).date, food: (<any>data.menu.body).food, canOrder: (<any>data.menu.body).canOrder });
+            this.menu = new Meni(
+                {
+                    menuId: (<any>data.menu.body).menuId,
+                    date: (<any>data.menu.body).date,
+                    food: (<any>data.menu.body).food,
+                    canOrder: (<any>data.menu.body).canOrder
+                });
             this.getOrders();
 
             this.allFood = data.food.body as any[];
@@ -47,7 +56,12 @@ export class OrdersReportComponent implements OnInit {
         console.log('Datum: ' + event.value);
         this.meniService.getMenu(event.value)
             .subscribe((data: any) => {
-                this.menu = new Meni({ menuId: data.body.menuId, date: data.body.date, food: data.body.food, canOrder: data.body.canOrder });
+                this.menu = new Meni({
+                    menuId: data.body.menuId,
+                    date: data.body.date,
+                    food: data.body.food,
+                    canOrder: data.body.canOrder
+                });
                 this.getOrders();
             });
     }
@@ -55,7 +69,6 @@ export class OrdersReportComponent implements OnInit {
     getOrders() {
         if (this.menu.menuId != 0) {
             this.orderService.getAll(this.menu.menuId).subscribe(data => {
-                console.log(data.body);
                 this.orders = data.body as any[];
                 this.setFoodSummary();
                 this.setOrdersForDisplay();
@@ -68,6 +81,7 @@ export class OrdersReportComponent implements OnInit {
 
     setFoodSummary() {
         this.foodSummary = [];
+        this.foodSummaryForTime = [];
         for (let i = 0; i < this.allFood.length; i++) {
             let numberOfOrdersForFood = this.orders.filter(o => o.foodId == this.allFood[i].hranaId).length;
             if (numberOfOrdersForFood > 0) {
@@ -75,19 +89,43 @@ export class OrdersReportComponent implements OnInit {
             }
         }
         this.foodSummary.sort((a, b) => { return b.numberOfOrders - a.numberOfOrders });
+
+        OrderTimeOptions.forEach((timeName, index) => {
+            this.foodSummaryForTime[index] = { time: timeName, foodSummary: [] };
+            for (let i = 0; i < this.allFood.length; i++) {
+                let numberOfOrdersForFood = this.orders.filter(o => o.foodId == this.allFood[i].hranaId && o.timeId == index).length;
+                if (numberOfOrdersForFood > 0) {
+                    this.foodSummaryForTime[index].foodSummary.push({ name: this.allFood[i].naziv, numberOfOrders: numberOfOrdersForFood });
+                }
+            }
+            this.foodSummaryForTime[index].foodSummary.sort((a, b) => { return b.numberOfOrders - a.numberOfOrders });
+        });
     }
 
     setOrdersForDisplay() {
         this.ordersForDisplay = [];
-        for (let i = 0; i < this.orders.length; i++) {
-            let order = this.orders[i];
-            this.ordersForDisplay.push(
+        OrderTimeOptions.forEach((timeName, timeIndex) => {
+            OrderLocationOptions.forEach((locationName, locationIndex) => {
+                this.ordersForDisplay.push({
+                    timeLocation: timeName + " - " + locationName,
+                    orders: this.getOrdersForDisplay(this.orders.filter(o => o.locationId == locationIndex && o.timeId == timeIndex))
+                })
+            })
+        })
+    }
+
+    getOrdersForDisplay(orders: any[]): any[] {
+        let ordersForDisplay = [];
+        for (let i = 0; i < orders.length; i++) {
+            let order = orders[i];
+            ordersForDisplay.push(
                 {
                     foodName: this.foodMap[order.foodId],
                     user: order.user.email,
                     sideDishes: this.getSideDishes(order.sideDishes)
                 })
         }
+        return ordersForDisplay;
     }
 
     getSideDishes = (sideDishes: any[]): string => {
