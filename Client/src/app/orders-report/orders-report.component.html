@@ -4,7 +4,7 @@
       Izvještaj za datum
     </h4>
     <div *ngIf="menu" fxFlex="20%">
-      <div class="color-success" *ngIf="menu.menuId == 0">Za izarani datum ne postoji meni</div>
+      <div class="color-success" *ngIf="menu.menuId == 0">Za izabrani datum ne postoji meni</div>
       <div class="color-success" *ngIf="menu.menuId != 0 && !menu.canOrder">Meni je zaključen</div>
       <div class="color-worning" *ngIf="menu.menuId != 0 && menu.canOrder">Još uvijek su moguće izmjene naruđbi</div>
     </div>
@@ -17,40 +17,75 @@
   </div>
 </div>
 
-<div class="card" *ngIf="orders.length > 0">
+<div class="card" *ngIf="foodSummary.length > 0">
   <div class="card-header" fxLayout="row" fxLayoutAlign="space-between center">
     <h4 fxFlex="100%">
       Sumarno za hranu
     </h4>
   </div>
   <div  class="card-body" fxLayout="row" fxLayoutAlign="space-around center">
-    <div fxLayout="column" fxLayoutAlign="start stretch">
-      <div *ngFor="let food of allFood" class="rows-container">
-        <div *ngIf="true" fxLayout="row" fxLayoutAlign="space-between center" class="rowItem">
-          <!--<div fxFlex="40%">{{user.email}}</div>
-          <div fxFlex="20%">{{user.roles}}</div>
-          <div fxFlex="10%">{{user.activated ? '':'Nije aktiviran'}}</div>
-          <div fxFlex="30%" class="controls" fxLayoutAlign="end">
-            <button class="btn btn-primary btn-sm" (click)="resetPassword(user)">
-              Resetuj lozinku
-            </button>
-            <button class="btn btn-danger btn-sm ml-2" (click)="delete(user)">
-              Obriši
-            </button>
-          </div>-->
+    <div fxFlex="100%" fxLayout="column" fxLayoutAlign="start stretch">
+      <div *ngFor="let food of foodSummary" class="rows-container">
+        <div fxFlex="100%" fxLayout="row" fxLayoutAlign="space-between center" class="rowItem">
+          <div fxFlex="50%">{{food.name}}</div>
+          <div fxFlex="50%">{{food.numberOfOrders}}</div>
         </div>
-        <!--<div *ngIf="!user.email" class="userItem userWithError">
-          <div fxFlex="70%">GREŠKA - Nepotpuni podaci za korisnika UserId = {{user.userId}}</div>
-          <div fxFlex="30%" class="controls" fxLayoutAlign="end">
-            <button class="btn btn-primary btn-sm" (click)="resetPassword(user)">
-              Resetuj lozinku
-            </button>
-            <button class="btn btn-danger btn-sm ml-2" (click)="delete(user)">
-              Obriši
-            </button>
-          </div>
-        </div>-->
       </div>
+
+      <div *ngFor="let summaryForTime of foodSummaryForTime">
+        <div class="card" >
+          <div class="card-header" fxLayout="row" fxLayoutAlign="space-between center">
+            <h4 fxFlex="100%">
+              {{summaryForTime.time}}
+            </h4>
+          </div>
+          <div class="card-body" fxLayout="row" fxLayoutAlign="space-around center">
+            <div fxFlex="100%" fxLayout="column" fxLayoutAlign="start stretch">
+              <div *ngFor="let food of summaryForTime.foodSummary" class="rows-container">
+                <div fxFlex="100%" fxLayout="row" fxLayoutAlign="space-between center" class="rowItem">
+                  <div fxFlex="50%">{{food.name}}</div>
+                  <div fxFlex="50%">{{food.numberOfOrders}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="card" *ngIf="ordersForDisplay.length > 0">
+  <div class="card-header" fxLayout="row" fxLayoutAlign="space-between center">
+    <h4 fxFlex="100%">
+      Narudžbe
+    </h4>
+  </div>
+  <div class="card-body" fxLayout="row" fxLayoutAlign="space-around center">
+    <div fxFlex="100%" fxLayout="column" fxLayoutAlign="start stretch">
+
+      <div class="card"  *ngFor="let orderForDateTime of ordersForDisplay">
+        <div class="card-header" fxLayout="row" fxLayoutAlign="space-between center">
+          <h4 fxFlex="100%">
+            {{orderForDateTime.timeLocation}}
+          </h4>
+        </div>
+        <div class="card-body" fxLayout="row" fxLayoutAlign="space-around center">
+          <div fxFlex="100%" fxLayout="column" fxLayoutAlign="start stretch">
+
+            <div *ngFor="let order of orderForDateTime.orders" class="rows-container">
+              <div fxFlex="100%" fxLayout="row" fxLayoutAlign="space-between center" class="rowItem">
+                <div fxFlex="30%">{{order.foodName}}</div>
+                <div fxFlex="40%">{{order.sideDishes}}</div>
+                <div fxFlex="30%">{{order.user}}</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
