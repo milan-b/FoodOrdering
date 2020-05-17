@@ -53,7 +53,6 @@ export class OrdersReportComponent implements OnInit {
     }
 
     onDateChange(event) {
-        console.log('Datum: ' + event.value);
         this.meniService.getMenu(event.value)
             .subscribe((data: any) => {
                 this.menu = new Meni({
@@ -125,6 +124,17 @@ export class OrdersReportComponent implements OnInit {
                     sideDishes: this.getSideDishes(order.sideDishes)
                 })
         }
+        ordersForDisplay = ordersForDisplay.sort((a, b) => {
+            var nameA = a.foodName.toUpperCase(); 
+            var nameB = b.foodName.toUpperCase();
+            if (nameA < nameB) {
+                return -1;
+            }
+            if (nameA > nameB) {
+                return 1;
+            }
+            return 0;
+        });
         return ordersForDisplay;
     }
 
