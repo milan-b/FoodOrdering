@@ -19,6 +19,7 @@ using WebApi.ViewModels;
 using System.Threading.Tasks;
 using Domain.Enums;
 using Newtonsoft.Json.Linq;
+using System.Net;
 
 namespace WebApi.Controllers
 {
@@ -83,6 +84,7 @@ namespace WebApi.Controllers
                 LastName = user.LastName,
                 Roles = user.Roles,
                 Activated = user.Activated,
+                
                 Token = tokenString
             });
         }
@@ -158,6 +160,37 @@ namespace WebApi.Controllers
             return ret;
         }
 
+        [HttpGet]
+        public IActionResult GetOptions()
+        {
+            var user = _userService.GetById(Convert.ToInt32(User.Identity.Name));
+            var viewModel = new OptionsViewModel();
+            MapUserToOptionVM(user, viewModel);
+
+            return Ok(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult SetOptions([FromBody] OptionsViewModel viewModel)
+        {
+            IActionResult ret;
+            if (!ModelState.IsValid)
+            {
+                ret = ValidationProblem("Nevalidan zahtjev!");
+            }
+            else
+            {
+                var user = _userService.GetById(Convert.ToInt32(User.Identity.Name));
+                user.LocationId = viewModel.LocationId;
+                user.TimeId = viewModel.TimeId;
+                user.ReceiveOrderConfirmationEmails = viewModel.ReceiveOrderConfirmationEmails;
+                user.ReceiveOrderWarningEmails = viewModel.ReceiveOrderWarningEmails;
+                _userService.Update(user);
+                ret = Ok();
+            }
+            return ret;
+        }
+
         [Authorize(Roles = Roles.Admin)]
         [HttpPost]
         public async Task<IActionResult> ResetPassword([FromBody]JToken jsonbody)
@@ -205,6 +238,14 @@ namespace WebApi.Controllers
             viewModel.Email = user.Email;
             viewModel.Roles = user.Roles;
 
+        }
+
+        private void MapUserToOptionVM(User user, OptionsViewModel viewModel)
+        {
+            viewModel.LocationId = user.LocationId;
+            viewModel.TimeId = user.TimeId;
+            viewModel.ReceiveOrderConfirmationEmails = user.ReceiveOrderConfirmationEmails;
+            viewModel.ReceiveOrderWarningEmails = user.ReceiveOrderWarningEmails;
         }
 
         private List<UserViewModel> MapUsersToUsersVM(List<User> users)

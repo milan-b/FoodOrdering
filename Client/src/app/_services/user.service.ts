@@ -4,6 +4,7 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { User } from '@app/_models';
 import { Observable } from 'rxjs';
+import { Options } from '../_models/options';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -31,5 +32,13 @@ export class UserService {
 
     updatePassword(password: string) {
         return this.http.post<any>(`${environment.apiUrl}Users/UpdatePassword`, { password: password });
+    }
+
+    getOptions(): Observable<Options> {
+        return this.http.get<any>(`${environment.apiUrl}Users/GetOptions`);
+    }
+
+    setOptions(options: Options): Observable<any> {
+        return this.http.post<Options>(`${environment.apiUrl}Users/SetOptions`, options);
     }
 }

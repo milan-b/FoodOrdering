@@ -51,6 +51,7 @@ import { RegisterComponent } from './register/register.component';
 import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 import { NewPasswordComponent } from './new-password/new-password.component';
 import { OrdersReportComponent } from './orders-report/orders-report.component';
+import { OptionsComponent } from './options/options.component';
 
 
 @NgModule({
@@ -98,7 +99,8 @@ import { OrdersReportComponent } from './orders-report/orders-report.component';
         RegisterComponent,
         DeleteDialogComponent,
         NewPasswordComponent,
-        OrdersReportComponent
+        OrdersReportComponent,
+        OptionsComponent
 
     ],
     providers: [

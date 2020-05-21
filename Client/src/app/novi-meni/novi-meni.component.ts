@@ -10,7 +10,7 @@ import { CreateFoodDialogComponent } from '../create-food-dialog/create-food-dia
 import { forkJoin, Subject } from 'rxjs';
 import { Meni } from '../_models/meni';
 import { BarService } from '../_services/bar.service';
-import { AuthenticationService } from '../_services';
+import { AuthenticationService, UserService } from '../_services';
 import { OrderLocationOptions, OrderTimeOptions, ROLES } from '../globas';
 import { OrderService } from '../_services/order.service';
 
@@ -47,7 +47,7 @@ export class NoviMeniComponent implements OnInit {
     refreshCalendar: Subject<boolean>;
 
     constructor(private meniService: MeniService, private dialog: MatDialog, private barService: BarService,
-        private authenticationService: AuthenticationService, private orderService: OrderService) { }
+        private authenticationService: AuthenticationService, private orderService: OrderService, private userService: UserService) { }
 
     ngOnInit() {
         this.today = moment();
@@ -60,9 +60,10 @@ export class NoviMeniComponent implements OnInit {
         this.orderLocationOptions = OrderLocationOptions;
         this.orderTimeOptions = OrderTimeOptions;
 
-        //TODO read this data from user
-        this.orderLocation = 1;
-        this.orderTime = 1;
+        this.userService.getOptions().subscribe(o => {
+            this.orderLocation = o.locationId;
+            this.orderTime = o.timeId;
+        })
 
     }
 
