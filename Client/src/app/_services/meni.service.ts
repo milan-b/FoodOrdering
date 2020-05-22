@@ -20,22 +20,6 @@ export class MeniService {
     return this.dataService.getAll('Meni/GetAllMenis');
   }
 
-  getAllFood() {
-    return this.dataService.getAll('hrana/GetAll');
-  }
-
-  getAllSideDishes() {
-    return this.dataService.getAll('hrana/GetAllSideDishes');
-  }
-
-  createSideDish(data) {
-    return this.dataService.post('hrana/CreateSideDish', data);
-  }
-
-  createFood(data) {
-    return this.dataService.post('hrana/CreateOrUpdate', data);
-  }
-
   createMenu(menu: Meni) {
     return this.dataService.post('meni/CreateOrUpdate', menu);
   }

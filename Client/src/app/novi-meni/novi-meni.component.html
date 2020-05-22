@@ -87,6 +87,7 @@
               <mat-panel-description>
                 <h3>{{item.naziv}}</h3>
                 <div fxLayoutAlign="end center">
+                  <star-rating (starClickChange)="onRatingChange($event, item.hranaId)" [hoverEnabled]="true" (click)="stopPropagation($event)" [starType]="'svg'" [rating]="3.6"></star-rating>
                   <button *ngIf="adminMode" (click)="addFoodToMenu($event, item)" [ngClass]="item.izabrana ? 'btn-success': 'btn-light'" class="btn ml-2">
                     {{item.izabrana? 'Ukloni iz menija' : 'Dodaj u meni'}}
                   </button>
@@ -177,6 +178,7 @@
               <mat-panel-description>
                 <h3>{{item.naziv}}</h3>
                 <div fxLayoutAlign="end center">
+                  <star-rating (starClickChange)="onRatingChange($event, item.hranaId)" [hoverEnabled]="true" (click)="stopPropagation($event)" [starType]="'svg'" [rating]="3.6"></star-rating>
                   <button *ngIf="adminMode" (click)="addFoodToMenu($event, item)" [ngClass]="item.izabrana ? 'btn-success': 'btn-light'" class="btn ml-2">
                     {{item.izabrana? 'Ukloni iz menija' : 'Dodaj u meni'}}
                   </button>

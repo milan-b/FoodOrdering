@@ -44,6 +44,23 @@ namespace WebApi.Controllers
             return Ok(viewModel);
         }
 
+        [HttpPost]
+        public IActionResult Rate([FromBody] RateViewModel viewModel)
+        {
+            IActionResult result;
+            if (!ModelState.IsValid)
+            {
+                result = ValidationProblem("Nevalidan zahtjev.");
+            }
+            else
+            {
+                _hranaService.SetRate(Convert.ToInt32(User.Identity.Name), viewModel.FoodId, viewModel.Mark);
+                result = Ok();
+            }
+
+            return result;
+        }
+
         [Authorize(Roles = Roles.Admin + "," + Roles.Cook)]
         [HttpPost]
         public IActionResult CreateOrUpdate([FromBody] HranaViewModel viewModel)
