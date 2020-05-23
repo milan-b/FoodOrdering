@@ -32,8 +32,9 @@ namespace Service
         public IEnumerable<Hrana> GetAll()
         {
             return _context.Hrana
-                        .Include(o => o.Prilozi)
-                        .ThenInclude(o => o.Prilog);
+                        .Include(o => o.Ocjene)
+                        .Include(o => o.Prilozi);
+                        //.ThenInclude(o => o.Prilog);
         }
 
         public IEnumerable<Prilog> GetAllSideDishes()

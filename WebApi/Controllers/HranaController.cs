@@ -29,9 +29,19 @@ namespace WebApi.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var hrana = _hranaService.GetAll().ToList();
-            //TODO No need for full prilog view model, just prilogId - write maping manualy
-            var viewModel = _mapper.Map<List<HranaViewModel>>(hrana);
+            var food = _hranaService.GetAll().ToList();
+            var viewModel = food.Select(o => new HranaViewModel
+            {
+                HranaId = o.HranaId,
+                Stalna = o.Stalna,
+                Naziv = o.Naziv,
+                Prilozi = o.Prilozi.Select(o1 => new PrilogViewModel
+                {
+                    PrilogId = o1.PrilogId,
+                    Varijanata = o1.Varijanta
+                }).ToList(),
+                Rating = o.Ocjene.Count() > 0 ? o.Ocjene.Select(o1 => o1.Vrijednost).Average() : 0
+            });
             return Ok(viewModel);
         }
 
