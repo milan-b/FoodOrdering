@@ -107,6 +107,8 @@ export class NoviMeniComponent implements OnInit {
                 this.hranaArray.push(hrana);
             }
         });
+        this.stalnaHranaArray.sort((a, b) => b.rating - a.rating);
+        this.hranaArray.sort((a, b) => b.rating - a.rating);
         if (this.adminMode) {
             this.setFoodForMenu();
         }
