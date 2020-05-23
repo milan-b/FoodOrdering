@@ -2,9 +2,9 @@
 <!--*ngIf="currentUser"-->
 <nav class="navbar navbar-expand navbar-dark bg-dark">
   <div class="navbar-nav">
-    <a class="nav-item nav-link" routerLink="/meni">Meni</a>
-    <a class="nav-item nav-link" routerLink="/">Home</a>
-    <a class="nav-item nav-link" routerLink="/novi-meni">Kreiraj meni</a>
+    <a class="nav-item nav-link" routerLink="">Meni</a>
+    <!--<a class="nav-item nav-link" routerLink="/">Home</a>-->
+    <!--<a class="nav-item nav-link" routerLink="/novi-meni">Meni</a>-->
     <a class="nav-item nav-link" routerLink="/options">Opcije</a>
     <a *ngIf="isAdmin" class="nav-item nav-link" routerLink="/user-managment">Upravljanje korisnicima</a>
     <a *ngIf="isAdmin || isCook" class="nav-item nav-link" routerLink="/orders-report">Izvještaj za meni</a>
