@@ -73,6 +73,7 @@ namespace Domain.Data
             modelBuilder.Entity<OrderSideDish>().HasKey(os => new { os.NarudzbaId, os.PrilogId });
 
             modelBuilder.Entity<User>().HasIndex(user => new { user.Email });
+            modelBuilder.Entity<Komentar>().HasIndex(comment => new { comment.HranaId });
 
             modelBuilder.Entity<Meni>().HasIndex(m => m.Datum).IsUnique(true);
             modelBuilder.Entity<Meni>().Property(m => m.Datum).HasColumnType("Date");

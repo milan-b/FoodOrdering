@@ -15,7 +15,7 @@
   </div>
   <div class="card-body">
     <div *ngIf="adminMode">
-      <button  class="btn btn-primary" (click)="createMenu()" [disabled]="!menu || !menu.canOrder"  title="{{(!menu || !menu.canOrder)? 'Verijeme za narudžbu je isteklo' : ''}}">
+      <button class="btn btn-primary" (click)="createMenu()" [disabled]="!menu || !menu.canOrder" title="{{(!menu || !menu.canOrder)? 'Verijeme za narudžbu je isteklo' : ''}}">
         Snimi meni
       </button>
     </div>
@@ -40,10 +40,10 @@
         </div>-->
       </section>
       <div fxFlex="20%" fxLayoutAlign="end center">
-        <button *ngIf="orderId != 0" class="btn btn-danger" (click)="deleteOrder()" [disabled]="!menu || !menu.canOrder"  title="{{(!menu || !menu.canOrder)? 'Verijeme za narudžbu je isteklo' : ''}}">
+        <button *ngIf="orderId != 0" class="btn btn-danger" (click)="deleteOrder()" [disabled]="!menu || !menu.canOrder" title="{{(!menu || !menu.canOrder)? 'Verijeme za narudžbu je isteklo' : ''}}">
           Poništi
         </button>
-        <button (click)="createOrder()" [disabled]="!menu || !menu.canOrder"  title="{{(!menu || !menu.canOrder)? 'Verijeme za narudžbu je isteklo' : ''}}"  class="btn btn-primary ml-1" >
+        <button (click)="createOrder()" [disabled]="!menu || !menu.canOrder" title="{{(!menu || !menu.canOrder)? 'Verijeme za narudžbu je isteklo' : ''}}" class="btn btn-primary ml-1">
           Naruči
         </button>
       </div>
@@ -87,8 +87,7 @@
               <mat-panel-description>
                 <h3>{{item.naziv}}</h3>
                 <div fxLayoutAlign="end center">
-                  <star-rating
-                               (starClickChange)="onRatingChange($event, item.hranaId)"
+                  <star-rating (starClickChange)="onRatingChange($event, item.hranaId)"
                                [hoverEnabled]="true" staticColor="thisIsBugFix"
                                (click)="stopPropagation($event)"
                                [starType]="'svg'"
@@ -127,6 +126,43 @@
 
               </div>
             </div>
+
+            <mat-expansion-panel [expanded]="false">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <h4>Komentari</h4>
+                </mat-panel-title>
+                <mat-panel-description>
+                  10
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+
+              <mat-form-field>
+                <mat-label>Komentar</mat-label>
+                <input matInput>
+              </mat-form-field>
+
+              <!--<input #imageInput hidden="true" type="file" onclick="this.value=null" accept="image/*" />
+              <button mat-flat-button color="primary" (click)="imageInput.click()">Dodaj sliku</button>-->
+
+
+              <button class="btn btn-primary" (click)="kreirajHranu(false)">
+                Snimi
+              </button>
+
+              <hr />
+              <div>
+                <div class="card">
+                  <div class="card-header" fxLayout="row" fxLayoutAlign="space-between center">
+                    <div  fxFlex="50%">User.Name</div>
+                    <div  fxFlex="50%">Vrijeme: dd.mm.gggg - hh:mm</div>
+                  </div>
+                  <div class="card-body">
+                    sadrzaj komentara :)
+                  </div>
+                </div>
+              </div>
+            </mat-expansion-panel>
 
             <mat-action-row>
               <button *ngIf="adminMode" class="btn btn-secondary" (click)="editFood(item)">
@@ -183,8 +219,7 @@
               <mat-panel-description>
                 <h3>{{item.naziv}}</h3>
                 <div fxLayoutAlign="end center">
-                  <star-rating
-                               (starClickChange)="onRatingChange($event, item.hranaId)"
+                  <star-rating (starClickChange)="onRatingChange($event, item.hranaId)"
                                [hoverEnabled]="true" staticColor="thisIsBugFix"
                                (click)="stopPropagation($event)"
                                [starType]="'svg'"
@@ -234,6 +269,8 @@
               </button>
             </mat-action-row>
           </mat-expansion-panel>
+
+
         </div>
       </div>
     </mat-accordion>
