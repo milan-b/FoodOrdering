@@ -1,4 +1,5 @@
 import { Prilog } from './prilog';
+import { Comment } from './comment';
 
 export class Hrana {
     hranaId: number;
@@ -8,6 +9,7 @@ export class Hrana {
     narucena: boolean;
     rating: number;
     prilozi: Prilog[];
+    comments: Comment[];
 
     //public constructor(init?: Partial<Hrana>) {
     //  Object.assign(this, init);
