@@ -10,6 +10,8 @@ import { fakeBackendProvider } from './_helpers';
 import { AppComponent } from './app.component';
 import { appRoutingModule } from './app.routing';
 
+import { StarRatingModule } from 'angular-star-rating';
+
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 import { HomeComponent } from './home';
 import { LoginComponent } from './login';
@@ -82,7 +84,8 @@ import { OptionsComponent } from './options/options.component';
         MatInputModule,
         MatButtonModule,
         MatTableModule,
-        MatSortModule
+        MatSortModule,
+        StarRatingModule.forRoot()
     ],
     declarations: [
         AppComponent,

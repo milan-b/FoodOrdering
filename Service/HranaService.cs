@@ -18,6 +18,7 @@ namespace Service
         Prilog GetSideDish(int id);
         void Delete(int id);
         Hrana CreateOrUpdate(Hrana hrana);
+        void SetRate(int userId, int foodId, int mark);
     }
     public class HranaService : IHranaService
     {
@@ -31,8 +32,9 @@ namespace Service
         public IEnumerable<Hrana> GetAll()
         {
             return _context.Hrana
-                        .Include(o => o.Prilozi)
-                        .ThenInclude(o => o.Prilog);
+                        .Include(o => o.Ocjene)
+                        .Include(o => o.Prilozi);
+                        //.ThenInclude(o => o.Prilog);
         }
 
         public IEnumerable<Prilog> GetAllSideDishes()
@@ -66,6 +68,28 @@ namespace Service
         {
             return _context.Prilozi.Find(id);
         }
+
+        public void SetRate(int userId, int foodId, int mark)
+        {
+            var rate = _context.Ocjene.Where(o => o.UserId == userId && o.HranaId == foodId).FirstOrDefault();
+            if (rate == null)
+            {
+                var newRate = new Ocjena
+                {
+                    UserId = userId,
+                    HranaId = foodId,
+                    Vrijednost = mark
+                };
+                _context.Ocjene.Add(newRate);
+            }
+            else
+            {
+                rate.Vrijednost = mark;
+                _context.Ocjene.Update(rate);
+            }
+            _context.SaveChanges();
+        }
+
 
         public Hrana GetById(int id)
         {

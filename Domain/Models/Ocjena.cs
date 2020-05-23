@@ -13,9 +13,9 @@ namespace Domain.Models
         [Required]
         public int HranaId { get; set; }
         [Required]
-        public int KorisnikId { get; set; }
+        public int UserId { get; set; }
         [Required]
-        public Korisnik Korisnik { get; set; }
+        public User User { get; set; }
 
         //public ICollection<SavedBook> BookUsers { get; set; }
     }

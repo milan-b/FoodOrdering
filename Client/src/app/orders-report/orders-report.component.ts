@@ -7,6 +7,7 @@ import { forkJoin } from 'rxjs';
 import { OrderLocationOptions, OrderTimeOptions, ROLES } from '../globas';
 import { Hrana } from '../_models/hrana';
 import { Order } from '../_models/order';
+import { FoodService } from '../_services/food.service';
 
 @Component({
     selector: 'app-orders-report',
@@ -23,13 +24,13 @@ export class OrdersReportComponent implements OnInit {
     ordersForDisplay = [];
     foodSummary = [];
     foodSummaryForTime = [];
-    constructor(private meniService: MeniService, private orderService: OrderService) { }
+    constructor(private meniService: MeniService, private orderService: OrderService, private foodService: FoodService) { }
 
     ngOnInit(): void {
         this.today = moment();
         forkJoin({
-            food: this.meniService.getAllFood(),
-            sideDishes: this.meniService.getAllSideDishes(),
+            food: this.foodService.getAllFood(),
+            sideDishes: this.foodService.getAllSideDishes(),
             menu: this.meniService.getMenu(this.today),
         }).subscribe((data) => {
             this.menu = new Meni(
@@ -41,12 +42,12 @@ export class OrdersReportComponent implements OnInit {
                 });
             this.getOrders();
 
-            this.allFood = data.food.body as any[];
+            this.allFood = data.food;
             this.allFood.forEach(o => {
                 this.foodMap[o.hranaId] = o.naziv;
             });
 
-            (<any[]>data.sideDishes.body).forEach(o => {
+            data.sideDishes.forEach(o => {
                 this.sideDishesMap[o.prilogId] = o.naziv;
             });
         });

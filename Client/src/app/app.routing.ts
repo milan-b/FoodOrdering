@@ -13,18 +13,19 @@ import { NewUserGuard } from './_helpers/newUser.guard';
 import { NewPasswordComponent } from './new-password/new-password.component';
 import { OrdersReportComponent } from './orders-report/orders-report.component';
 import { OptionsComponent } from './options/options.component';
+import { CookGuard } from './_helpers/cook.guard';
 
 const routes: Routes = [
-    { path: '', component: HomeComponent, canActivate: [AuthGuard, NewUserGuard] },
+    { path: '', component: NoviMeniComponent, canActivate: [AuthGuard, NewUserGuard] },
     { path: 'login', component: LoginComponent },
     { path: 'new-password', component: NewPasswordComponent, canActivate: [AuthGuard] },
-    { path: 'meni', component: MeniComponent, canActivate: [AuthGuard, NewUserGuard] },
-    { path: 'novi-meni', component: NoviMeniComponent, canActivate: [AuthGuard, NewUserGuard] },
-    { path: 'orders-report', component: OrdersReportComponent, canActivate: [AdminGuard] },
+    //{ path: 'meni', component: MeniComponent, canActivate: [AuthGuard, NewUserGuard] },
+    //{ path: 'meni', component: NoviMeniComponent, canActivate: [AuthGuard, NewUserGuard] },
+    { path: 'orders-report', component: OrdersReportComponent, canActivate: [CookGuard] },
     { path: 'options', component: OptionsComponent, canActivate: [AuthGuard, NewUserGuard] },
     { path: 'user-managment', component: RegisterComponent, canActivate: [AdminGuard] },
 
-    // otherwise redirect to home
+    // otherwise redirect to menu
     { path: '**', redirectTo: '' }
 ];
 

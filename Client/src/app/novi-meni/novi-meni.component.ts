@@ -13,6 +13,7 @@ import { BarService } from '../_services/bar.service';
 import { AuthenticationService, UserService } from '../_services';
 import { OrderLocationOptions, OrderTimeOptions, ROLES } from '../globas';
 import { OrderService } from '../_services/order.service';
+import { FoodService } from '../_services/food.service';
 
 @Component({
     selector: 'app-novi-meni',
@@ -46,7 +47,7 @@ export class NoviMeniComponent implements OnInit {
     orderId: number = 0;
     refreshCalendar: Subject<boolean>;
 
-    constructor(private meniService: MeniService, private dialog: MatDialog, private barService: BarService,
+    constructor(private meniService: MeniService, private dialog: MatDialog, private barService: BarService, private foodService: FoodService,
         private authenticationService: AuthenticationService, private orderService: OrderService, private userService: UserService) { }
 
     ngOnInit() {
@@ -69,15 +70,15 @@ export class NoviMeniComponent implements OnInit {
 
     initFood() {
         forkJoin({
-            food: this.meniService.getAllFood(),
-            sideDishes: this.meniService.getAllSideDishes(),
+            food: this.foodService.getAllFood(),
+            sideDishes: this.foodService.getAllSideDishes(),
             menu: this.meniService.getMenu(this.today),
         }).subscribe((data) => {
             this.menu = new Meni({ menuId: (<any>data.menu.body).menuId, date: (<any>data.menu.body).date, food: (<any>data.menu.body).food })
             this.setFood(data.food);
             this.sideDishesMap = [];
-            this.sideDishes = [...(<any[]>data.sideDishes.body).map(o => new Prilog({ prilogId: o.prilogId, naziv: o.naziv, varijanta: o.varijanta }))];
-            (<any[]>data.sideDishes.body).forEach(o => {
+            this.sideDishes = [...(data.sideDishes).map(o => new Prilog({ prilogId: o.prilogId, naziv: o.naziv, varijanta: o.varijanta }))];
+            data.sideDishes.forEach(o => {
                 this.sideDishesMap[o.prilogId] = o.naziv;
             })
         });
@@ -95,10 +96,10 @@ export class NoviMeniComponent implements OnInit {
             });
     }
 
-    setFood = (data: HttpResponse<Object>) => {
+    setFood = (data: Hrana[]) => {
         this.stalnaHranaArray = [];
         this.hranaArray = [];
-        (<[]>data.body).forEach(dataForHrana => {
+        data.forEach(dataForHrana => {
             let hrana = new Hrana(dataForHrana);
             if (hrana.stalna) {
                 this.stalnaHranaArray.push(hrana);
@@ -106,6 +107,8 @@ export class NoviMeniComponent implements OnInit {
                 this.hranaArray.push(hrana);
             }
         });
+        this.stalnaHranaArray.sort((a, b) => b.rating - a.rating);
+        this.hranaArray.sort((a, b) => b.rating - a.rating);
         if (this.adminMode) {
             this.setFoodForMenu();
         }
@@ -299,6 +302,13 @@ export class NoviMeniComponent implements OnInit {
             }
         }
     }
+    onRatingChange(event, foodId) {
+        this.foodService.rateFood(foodId, event.rating).subscribe(() => {
+            this.barService.showInfo(`Usješno ste ocijenili hranu.`);
+        }, error => {
+            this.barService.showError('Dogorila se greška. Molimo Vas pokušajte kasnije. Detalji: \n' + error);
+        })
+    }
 
     /// Steps region ///
     setStep(index: number) {
@@ -327,6 +337,10 @@ export class NoviMeniComponent implements OnInit {
     prevStepStalna(event) {
         event.stopPropagation();
         this.stepStalna--;
+    }
+
+    stopPropagation(event) {
+        event.stopPropagation();
     }
     /// end region ///
 }

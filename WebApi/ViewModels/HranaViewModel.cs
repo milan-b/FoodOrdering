@@ -12,7 +12,8 @@ namespace WebApi.ViewModels
         [Required]
         public string Naziv { get; set; }
         public bool Stalna { get; set; }
-        public List<HranaPrilogViewModel> Prilozi { get; set; }
+        public List<PrilogViewModel> Prilozi { get; set; }
         public bool Narucena { get; set; }
+        public double Rating { get; set; }
     }
 }

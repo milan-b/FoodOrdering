@@ -6,6 +6,7 @@ import { BarService } from '../_services/bar.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Hrana } from '../_models/hrana';
 import { error } from '@angular/compiler/src/util';
+import { FoodService } from '../_services/food.service';
 
 @Component({
   selector: 'app-create-food-dialog',
@@ -21,8 +22,8 @@ export class CreateFoodDialogComponent implements OnInit {
   isEditMode = false;
 
 
-  constructor(private formBuilder: FormBuilder, private menueService: MeniService, private barService: BarService,
-    public dialogRef: MatDialogRef<CreateFoodDialogComponent>,
+    constructor(private formBuilder: FormBuilder, private barService: BarService,
+        public dialogRef: MatDialogRef<CreateFoodDialogComponent>, private foodService: FoodService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
     this.mapVariantToVariantId['all'] = 0;
     this.mapVariantToVariantId['first'] = 1;
@@ -86,7 +87,7 @@ export class CreateFoodDialogComponent implements OnInit {
       this.barService.showError('Morate unijeti naziv priloga.');
     }
     else {
-      this.menueService.createSideDish({ naziv: newSideDishInput.value }).subscribe((sideDishId: number) => {
+        this.foodService.createSideDish({ naziv: newSideDishInput.value }).subscribe((sideDishId: number) => {
         (<FormArray>this.createFoodForm.get('sideDishes')).controls.push(this.formBuilder.group({
           selected: [true, Validators.required],
           variant: ['0', Validators.required]
@@ -119,7 +120,7 @@ export class CreateFoodDialogComponent implements OnInit {
       };
       //this.loading = true;
 
-      this.menueService.createFood(food).subscribe(() => {
+        this.foodService.createFood(food).subscribe(() => {
         this.barService.showInfo("Hrana je uspješno snimljena.");
         this.dialogRef.close();
       }, (error) => {
