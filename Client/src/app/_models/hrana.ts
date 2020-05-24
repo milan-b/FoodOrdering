@@ -9,7 +9,7 @@ export class Hrana {
     narucena: boolean;
     rating: number;
     prilozi: Prilog[];
-    comments: Comment[];
+    numberOfComments: number;
 
     //public constructor(init?: Partial<Hrana>) {
     //  Object.assign(this, init);
@@ -23,6 +23,7 @@ export class Hrana {
         this.rating = hrana.rating;
         //izabrana: this.narudzba.hrana == hranaItem.hrana.hranaId,
         this.prilozi = this.getPrilozi(hrana.prilozi);
+        this.numberOfComments = hrana.numberOfComments;
     }
 
     //public constructor(init?: Partial<Hrana>) {

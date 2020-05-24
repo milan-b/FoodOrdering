@@ -92,7 +92,6 @@ export class CreateFoodDialogComponent implements OnInit {
           selected: [true, Validators.required],
           variant: ['0', Validators.required]
         }));
-        console.log(this.createFoodForm.controls);
         this.sideDishes.push(new Prilog({ naziv: newSideDishInput.value, prilogId: sideDishId }));
         this.sideDishesMap[sideDishId] = newSideDishInput.value;
         this.barService.showInfo("Prilog je uspješno kreiran.");

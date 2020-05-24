@@ -126,43 +126,8 @@
 
               </div>
             </div>
-
-            <mat-expansion-panel [expanded]="false">
-              <mat-expansion-panel-header>
-                <mat-panel-title>
-                  <h4>Komentari</h4>
-                </mat-panel-title>
-                <mat-panel-description>
-                  10
-                </mat-panel-description>
-              </mat-expansion-panel-header>
-
-              <mat-form-field>
-                <mat-label>Komentar</mat-label>
-                <input matInput>
-              </mat-form-field>
-
-              <!--<input #imageInput hidden="true" type="file" onclick="this.value=null" accept="image/*" />
-              <button mat-flat-button color="primary" (click)="imageInput.click()">Dodaj sliku</button>-->
-
-
-              <button class="btn btn-primary" (click)="kreirajHranu(false)">
-                Snimi
-              </button>
-
-              <hr />
-              <div>
-                <div class="card">
-                  <div class="card-header" fxLayout="row" fxLayoutAlign="space-between center">
-                    <div  fxFlex="50%">User.Name</div>
-                    <div  fxFlex="50%">Vrijeme: dd.mm.gggg - hh:mm</div>
-                  </div>
-                  <div class="card-body">
-                    sadrzaj komentara :)
-                  </div>
-                </div>
-              </div>
-            </mat-expansion-panel>
+            <app-comments [food]="item"></app-comments>
+            
 
             <mat-action-row>
               <button *ngIf="adminMode" class="btn btn-secondary" (click)="editFood(item)">
@@ -259,7 +224,7 @@
 
               </div>
             </div>
-
+            <app-comments [food]="item"></app-comments>
             <mat-action-row>
               <button *ngIf="adminMode" class="btn btn-secondary" (click)="editFood(item)">
                 Izmjeni

@@ -10,11 +10,13 @@ namespace Domain.Models
         public int KomentarId { get; set; }
         [Required]
         public int HranaId { get; set; }
-        public string? Slika { get; set; }
+        public string Slika { get; set; }
         [Required]
-        public int KorisnikId { get; set; }
+        public string Comment { get; set; }
         [Required]
-        public Korisnik Korisnik { get; set; }
+        public int UserId { get; set; }
+        public User User { get; set; }
+        public DateTime Time { get; set; }
 
         //public ICollection<SavedBook> BookUsers { get; set; }
     }

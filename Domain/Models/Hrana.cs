@@ -9,6 +9,7 @@ namespace Domain.Models
         public int HranaId { get; set; }
         public string Naziv { get; set; }
         public bool Stalna { get; set; }
+        public string Image { get; set; }
 
 
         public virtual ICollection <Komentar> Komentari { get; set; }

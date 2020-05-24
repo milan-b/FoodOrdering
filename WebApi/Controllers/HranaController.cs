@@ -40,8 +40,9 @@ namespace WebApi.Controllers
                     PrilogId = o1.PrilogId,
                     Varijanata = o1.Varijanta
                 }).ToList(),
-                Rating = o.Ocjene.Count() > 0 ? o.Ocjene.Select(o1 => o1.Vrijednost).Average() : 0
-            });
+                Rating = o.Ocjene.Count() > 0 ? o.Ocjene.Select(o1 => o1.Vrijednost).Average() : 0,
+                NumberOfComments = o.Komentari.Count()
+            }) ;
             return Ok(viewModel);
         }
 
@@ -91,6 +92,31 @@ namespace WebApi.Controllers
             return result;
         }
 
+        [HttpPost]
+        public IActionResult SetComment([FromBody] CommentViewModel viewModel)
+        {
+            IActionResult result;
+            if (!ModelState.IsValid)
+            {
+                result = ValidationProblem("Nevalidan zahtjev.");
+            }
+            else
+            {
+                _hranaService.SetComment(Convert.ToInt32(User.Identity.Name), viewModel.FoodId, viewModel.Content, viewModel.Image);
+                result = Ok();
+            }
+
+            return result;
+        }
+
+        [HttpGet]
+        public IActionResult GetComments(int foodId)
+        {
+            var comments = _hranaService.GetComments(foodId);
+            var viewModel = comments.Select(o => MapCommentToCommentVM(o)).ToList();
+            return Ok(viewModel);
+        }
+
         [Authorize(Roles = Roles.Admin + "," + Roles.Cook)]
         [HttpPost]
         public IActionResult CreateSideDish([FromBody] PrilogViewModel viewModel)
@@ -107,5 +133,25 @@ namespace WebApi.Controllers
             }
             return result;
         }
+
+        #region Mappers
+
+        private CommentViewModel MapCommentToCommentVM(Komentar comment)
+        {
+            var commentVM = new CommentViewModel();
+            MapCommentToCommentVM(comment, commentVM);
+            return commentVM;
+        }
+
+        private void MapCommentToCommentVM(Komentar comment, CommentViewModel viewModel)
+        {
+            viewModel.User = comment.User.Email;
+            viewModel.Time = comment.Time;
+            viewModel.Content = comment.Comment;
+            viewModel.Image = comment.Slika;
+            
+        }
+
+        #endregion
     }
 }

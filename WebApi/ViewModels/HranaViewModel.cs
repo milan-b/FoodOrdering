@@ -15,5 +15,6 @@ namespace WebApi.ViewModels
         public List<PrilogViewModel> Prilozi { get; set; }
         public bool Narucena { get; set; }
         public double Rating { get; set; }
+        public int NumberOfComments { get; set; }
     }
 }

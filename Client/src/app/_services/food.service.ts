@@ -4,6 +4,7 @@ import { HttpParams, HttpClient } from '@angular/common/http';
 import { Moment } from 'moment';
 import { Meni } from '../_models/meni';
 import { Hrana } from '../_models/hrana';
+import { Comment } from '../_models/comment';
 import { environment } from '../../environments/environment';
 import { Prilog } from '../_models/prilog';
 import { Observable } from 'rxjs';
@@ -33,6 +34,15 @@ export class FoodService {
 
     rateFood(foodId: number, mark: number) {
         return this.http.post<any>(`${environment.apiUrl}hrana/Rate`, { mark: mark, foodId: foodId });
+    }
+
+    setComment(foodId: number, content: string) {
+        return this.http.post<any>(`${environment.apiUrl}hrana/SetComment`, { content: content, foodId: foodId });
+    }
+
+    getComments(foodId: number): Observable<Comment[]> {
+        let params = new HttpParams().set('foodId', foodId.toString());
+        return this.http.get<Comment[]>(`${environment.apiUrl}hrana/GetComments`, { params: params });
     }
 
 
