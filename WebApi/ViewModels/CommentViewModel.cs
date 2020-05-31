@@ -1,4 +1,5 @@
 ﻿using Domain.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,6 +19,9 @@ namespace WebApi.ViewModels
         public string Image { get; set; }
         public string User { get; set; }
         public DateTime Time { get; set; }
+        public string ImageBase64 { get; set; }
+
+
 
     }
 }

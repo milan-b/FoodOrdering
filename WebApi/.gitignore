@@ -1,3 +1,6 @@
+# Images
+wwwroot/images/*
+
 # Logs
 logs
 *.log

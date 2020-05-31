@@ -1,5 +1,5 @@
 <mat-expansion-panel [expanded]="false" (opened)="onOpen()" class="flex">
-  <mat-expansion-panel-header >
+  <mat-expansion-panel-header>
     <mat-panel-title>
       <h4>Komentari</h4>
     </mat-panel-title>
@@ -10,19 +10,19 @@
   <div fxLayout="column">
     <div [formGroup]="commentForm" fxLayout="column" fxLayoutAlign="space-around start">
 
-
+      <img *ngIf="imgResultAfterCompress" [src]="imgResultAfterCompress" alt="">
       <mat-form-field style="width:100%">
         <mat-label>Komentar</mat-label>
         <input formControlName="comment" matInput>
       </mat-form-field>
-
-      <!--<input #imageInput hidden="true" type="file" onclick="this.value=null" accept="image/*" />
-    <button mat-flat-button color="primary" (click)="imageInput.click()">Dodaj sliku</button>-->
-
-
-      <button class="btn btn-primary" fxFlex="20" (click)="onSubmit()">
-        Snimi
-      </button>
+      <div fxLayout="row">
+        <button class="btn btn-success" (click)="compressFile()">
+          Dodaj sliku
+        </button>
+        <button class="btn btn-primary ml-1" (click)="onSubmit()">
+          Snimi
+        </button>
+      </div>
     </div>
 
     <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
@@ -34,6 +34,7 @@
           <div fxFlex="50%">{{comment.user}}</div>
         </div>
         <div class="card-body">
+          <img *ngIf="comment.image" src="{{imagesUrl}}{{comment.image}}" alt="">
           {{comment.content}}
         </div>
       </div>

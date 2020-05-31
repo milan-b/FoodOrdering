@@ -54,7 +54,7 @@
 <div class="card">
   <div class="card-header" fxLayout="row" fxLayoutAlign="space-between center">
     <h4 fxFlex="20%">
-      Hrana
+      Hrana 
     </h4>
     <div fxFlex="80%" fxLayout="row" fxLayoutAlign="space-between center">
       <!--<label for="username">Username</label>-->
@@ -210,7 +210,7 @@
             <!--Prilozi-->
             <div *ngIf="item.prilozi.length > 0" class="card mt-2">
               <h4 class="card-header">
-                Prilozi
+                Prilozi 
               </h4>
               <div class="card-body">
                 <section class="prilog-section">
@@ -226,6 +226,7 @@
             </div>
             <app-comments [food]="item"></app-comments>
             <mat-action-row>
+
               <button *ngIf="adminMode" class="btn btn-secondary" (click)="editFood(item)">
                 Izmjeni
               </button>

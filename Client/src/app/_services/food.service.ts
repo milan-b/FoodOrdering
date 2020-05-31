@@ -36,8 +36,12 @@ export class FoodService {
         return this.http.post<any>(`${environment.apiUrl}hrana/Rate`, { mark: mark, foodId: foodId });
     }
 
-    setComment(foodId: number, content: string) {
-        return this.http.post<any>(`${environment.apiUrl}hrana/SetComment`, { content: content, foodId: foodId });
+    setComment(foodId: number, content: string, imageFile: string) {
+        const formData = new FormData();
+        formData.append('content', content);
+        formData.append('imageBase64', imageFile);
+        formData.append('foodId', foodId.toString());
+        return this.http.post<any>(`${environment.apiUrl}hrana/SetComment`, formData);
     }
 
     getComments(foodId: number): Observable<Comment[]> {
