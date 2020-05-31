@@ -47,7 +47,8 @@ namespace WebApi.Controllers
                     Varijanata = o1.Varijanta
                 }).ToList(),
                 Rating = o.Ocjene.Count() > 0 ? o.Ocjene.Select(o1 => o1.Vrijednost).Average() : 0,
-                NumberOfComments = o.Komentari.Count()
+                NumberOfComments = o.Komentari.Count(),
+                Image = o.Image
             });
             return Ok(viewModel);
         }

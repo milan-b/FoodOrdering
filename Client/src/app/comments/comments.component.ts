@@ -20,7 +20,7 @@ export class CommentsComponent implements OnInit {
 
     commentForm: FormGroup;
     comments: Comment[];
-    imagesUrl: string = environment.apiUrl + "images/";
+    imagesUrl: string = environment.imagesUrl;
 
 
 

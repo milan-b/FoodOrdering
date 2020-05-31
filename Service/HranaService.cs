@@ -106,6 +106,12 @@ namespace Service
             };
             _context.Komentari.Add(newComment);
 
+            var food = _context.Hrana.Find(foodId);
+            if (string.IsNullOrEmpty(food.Image))
+            {
+                food.Image = image;
+            }
+
             _context.SaveChanges();
         }
 

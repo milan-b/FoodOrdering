@@ -10,6 +10,7 @@ export class Hrana {
     rating: number;
     prilozi: Prilog[];
     numberOfComments: number;
+    image: string;
 
     //public constructor(init?: Partial<Hrana>) {
     //  Object.assign(this, init);
@@ -24,6 +25,7 @@ export class Hrana {
         //izabrana: this.narudzba.hrana == hranaItem.hrana.hranaId,
         this.prilozi = this.getPrilozi(hrana.prilozi);
         this.numberOfComments = hrana.numberOfComments;
+        this.image = hrana.image;
     }
 
     //public constructor(init?: Partial<Hrana>) {

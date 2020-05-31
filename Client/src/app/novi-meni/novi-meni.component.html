@@ -57,7 +57,6 @@
       Hrana 
     </h4>
     <div fxFlex="80%" fxLayout="row" fxLayoutAlign="space-between center">
-      <!--<label for="username">Username</label>-->
       <div fxFlex="30%">
         <input [(ngModel)]="filterHrana" type="text" placeholder="Filtriraj hranu" class="form-control" />
       </div>
@@ -82,7 +81,8 @@
                                hideToggle>
             <mat-expansion-panel-header>
               <mat-panel-title>
-                <img src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+                <img *ngIf="!item.image" src="../../assets/images/food.png" alt="Ne postoji fotografija hrane">
+                <img *ngIf="item.image" src="{{imagesUrl}}{{item.image}}" alt="Ne postoji fotografija hrane">
               </mat-panel-title>
               <mat-panel-description>
                 <h3>{{item.naziv}}</h3>
@@ -178,7 +178,8 @@
                                (opened)="setStepStalna(i)" hideToggle>
             <mat-expansion-panel-header>
               <mat-panel-title>
-                <img src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+                <img *ngIf="!item.image" src="../../assets/images/food.png" alt="Ne postoji fotografija hrane">
+                <img *ngIf="item.image" src="{{imagesUrl}}{{item.image}}" alt="Ne postoji fotografija hrane">
 
               </mat-panel-title>
               <mat-panel-description>
