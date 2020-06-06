@@ -4,9 +4,9 @@
       Izvještaj za datum
     </h4>
     <div *ngIf="menu" fxFlex="20%">
-      <div class="color-success" *ngIf="menu.menuId == 0">Za izabrani datum ne postoji meni</div>
-      <div class="color-success" *ngIf="menu.menuId != 0 && !menu.canOrder">Meni je zaključen</div>
-      <div class="color-worning" *ngIf="menu.menuId != 0 && menu.canOrder">Još uvijek su moguće izmjene naruđbi</div>
+      <div class="color-success pl-2 pr-2" *ngIf="menu.menuId == 0">Za izabrani datum ne postoji meni</div>
+      <div class="color-success pl-2 pr-2" *ngIf="menu.menuId != 0 && !menu.canOrder">Meni je zaključen</div>
+      <div class="color-worning pl-2 pr-2" *ngIf="menu.menuId != 0 && menu.canOrder">Još uvijek su moguće izmjene narudžbi</div>
     </div>
     <div fxFlex="40%" fxLayoutAlign="end center">
       <app-date-picker (dateChange)="onDateChange($event)" [initDate]="today"></app-date-picker>

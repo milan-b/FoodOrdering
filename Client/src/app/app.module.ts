@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import {NgxImageCompressService} from 'ngx-image-compress';
 
 // used to create fake backend
 import { fakeBackendProvider } from './_helpers';
@@ -54,6 +55,7 @@ import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 import { NewPasswordComponent } from './new-password/new-password.component';
 import { OrdersReportComponent } from './orders-report/orders-report.component';
 import { OptionsComponent } from './options/options.component';
+import { CommentsComponent } from './comments/comments.component';
 
 
 @NgModule({
@@ -103,10 +105,12 @@ import { OptionsComponent } from './options/options.component';
         DeleteDialogComponent,
         NewPasswordComponent,
         OrdersReportComponent,
-        OptionsComponent
+        OptionsComponent,
+        CommentsComponent
 
     ],
     providers: [
+        NgxImageCompressService,
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         { provide: MAT_DATE_LOCALE, useValue: 'sr' },

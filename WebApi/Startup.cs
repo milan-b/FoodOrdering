@@ -102,6 +102,7 @@ namespace WebApi
             // configure DI for application services
             //services.AddScoped<IUserService, UserService>();
             services.AddScoped<IHranaService, HranaService>();
+            services.AddScoped<IFileService, FileService>();
             services.AddScoped<IMeniService, MeniService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IOrderService, OrderService>();
@@ -111,6 +112,8 @@ namespace WebApi
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseRouting();
+
+            app.UseStaticFiles();
 
             // global cors policy
             app.UseCors(x => x

@@ -15,7 +15,7 @@
   </div>
   <div class="card-body">
     <div *ngIf="adminMode">
-      <button  class="btn btn-primary" (click)="createMenu()" [disabled]="!menu || !menu.canOrder"  title="{{(!menu || !menu.canOrder)? 'Verijeme za narudžbu je isteklo' : ''}}">
+      <button class="btn btn-primary" (click)="createMenu()" [disabled]="!menu || !menu.canOrder" title="{{(!menu || !menu.canOrder)? 'Verijeme za narudžbu je isteklo' : ''}}">
         Snimi meni
       </button>
     </div>
@@ -40,10 +40,10 @@
         </div>-->
       </section>
       <div fxFlex="20%" fxLayoutAlign="end center">
-        <button *ngIf="orderId != 0" class="btn btn-danger" (click)="deleteOrder()" [disabled]="!menu || !menu.canOrder"  title="{{(!menu || !menu.canOrder)? 'Verijeme za narudžbu je isteklo' : ''}}">
+        <button *ngIf="orderId != 0" class="btn btn-danger" (click)="deleteOrder()" [disabled]="!menu || !menu.canOrder" title="{{(!menu || !menu.canOrder)? 'Verijeme za narudžbu je isteklo' : ''}}">
           Poništi
         </button>
-        <button (click)="createOrder()" [disabled]="!menu || !menu.canOrder"  title="{{(!menu || !menu.canOrder)? 'Verijeme za narudžbu je isteklo' : ''}}"  class="btn btn-primary ml-1" >
+        <button (click)="createOrder()" [disabled]="!menu || !menu.canOrder" title="{{(!menu || !menu.canOrder)? 'Verijeme za narudžbu je isteklo' : ''}}" class="btn btn-primary ml-1">
           Naruči
         </button>
       </div>
@@ -54,10 +54,9 @@
 <div class="card">
   <div class="card-header" fxLayout="row" fxLayoutAlign="space-between center">
     <h4 fxFlex="20%">
-      Hrana
+      Hrana 
     </h4>
     <div fxFlex="80%" fxLayout="row" fxLayoutAlign="space-between center">
-      <!--<label for="username">Username</label>-->
       <div fxFlex="30%">
         <input [(ngModel)]="filterHrana" type="text" placeholder="Filtriraj hranu" class="form-control" />
       </div>
@@ -82,13 +81,13 @@
                                hideToggle>
             <mat-expansion-panel-header>
               <mat-panel-title>
-                <img src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+                <img *ngIf="!item.image" src="../../assets/images/food.png" alt="Ne postoji fotografija hrane">
+                <img *ngIf="item.image" src="{{imagesUrl}}{{item.image}}" alt="Ne postoji fotografija hrane">
               </mat-panel-title>
               <mat-panel-description>
                 <h3>{{item.naziv}}</h3>
                 <div fxLayoutAlign="end center">
-                  <star-rating
-                               (starClickChange)="onRatingChange($event, item.hranaId)"
+                  <star-rating (starClickChange)="onRatingChange($event, item.hranaId)"
                                [hoverEnabled]="true" staticColor="thisIsBugFix"
                                (click)="stopPropagation($event)"
                                [starType]="'svg'"
@@ -127,6 +126,8 @@
 
               </div>
             </div>
+            <app-comments [food]="item"></app-comments>
+            
 
             <mat-action-row>
               <button *ngIf="adminMode" class="btn btn-secondary" (click)="editFood(item)">
@@ -177,14 +178,14 @@
                                (opened)="setStepStalna(i)" hideToggle>
             <mat-expansion-panel-header>
               <mat-panel-title>
-                <img src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+                <img *ngIf="!item.image" src="../../assets/images/food.png" alt="Ne postoji fotografija hrane">
+                <img *ngIf="item.image" src="{{imagesUrl}}{{item.image}}" alt="Ne postoji fotografija hrane">
 
               </mat-panel-title>
               <mat-panel-description>
                 <h3>{{item.naziv}}</h3>
                 <div fxLayoutAlign="end center">
-                  <star-rating
-                               (starClickChange)="onRatingChange($event, item.hranaId)"
+                  <star-rating (starClickChange)="onRatingChange($event, item.hranaId)"
                                [hoverEnabled]="true" staticColor="thisIsBugFix"
                                (click)="stopPropagation($event)"
                                [starType]="'svg'"
@@ -210,7 +211,7 @@
             <!--Prilozi-->
             <div *ngIf="item.prilozi.length > 0" class="card mt-2">
               <h4 class="card-header">
-                Prilozi
+                Prilozi 
               </h4>
               <div class="card-body">
                 <section class="prilog-section">
@@ -224,8 +225,9 @@
 
               </div>
             </div>
-
+            <app-comments [food]="item"></app-comments>
             <mat-action-row>
+
               <button *ngIf="adminMode" class="btn btn-secondary" (click)="editFood(item)">
                 Izmjeni
               </button>
@@ -234,6 +236,8 @@
               </button>
             </mat-action-row>
           </mat-expansion-panel>
+
+
         </div>
       </div>
     </mat-accordion>

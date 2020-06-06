@@ -3,14 +3,16 @@ using System;
 using Domain.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Domain.Migrations
 {
     [DbContext(typeof(HranaContext))]
-    partial class HranaContextModelSnapshot : ModelSnapshot
+    [Migration("20200524174333_commentUpdate")]
+    partial class commentUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,18 +81,11 @@ namespace Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
                     b.Property<int>("HranaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Slika")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");

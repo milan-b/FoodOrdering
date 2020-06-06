@@ -1,4 +1,5 @@
 import { Prilog } from './prilog';
+import { Comment } from './comment';
 
 export class Hrana {
     hranaId: number;
@@ -8,6 +9,8 @@ export class Hrana {
     narucena: boolean;
     rating: number;
     prilozi: Prilog[];
+    numberOfComments: number;
+    image: string;
 
     //public constructor(init?: Partial<Hrana>) {
     //  Object.assign(this, init);
@@ -21,6 +24,8 @@ export class Hrana {
         this.rating = hrana.rating;
         //izabrana: this.narudzba.hrana == hranaItem.hrana.hranaId,
         this.prilozi = this.getPrilozi(hrana.prilozi);
+        this.numberOfComments = hrana.numberOfComments;
+        this.image = hrana.image;
     }
 
     //public constructor(init?: Partial<Hrana>) {

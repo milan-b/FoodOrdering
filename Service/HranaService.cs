@@ -19,6 +19,8 @@ namespace Service
         void Delete(int id);
         Hrana CreateOrUpdate(Hrana hrana);
         void SetRate(int userId, int foodId, int mark);
+        void SetComment(int userId, int foodId, string comment, string image);
+        IEnumerable<Komentar> GetComments(int foodId);
     }
     public class HranaService : IHranaService
     {
@@ -33,8 +35,9 @@ namespace Service
         {
             return _context.Hrana
                         .Include(o => o.Ocjene)
-                        .Include(o => o.Prilozi);
-                        //.ThenInclude(o => o.Prilog);
+                        .Include(o => o.Prilozi)
+                        .Include(o => o.Komentari);
+            //.ThenInclude(o => o.Prilog);
         }
 
         public IEnumerable<Prilog> GetAllSideDishes()
@@ -90,6 +93,32 @@ namespace Service
             _context.SaveChanges();
         }
 
+        public void SetComment(int userId, int foodId, string comment, string image)
+        {
+
+            var newComment = new Komentar
+            {
+                UserId = userId,
+                HranaId = foodId,
+                Comment = comment,
+                Slika = image,
+                Time = DateTime.Now
+            };
+            _context.Komentari.Add(newComment);
+
+            var food = _context.Hrana.Find(foodId);
+            if (string.IsNullOrEmpty(food.Image))
+            {
+                food.Image = image;
+            }
+
+            _context.SaveChanges();
+        }
+
+        public IEnumerable<Komentar> GetComments(int foodId)
+        {
+            return _context.Komentari.Where(o => o.HranaId == foodId).OrderByDescending(o => o.Time).Include(o => o.User);
+        }
 
         public Hrana GetById(int id)
         {

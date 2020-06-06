@@ -14,6 +14,7 @@ import { AuthenticationService, UserService } from '../_services';
 import { OrderLocationOptions, OrderTimeOptions, ROLES } from '../globas';
 import { OrderService } from '../_services/order.service';
 import { FoodService } from '../_services/food.service';
+import { environment } from '../../environments/environment';
 
 @Component({
     selector: 'app-novi-meni',
@@ -37,6 +38,8 @@ export class NoviMeniComponent implements OnInit {
 
     adminMode: boolean = false;
     isAdminOrCook: boolean = false;
+
+    imagesUrl: string = environment.imagesUrl;
 
     // Order
     orderError: { time: boolean, place: boolean };
