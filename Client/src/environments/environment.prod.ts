@@ -1,5 +1,5 @@
 export const environment = {
     production: true,
-    apiUrl: 'http://localhost:4000/',
-    imagesUrl: 'http://localhost:4000/images/'
+    apiUrl: 'http://mbookcase-001-site1.ftempurl.com/api/',
+    imagesUrl: 'http://mbookcase-001-site1.ftempurl.com/api/images/'
 };

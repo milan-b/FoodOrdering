@@ -72,7 +72,13 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "Client:build:production"
+              "browserTarget": "Client:build:production",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ]
             }
           }
         },
@@ -129,4 +135,14 @@
     }
   },
   "defaultProject": "Client"
+  //"configurations": {
+  //  "production": {
+  //    "fileReplacements": [
+  //      {
+  //        "replace": "src/environments/environment.ts",
+  //        "with": "src/environments/environment.prod.ts"
+  //      }
+  //    ]
+  //  }
+  //}
 }
