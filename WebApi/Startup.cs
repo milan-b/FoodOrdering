@@ -40,7 +40,12 @@ namespace WebApi
             //services.AddDbContext<HranaContext>(options =>
             //        options.UseSqlServer(Configuration.GetConnectionString("HranaContext"), b => b.MigrationsAssembly("Domain")));
             services.AddDbContext<HranaContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("HranaContext"), b => b.MigrationsAssembly("Domain")), ServiceLifetime.Scoped);
+                options.UseMySql(Configuration.GetConnectionString("HranaContext"), 
+                b => {
+                    b.MigrationsAssembly("Domain");
+                    b.EnableRetryOnFailure();
+                    })
+                , ServiceLifetime.Scoped);
 
 
             services.AddControllers();

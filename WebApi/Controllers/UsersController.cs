@@ -268,7 +268,7 @@ namespace WebApi.Controllers
                 $"na {_appSettings.URL} sa email-om: {user.Email} i lozinkom:<br><b>{password}</b><br>" +
                 $"Da bi Vaš nalog postao aktivan, nakon prve prijave promijenite lozinku.<br><br>" +
                 $"Srdačan pozdrav i prijatno.<br> ";
-            await _emailService.SendEmailToRecipientAsinc(user.Email, "Registracija na portalu za nardžbu hrane", emailBody);
+            await _emailService.SendEmailToRecipientAsinc(user.Email, "Registracija na portalu za narudžbu hrane", emailBody);
         }
 
         private async Task SendEmailForNewPassword(User user, string password)
