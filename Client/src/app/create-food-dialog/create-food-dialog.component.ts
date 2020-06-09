@@ -133,7 +133,7 @@ export class CreateFoodDialogComponent implements OnInit {
     let ret = [];
     sideDishesFG.forEach((item, index) => {
       if (item.controls.selected.value) {
-        ret.push({ varijanta: item.controls.variant.value, prilog: { prilogId: this.data.sideDishes[index].prilogId } });
+        ret.push({ varijanta: item.controls.variant.value, prilogId: this.data.sideDishes[index].prilogId });
       }
     });
 

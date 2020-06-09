@@ -9,7 +9,7 @@ namespace WebApi.ViewModels
     public class PrilogViewModel
     {
         public int PrilogId { get; set; }
-        public int Varijanata { get; set; }
+        public int Varijanta { get; set; }
         public string Naziv { get; set; }
     }
 }

@@ -81,11 +81,11 @@
                                hideToggle>
             <mat-expansion-panel-header>
               <mat-panel-title>
-                <img *ngIf="!item.image" src="../../assets/images/food.png" alt="Ne postoji fotografija hrane">
-                <img *ngIf="item.image" src="{{imagesUrl}}{{item.image}}" alt="Ne postoji fotografija hrane">
+                <img *ngIf="!item.image" src="../../assets/images/food.png" title="Ne postoji fotografija hrane" alt="Ne postoji fotografija hrane">
+                <img *ngIf="item.image" src="{{imagesUrl}}{{item.image}}">
               </mat-panel-title>
               <mat-panel-description>
-                <h3>{{item.naziv}}</h3>
+                <h4>{{item.naziv}}</h4>
                 <div fxLayoutAlign="end center">
                   <star-rating (starClickChange)="onRatingChange($event, item.hranaId)"
                                [hoverEnabled]="true" staticColor="thisIsBugFix"
@@ -96,14 +96,14 @@
                     {{item.izabrana? 'Ukloni iz menija' : 'Dodaj u meni'}}
                   </button>
                   <div class="icon-place-holder">
-                    <div *ngIf="step === i">
+                    <!--<div *ngIf="step === i">
                       <mat-icon *ngIf="i > 0" class="btn" mat-button color="secondary" title="Prethodni" (click)="prevStep($event)">keyboard_arrow_left</mat-icon>
                       <mat-icon class="btn" mat-button color="primary"
                                 title="{{i == hranaArray.length - 1 ? 'Kraj' : 'Sledeći'}}"
                                 (click)="nextStep($event)">
                         keyboard_arrow_right
                       </mat-icon>
-                    </div>
+                    </div>-->
                   </div>
                 </div>
               </mat-panel-description>
@@ -177,13 +177,13 @@
                                [expanded]="stepStalna === i"
                                (opened)="setStepStalna(i)" hideToggle>
             <mat-expansion-panel-header>
-              <mat-panel-title>
-                <img *ngIf="!item.image" src="../../assets/images/food.png" alt="Ne postoji fotografija hrane">
-                <img *ngIf="item.image" src="{{imagesUrl}}{{item.image}}" alt="Ne postoji fotografija hrane">
+              <mat-panel-title >
+                <img *ngIf="!item.image" src="../../assets/images/food.png" title="Ne postoji fotografija hrane" alt="Ne postoji fotografija hrane">
+                <img *ngIf="item.image" src="{{imagesUrl}}{{item.image}}" >
 
               </mat-panel-title>
               <mat-panel-description>
-                <h3>{{item.naziv}}</h3>
+                <h4>{{item.naziv}}</h4>
                 <div fxLayoutAlign="end center">
                   <star-rating (starClickChange)="onRatingChange($event, item.hranaId)"
                                [hoverEnabled]="true" staticColor="thisIsBugFix"
@@ -193,7 +193,7 @@
                   <button *ngIf="adminMode" (click)="addFoodToMenu($event, item)" [ngClass]="item.izabrana ? 'btn-success': 'btn-light'" class="btn ml-2">
                     {{item.izabrana? 'Ukloni iz menija' : 'Dodaj u meni'}}
                   </button>
-                  <div class="icon-place-holder">
+                  <!--<div class="icon-place-holder">
                     <div *ngIf="stepStalna === i">
                       <mat-icon *ngIf="i > 0" class="btn" mat-button color="secondary" title="Prethodni" (click)="prevStepStalna($event)">keyboard_arrow_left</mat-icon>
                       <mat-icon class="btn" mat-button color="primary"
@@ -202,7 +202,7 @@
                         keyboard_arrow_right
                       </mat-icon>
                     </div>
-                  </div>
+                  </div>-->
 
                 </div>
               </mat-panel-description>

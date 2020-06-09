@@ -98,6 +98,7 @@ namespace Domain.Data
         public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
             OnBeforeSaving();
+            
             return base.SaveChanges(acceptAllChangesOnSuccess);
         }
 

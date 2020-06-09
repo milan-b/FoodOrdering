@@ -44,7 +44,7 @@ namespace WebApi.Controllers
                 Prilozi = o.Prilozi.Select(o1 => new PrilogViewModel
                 {
                     PrilogId = o1.PrilogId,
-                    Varijanata = o1.Varijanta
+                    Varijanta = o1.Varijanta
                 }).ToList(),
                 Rating = o.Ocjene.Count() > 0 ? o.Ocjene.Select(o1 => o1.Vrijednost).Average() : 0,
                 NumberOfComments = o.Komentari.Count(),
@@ -90,10 +90,11 @@ namespace WebApi.Controllers
             }
             else
             {
-                var hrana = _mapper.Map<Hrana>(viewModel);
-
-                hrana = _hranaService.CreateOrUpdate(hrana);
-                result = Ok(hrana.HranaId);
+                //var hrana = _mapper.Map<Hrana>(viewModel);
+                var food = new Hrana();
+                MapFoodVMToFood(viewModel, food);
+                var foodId = _hranaService.CreateOrUpdate(food).HranaId;
+                result = Ok(foodId);
             }
 
             return result;
@@ -186,6 +187,22 @@ namespace WebApi.Controllers
             viewModel.Image = comment.Slika;
 
         }
+
+        private void MapFoodVMToFood(HranaViewModel viewModel, Hrana food)
+        {
+            food.Naziv = viewModel.Naziv;
+            food.Stalna = viewModel.Stalna;
+            food.HranaId = viewModel.HranaId;
+
+            food.Prilozi = viewModel.Prilozi.Select(o => new HranaPrilog
+            {
+                PrilogId = o.PrilogId,
+                Varijanta = o.Varijanta
+            }).ToList();
+
+        }
+        
+
 
         #endregion
     }
