@@ -16,6 +16,7 @@ using Domain.Data;
 using Service;
 using WebApi.Entities;
 using WebApi.HostedServices;
+using Microsoft.Extensions.Hosting;
 
 namespace WebApi
 {
@@ -40,12 +41,13 @@ namespace WebApi
             //services.AddDbContext<HranaContext>(options =>
             //        options.UseSqlServer(Configuration.GetConnectionString("HranaContext"), b => b.MigrationsAssembly("Domain")));
             services.AddDbContext<HranaContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("HranaContext"), 
-                b => {
+                options.UseMySql(Configuration.GetConnectionString("HranaContext"),
+                b =>
+                {
                     b.MigrationsAssembly("Domain");
                     b.EnableRetryOnFailure();
-                    })
-                , ServiceLifetime.Scoped);
+                }));
+                //, ServiceLifetime.Scoped);
 
 
             services.AddControllers();
@@ -119,6 +121,16 @@ namespace WebApi
             app.UseRouting();
 
             app.UseStaticFiles();
+
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                app.UseHsts();
+            }
 
             // global cors policy
             app.UseCors(x => x

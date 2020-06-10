@@ -16,7 +16,7 @@ export class BarService {
         this.snackBar.openFromComponent(ErrorBarComponent, {
             duration: this.durationInSeconds * 1000,
             data: errorMessage,
-            verticalPosition: 'top',
+            verticalPosition: 'bottom',
             horizontalPosition: 'left'
         });
     }
@@ -25,7 +25,7 @@ export class BarService {
         this.snackBar.openFromComponent(InfoBarComponent, {
             duration: this.durationInSeconds * 1000,
             data: infoMessage,
-            verticalPosition: 'top',
+            verticalPosition: 'bottom',
             horizontalPosition: 'left'
         });
     }
@@ -34,7 +34,7 @@ export class BarService {
         this.snackBar.openFromComponent(WarningBarComponent, {
             duration: this.durationInSeconds * 1000,
             data: infoMessage,
-            verticalPosition: 'top',
+          verticalPosition: 'bottom',
             horizontalPosition: 'left'
         });
     }
