@@ -50,6 +50,10 @@ export class NoviMeniComponent implements OnInit {
   orderId: number = 0;
   refreshCalendar: Subject<boolean>;
 
+  loading: boolean = false;
+  initMenuLoading: boolean = false;
+  setOrderLoading: boolean = false;
+
   constructor(private meniService: MeniService, private dialog: MatDialog, private barService: BarService, private foodService: FoodService,
     private authenticationService: AuthenticationService, private orderService: OrderService, private userService: UserService) { }
 
@@ -72,10 +76,11 @@ export class NoviMeniComponent implements OnInit {
   }
 
   initFood() {
+    this.loading = true;
     forkJoin({
       food: this.foodService.getAllFood(),
       sideDishes: this.foodService.getAllSideDishes(),
-      menu: this.meniService.getMenu(this.today),
+      menu: this.meniService.getMenu(this.menu ? moment(this.menu.date) : this.today),
     }).subscribe((data) => {
       this.menu = new Meni({ menuId: (<any>data.menu.body).menuId, date: (<any>data.menu.body).date, food: (<any>data.menu.body).food, canOrder: (<any>data.menu.body).canOrder })
       this.setFood(data.food);
@@ -83,11 +88,13 @@ export class NoviMeniComponent implements OnInit {
       this.sideDishes = [...(data.sideDishes).map(o => new Prilog({ prilogId: o.prilogId, naziv: o.naziv, varijanta: o.varijanta }))];
       data.sideDishes.forEach(o => {
         this.sideDishesMap[o.prilogId] = o.naziv;
-      })
+      });
+      this.loading = false;
     });
   }
 
   initMenu(date: moment.Moment) {
+    this.initMenuLoading = true;
     this.meniService.getMenu(date)
       .subscribe((data: any) => {
         this.menu = new Meni({ menuId: data.body.menuId, date: data.body.date, food: data.body.food, canOrder: data.body.canOrder });
@@ -96,6 +103,7 @@ export class NoviMeniComponent implements OnInit {
         } else {
           this.setOrder();
         }
+        this.initMenuLoading = false;
       });
   }
 
@@ -135,17 +143,17 @@ export class NoviMeniComponent implements OnInit {
         this.foodForMenu.push(hrana);
         hrana.izabrana = true;
       });
-      
+
     }
   }
 
   setOrder = () => {
-
     this.stalnaHranaArray = this.stalnaHranaArray.map(o => { o.izabrana = false; return o; });
     this.hranaArray = this.hranaArray.map(o => { o.izabrana = false; return o; });
     this.orderId = 0;
     this.selectedFood = null;
     if (this.menu.menuId) {
+      this.setOrderLoading = true;
       this.orderService.get(this.menu.menuId).subscribe(data => {
         var order: any = data.body;
         if (order) {
@@ -157,6 +165,7 @@ export class NoviMeniComponent implements OnInit {
           orderdFood.prilozi.filter(o => order.sideDishes.indexOf(o.prilogId) != -1).map(o => { o.izabran = true; return o; });
           this.selectedFood = orderdFood;
         }
+        this.setOrderLoading = false;
       });
     }
   }
@@ -216,20 +225,24 @@ export class NoviMeniComponent implements OnInit {
   }
 
   createMenu(): void {
+    this.loading = true;
     this.menu.food = this.hranaArray.concat(this.stalnaHranaArray).filter(h => h.izabrana).map(o => o.hranaId);
     this.meniService.createMenu(this.menu).subscribe(
       (data: number) => {
         this.menu.menuId = data;
         this.barService.showInfo("Uspješno ste snimili meni.");
         this.refreshCalendar.next(true);
+        this.loading = false;
       }, error => {
         this.barService.showError(error.message);
+        this.loading = false;
       });
 
   }
 
   createOrder() {
     if (this.selectedFood) {
+      this.loading = true;
       const order = {
         orderId: this.orderId,
         timeId: this.orderTime,
@@ -244,9 +257,11 @@ export class NoviMeniComponent implements OnInit {
         this.refreshCalendar.next(true);
         this.barService.showInfo(`Usješno ste naručili "${this.selectedFood.naziv}" na lokaciju "${this.orderLocationOptions[this.orderLocation]}"
                                       u vrijeme "${this.orderTimeOptions[this.orderTime]}".`);
+        this.loading = false;
       },
         error => {
           this.barService.showError('Dogorila se greška. Narudžba nije kreirana. Detalji: \n' + error);
+          this.loading = false;
         });
     } else {
       this.barService.showError("Niste izabrali hranu!");
@@ -254,12 +269,15 @@ export class NoviMeniComponent implements OnInit {
   }
 
   deleteOrder() {
+    this.loading = true;
     this.orderService.delete(this.orderId).subscribe(rez => {
       this.barService.showWarning('Obrisali ste narudžbu.');
       this.refreshCalendar.next(true);
       this.setOrder();
+      this.loading = false;
     }, error => {
       this.barService.showError('Dogodila se greška. Narudžba nije obrisana.');
+      this.loading = false;
     });
   }
 

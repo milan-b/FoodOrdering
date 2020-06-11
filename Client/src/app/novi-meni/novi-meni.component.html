@@ -1,9 +1,10 @@
 
 <div class="card">
   <div class="card-header" fxLayout="row" fxLayoutAlign="space-between center">
-    <h4 fxFlex="40%">
-      Meni za datum
-    </h4>
+    <div fxFlex="40%">
+      <div style="display:inline-block;"><h4>Meni za datum</h4></div>
+      <span *ngIf="loading || initMenuLoading || setOrderLoading" class="spinner-border spinner-border-sm m-1"></span>
+    </div>
     <div fxFlex="20%">
       <mat-slide-toggle (change)="adminModeChaged()" [(ngModel)]="adminMode" *ngIf="isAdminOrCook">
         Admin mode

@@ -91,7 +91,7 @@ namespace WebApi.Controllers
                     MapOrderVMToOrder(viewModel, order);
                     var user = _userService.GetById(Convert.ToInt32(User.Identity.Name));
                     order = _orderService.CreateOrUpdate(order, user.UserId);
-                    await SendEmailToConfirmOrder(user, order.NarudzbaId);
+                    await SendEmailToConfirmOrder(user, order);
                     result = Ok(order.NarudzbaId);
                 }
             }
@@ -150,12 +150,11 @@ namespace WebApi.Controllers
         #endregion
 
         #region helpers 
-        private async Task SendEmailToConfirmOrder(User user, int orderId)
+        private async Task SendEmailToConfirmOrder(User user, Narudzba order)
         {
             if (user.ReceiveOrderConfirmationEmails)
             {
                 var prilozi = "";
-                var order = _orderService.Get(orderId);
                 order.SideDishes.ToList().ForEach(o => prilozi += o.Prilog.Naziv + ", ");
                 if (!string.IsNullOrEmpty(prilozi))
                 {

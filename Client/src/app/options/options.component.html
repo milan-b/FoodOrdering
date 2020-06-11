@@ -1,9 +1,12 @@
 <div class="card">
-  <div class="card-header" fxLayout="row" fxLayoutAlign="space-between center">
-    <h4 fxFlex="50%">
-      Opcije
-    </h4>
+  <div class="card-header" fxLayout="row" fxLayoutAlign="center center">
+    <div fxFlex="50%">
+      <div style="display:inline-block;"><h4>Opcije</h4></div>
+      <span *ngIf="loading" class="spinner-border spinner-border-sm m-1"></span>
+    </div>
+
     <div fxFlex="50%" fxLayoutAlign="end center">
+      
       <!--<app-date-picker (dateChange)="onDateChange($event)" [initDate]="nextDay"></app-date-picker>-->
     </div>
   </div>
