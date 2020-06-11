@@ -34,7 +34,7 @@
           <div fxFlex="50%">{{comment.user}}</div>
         </div>
         <div class="card-body">
-          <img *ngIf="comment.image" src="{{imagesUrl}}{{comment.image}}" alt="">
+          <img style="max-height:300px; max-width:300px;" *ngIf="comment.image" src="{{imagesUrl}}{{comment.image}}" alt="">
           {{comment.content}}
         </div>
       </div>
