@@ -100,8 +100,7 @@ namespace WebApi.HostedServices
                 {
                     if (!menu.Locked && (menu.Datum.Subtract(DateTime.Now).TotalHours < 10))
                     {
-                        menu.Locked = true;
-                        menuService.CreateOrUpdate(menu);
+                        menuService.Lock(menu);
                     }
                 }
             }

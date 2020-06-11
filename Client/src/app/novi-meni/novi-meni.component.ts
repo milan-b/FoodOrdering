@@ -104,7 +104,8 @@ export class NoviMeniComponent implements OnInit {
           this.setOrder();
         }
         this.initMenuLoading = false;
-      });
+      },
+        () => this.initMenuLoading = false);
   }
 
   setFood = (data: Hrana[]) => {

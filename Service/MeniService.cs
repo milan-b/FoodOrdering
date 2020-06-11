@@ -17,6 +17,7 @@ namespace Service
         Meni GetByDate(DateTime date);
         Meni CreateOrUpdate(Meni meni);
         Meni Create(Meni meni);
+        void Lock(Meni menu);
     }
     public class MeniService : IMeniService
     {
@@ -35,6 +36,16 @@ namespace Service
         public Meni GetById(int id)
         {
             return _context.Menii.Find(id);
+        }
+
+        public void Lock(Meni menu)
+        {
+            if(menu != null)
+            {
+                menu.Locked = true;
+                _context.Menii.Update(menu);
+                _context.SaveChanges();
+            }
         }
 
         public Meni GetByDate(DateTime date)
