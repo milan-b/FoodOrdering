@@ -3,11 +3,13 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-    production: false,
-    apiUrl: 'http://localhost:4000/',
-    imagesUrl: 'http://localhost:4000/images/'
-    //apiUrl: 'http://localhost:53014/'
-    //apiUrl: 'http://localhost:61821/'
+  production: false,
+  //apiUrl: 'http://localhost:4000/',
+  //imagesUrl: 'http://localhost:4000/images/',
+  apiUrl: 'http://mbookcase.com/api/',
+    imagesUrl: 'http://mbookcase.com/api/images/'
+  //apiUrl: 'http://localhost:53014/'
+  //apiUrl: 'http://localhost:61821/'
 };
 
 /*

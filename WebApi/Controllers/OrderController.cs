@@ -21,19 +21,22 @@ namespace WebApi.Controllers
         readonly IEmailService _emailService;
         readonly IMeniService _meniService;
         readonly IUserService _userService;
+        readonly IHranaService _foodService;
         readonly private IMapper _mapper;
 
         private string[] ORDER_LOCATION_OPTIONS = { "Čajavec", "Medicinska Elektronika", "ETF" };
         private string[] ORDER_TIME_OPTIONS = { "11:30h", "12:30h" };
 
 
-        public OrderController(IOrderService orderService, IMapper mapper, IEmailService emailService, IMeniService meniService, IUserService userService)
+        public OrderController(IOrderService orderService, IMapper mapper, IEmailService emailService,
+            IMeniService meniService, IUserService userService, IHranaService foodService)
         {
             _mapper = mapper;
             _orderService = orderService;
             _emailService = emailService;
             _meniService = meniService;
             _userService = userService;
+            _foodService = foodService;
         }
 
         [Authorize(Roles = Roles.Admin + "," + Roles.Cook)]
@@ -91,7 +94,14 @@ namespace WebApi.Controllers
                     MapOrderVMToOrder(viewModel, order);
                     var user = _userService.GetById(Convert.ToInt32(User.Identity.Name));
                     order = _orderService.CreateOrUpdate(order, user.UserId);
-                    await SendEmailToConfirmOrder(user, order);
+                    try
+                    {
+                        await SendEmailToConfirmOrder(user, order);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Dogodila se greška prilikom slanja emaila.\n\nDetalji:\n" + e.Message);
+                    }
                     result = Ok(order.NarudzbaId);
                 }
             }
@@ -162,10 +172,11 @@ namespace WebApi.Controllers
                 }
                 var location = ORDER_LOCATION_OPTIONS[order.LocationId];
                 var time = ORDER_TIME_OPTIONS[order.TimeId];
+                var food = _foodService.GetById(order.HranaId);
                 var emailBody = $"Poštovani,<br><br>" +
-                    $" Naručili ste \"{order.Hrana.Naziv}\" za dan {order.Meni.Datum.ToShortDateString()} <br>" +
+                    $" Naručili ste \"{food.Naziv}\" za dan {order.Meni.Datum.ToString("ddd,dd.MM.yyyy.")} <br>" +
                     $"prilozi: {prilozi}<br>" +
-                    $"na likaciju: {location} <br>" +
+                    $"na lokaciju: {location} <br>" +
                     $"u vrijeme: {time}. <br> <br>" +
                 $"Srdačan pozdrav i prijatno.<br> ";
                 await _emailService.SendEmailToRecipientAsinc(user.Email, "Potvrda nardžbe hrane", emailBody);

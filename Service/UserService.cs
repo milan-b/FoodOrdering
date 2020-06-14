@@ -41,7 +41,7 @@ namespace Service
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
                 return null;
 
-            var user = _context.Users.SingleOrDefault(x => x.Email == email);
+            var user = _context.Users.SingleOrDefault(x => x.Email.Equals(email, StringComparison.InvariantCultureIgnoreCase));
 
             // check if username exists
             if (user == null)
