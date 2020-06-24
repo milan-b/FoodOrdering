@@ -22,8 +22,8 @@ export class UserService {
     }
 
     delete(userId: number): Observable<any> {
-        let params = new HttpParams().set('id', userId.toString());
-        return this.http.delete(`${environment.apiUrl}Users/Delete`, { params: params });
+      //let params = new HttpParams().set('id', userId.toString());
+      return this.http.post<any>(`${environment.apiUrl}Users/Delete`, { id: userId });
     }
 
     resetPassword(userId: number) {

@@ -1,5 +1,5 @@
 export const environment = {
     production: true,
-    apiUrl: 'http://mbookcase.com/api/',
-    imagesUrl: 'http://mbookcase.com/api/images/'
+    apiUrl: 'http://api.mbookcase.com/',
+    imagesUrl: 'http://api.mbookcase.com/images/'
 };
