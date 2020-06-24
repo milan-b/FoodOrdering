@@ -22,6 +22,9 @@ namespace WebApi
 {
     public class Startup
     {
+
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -32,7 +35,15 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("http://mbookcase.com",
+                                                          "http://www.mbookcase.com");
+                                  });
+            });
 
             //services.AddDbContext<DataContext>(x => x.UseInMemoryDatabase("TestDb"));
             //services.AddDbContext<BookcaseContext>(options =>

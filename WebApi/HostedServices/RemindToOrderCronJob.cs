@@ -71,9 +71,10 @@ namespace WebApi.HostedServices
                 var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
 
                 var recipients = userService.GetEmailsFromAllThatDidNotOrder(DateTime.Now.AddDays(1).Date);
-                _logger.LogInformation(recipients.ToString());
+                
                 if (recipients != null && recipients.Count() > 0)
                 {
+                    _logger.LogInformation(recipients.ToString());
                     await SendEmailToRemind(recipients);
                 }
             }

@@ -49,8 +49,15 @@ namespace WebApi.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet]
+        public IActionResult Test()
+        {
+            return Ok("radi");
+        }
+
+        [AllowAnonymous]
         [HttpPost]
-        public IActionResult Authenticate([FromBody]AuthenticateModel model)
+        public IActionResult Authenticate([FromBody] AuthenticateModel model)
         {
             var user = _userService.Authenticate(model.Email, model.Password);
 
@@ -84,14 +91,14 @@ namespace WebApi.Controllers
                 LastName = user.LastName,
                 Roles = user.Roles,
                 Activated = user.Activated,
-                
+
                 Token = tokenString
             });
         }
 
         [Authorize(Roles = Roles.Admin)]
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody]RegisterModel viewModel)
+        public async Task<IActionResult> Register([FromBody] RegisterModel viewModel)
         {
             IActionResult ret;
 
@@ -141,7 +148,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdatePassword([FromBody]JToken jsonbody)
+        public IActionResult UpdatePassword([FromBody] JToken jsonbody)
         {
             IActionResult ret;
             var password = jsonbody.Value<string>("password");
@@ -193,7 +200,7 @@ namespace WebApi.Controllers
 
         [Authorize(Roles = Roles.Admin)]
         [HttpPost]
-        public async Task<IActionResult> ResetPassword([FromBody]JToken jsonbody)
+        public async Task<IActionResult> ResetPassword([FromBody] JToken jsonbody)
         {
             var id = jsonbody.Value<int>("id");
             var user = _userService.GetById(id);
@@ -205,9 +212,10 @@ namespace WebApi.Controllers
         }
 
         [Authorize(Roles = Roles.Admin)]
-        [HttpDelete]
-        public IActionResult Delete(int id)
+        [HttpPost]
+        public IActionResult Delete([FromBody] JToken jsonbody)
         {
+            var id = jsonbody.Value<int>("id");
             _orderService.DeleteAllForUser(id);
             _userService.Delete(id);
             return Ok();
